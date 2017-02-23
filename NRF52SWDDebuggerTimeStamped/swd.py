@@ -25,11 +25,16 @@ server_address = ('localhost', 19021)
 print "Connecting to the server @",server_address
 #while True:print "ok"
 sock.connect(server_address)
+
+
+time.sleep(1)
+
 past=datetime.datetime.now()
 
 try:
 	while True:
 		rcv=sock.recv(1000)
+                if rcv=="":continue
 		now=datetime.datetime.now()
 		delta = now-past
 		print now,"---",delta,"---",rcv,
