@@ -138,10 +138,10 @@ class blynkDevice:
 		pinType=cmd.pop(0)
 		pinNo=cmd.pop(0)
 		pinValue=cmd.pop(0)
-		print (pinType,pinNo,pinValue)
+		return (pinType,pinNo,pinValue)
 
 
-	def manage(self):
+	def manage(self,callback=None):
 		try:
 			if not self.connected:
 				print "(Re)connecting..."
@@ -150,7 +150,8 @@ class blynkDevice:
 				response,data=self.rxFrame()
 				#print response,data
 				if response:
-					print response
+					if not callback:
+						print response
 				else:
 					self.ping()
 					return False
@@ -159,32 +160,54 @@ class blynkDevice:
 					pass
 				else:
 					print "Unknown Message/Command received..."
+					return False
 
 				if data:
-					self.unpack_command(data)
+					result = self.unpack_command(data)
+					if callback:
+						callback(result)
+					else:
+						print result
+					return result
 				else:
-					pass
+					return False
 
 		except Exception as e:
 			print "Exception in manage",e
 
 
 
+def setup(token):
+	dev = blynkDevice()
+	dev.connect()
+	dev.auth(TOKEN)
+	dev.ping()
+	
+	def myprint(x):
+		print x
 
-TOKEN="cbda5b4ec5f249c68683316f8d84a4e3"
+	try:
+		while 1:
+			dev.manage(myprint)
+	except KeyboardInterrupt:
+		print "Closing connection..."
+		dev.sock.close()
+		print "Graceful shutdown..."
 
-dev = blynkDevice()
-dev.connect()
-dev.auth(TOKEN)
-dev.ping()
 
-try:
-	while 1:
-		dev.manage()
 
-except KeyboardInterrupt:
-	print "Closing connection..."
-	dev.sock.close()
-	print "Graceful shutdown..."
+
+if __name__=="__main__":
+
+	def callback(data):
+		print "Got : ",data
+
+	TOKEN="cbda5b4ec5f249c68683316f8d84a4e3"
+	setup(TOKEN)
+	
+
+
+
+	
 
 
