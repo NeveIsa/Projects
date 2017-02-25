@@ -15,4 +15,4 @@ ISAblynk.setup(token,callback)
 
 
 ---
-As Simple as that, KISS
+#As Simple as that, check *client.py* for details 
