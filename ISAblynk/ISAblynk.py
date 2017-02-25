@@ -22,7 +22,14 @@ class blynkDevice:
 	def connect(self):
 		self.msgID=0
 		try:
-			self.sock=socket.create_connection((self.server,self.port),timeout=10)
+			try:
+				#raise
+				self.sock=socket.create_connection((self.server,self.port),timeout=10)
+			except Exception as e:
+				print "Exception using socket.create_connection...",e
+				print "Falling back to lower level socket methods..."
+				self.sock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+				self.sock.connect(socket.getaddrinfo(self.server,self.port)[0][-1])
 			if self.sock:
 				print "Connected..."
 				return True
