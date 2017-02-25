@@ -202,7 +202,7 @@ if __name__=="__main__":
 	def callback(data):
 		print "Got : ",data
 
-	TOKEN="cbda5b4ec5f249c68683316f8d84a4e3"
+	TOKEN="b7f5c2c4af7940929d90fb48b9ed1554"
 	setup(TOKEN)
 	
 
