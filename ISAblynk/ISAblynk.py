@@ -192,14 +192,17 @@ class blynkDevice:
 
 
 
-def setup(token):
+def setup(token,callback=None):
 	dev = blynkDevice()
 	dev.connect()
-	dev.auth(TOKEN)
+	dev.auth(token)
 	dev.ping()
 	
 	def myprint(x):
-		print x
+		if callback:
+			callback(x)
+		else:
+			print x
 
 	try:
 		while 1:
@@ -218,7 +221,7 @@ if __name__=="__main__":
 		print "Got : ",data
 
 	TOKEN="cbda5b4ec5f249c68683316f8d84a4e3"
-	setup(TOKEN)
+	setup(TOKEN,callback)
 	
 
 
