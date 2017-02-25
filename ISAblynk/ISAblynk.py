@@ -135,10 +135,13 @@ class blynkDevice:
 	def unpack_command(self,cmd):
 		#print cmd
 		cmd = cmd.split('\0') #split into
-		pinType=cmd.pop(0)
+		pinCmdType=cmd.pop(0)
+		if pinCmdType=="pm":
+			pass # no values to pop if 'pm' command
+			return (pinCmdType,None,None)
 		pinNo=cmd.pop(0)
 		pinValue=cmd.pop(0)
-		return (pinType,pinNo,pinValue)
+		return (pinCmdType,pinNo,pinValue)
 
 
 	def manage(self,callback=None):
@@ -148,6 +151,8 @@ class blynkDevice:
 				return self.connect() and self.auth()
 			else:
 				response,data=self.rxFrame()
+				#print response,data
+				#return
 				#print response,data
 				if response:
 					if not callback:
@@ -164,6 +169,9 @@ class blynkDevice:
 
 				if data:
 					result = self.unpack_command(data)
+					if(result[0])=="pm":
+						print "Pin Mode Command Received...An APP just connected to this BlynkDevice.."
+						return True
 					if callback:
 						callback(result)
 					else:
