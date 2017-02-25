@@ -4,14 +4,14 @@
 Library tutorial
 ---
 
-import ISAblynk
+>import ISAblynk
 
-token="0123456789abcdef"
+>token="0123456789abcdef"
 
-def callback(x):
-  print "got:",x
+>def callback(x):
+>>  print "got:",x
 
-ISAblynk.setup(token,callback)
+>ISAblynk.setup(token,callback)
 
 
 ---
