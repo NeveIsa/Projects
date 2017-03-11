@@ -26,19 +26,19 @@ class blynkDevice:
 				#raise
 				self.sock=socket.create_connection((self.server,self.port),timeout=10)
 			except Exception as e:
-				print "Exception using socket.create_connection...",e
-				print "Falling back to lower level socket methods..."
+				print ("Exception using socket.create_connection...",e)
+				print ("Falling back to lower level socket methods...")
 				self.sock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 				self.sock.connect(socket.getaddrinfo(self.server,self.port)[0][-1])
 			if self.sock:
-				print "Connected..."
+				print ("Connected...")
 				return True
 			else:
-				print "Could not connect to server..."
+				print ("Could not connect to server...")
 				self.connected=False
 				return False
 		except Exception as e:
-			print "Exception in connecting to server",e
+			print ("Exception in connecting to server",e)
 			self.connected=False
 
 	def frame(self,msgtype,msg,msgID=None):
@@ -53,7 +53,7 @@ class blynkDevice:
 
 	def deframe(self,payload):
 		if len(payload)<5:
-			print "deframe payload header is less than 5 bytes..error"
+			print ("deframe payload header is less than 5 bytes..error")
 			return (0,0,0)
 		try:
 			msgtype=ord(payload[0])
@@ -61,7 +61,7 @@ class blynkDevice:
 			msglen=ord(payload[3])*256 + ord(payload[4])
 			return (msgtype,msgID,msglen)
 		except Exception as e:
-			print "deframe exception",e
+			print ("deframe exception",e)
 			return (0,0,0)
 
 
@@ -69,7 +69,7 @@ class blynkDevice:
 		try:
 			self.sock.sendall(payload)
 		except Exception as e:
-			print e
+			print (e)
 			self.connected=False
 
 	def rx(self,length):
@@ -87,7 +87,7 @@ class blynkDevice:
 		except socket.timeout:
 			rcv=""
 		except Exception as e:
-			print "rx exception",e
+			print ("rx exception",e)
 			rcv=""
 			self.connected=False
 		return rcv
@@ -116,31 +116,31 @@ class blynkDevice:
 			response = self.rx(5)
 			response=self.deframe(response)
 			if response[-1]==MSGSTATUS.OK:
-				print "Authenticated..."
+				print ("Authenticated...")
 				self.connected=True
 			else:
-				print "Authentication failed"
+				print ("Authentication failed")
 				self.connected=False
 
 		except Exception as e:
-			print "Auth exception",e
+			print ("Auth exception",e)
 			self.connected=False
 
 	def ping(self):
 		payload = self.frame(MSGTYPE.PING,"")
-		print "Ping..."
+		print ("Ping...")
 		self.tx(payload)
 		response = self.rx(5)
 		response = self.deframe(response)
 		if not response:
-			print "Ping failed..."
+			print ("Ping failed...")
 			self.connected=False
 		if response==(MSGTYPE.RSP,self.msgID,MSGSTATUS.OK):
-			print "...Pong",self.msgID
+			print ("...Pong",self.msgID)
 
 
 	def unpack_command(self,cmd):
-		#print cmd
+		#print (cmd)
 		cmd = cmd.split('\0') #split into
 		pinCmdType=cmd.pop(0)
 		if pinCmdType=="pm":
@@ -154,16 +154,16 @@ class blynkDevice:
 	def manage(self,callback=None):
 		try:
 			if not self.connected:
-				print "(Re)connecting..."
+				print ("(Re)connecting...")
 				return self.connect() and self.auth()
 			else:
 				response,data=self.rxFrame()
-				#print response,data
+				#print (response,data)
 				#return
-				#print response,data
+				#print (response,data)
 				if response:
 					if not callback:
-						print response
+						print (response)
 				else:
 					self.ping()
 					return False
@@ -171,24 +171,24 @@ class blynkDevice:
 				if response[0]==MSGTYPE.HW or response[0]==MSGTYPE.BRIDGE:
 					pass
 				else:
-					print "Unknown Message/Command received..."
+					print ("Unknown Message/Command received...")
 					return False
 
 				if data:
 					result = self.unpack_command(data)
 					if(result[0])=="pm":
-						print "Pin Mode Command Received...An APP just connected to this BlynkDevice.."
+						print ("Pin Mode Command Received...An APP just connected to this BlynkDevice..")
 						return True
 					if callback:
 						callback(result)
 					else:
-						print result
+						print (result)
 					return result
 				else:
 					return False
 
 		except Exception as e:
-			print "Exception in manage",e
+			print ("Exception in manage",e)
 
 
 
@@ -202,15 +202,15 @@ def setup(token,callback=None):
 		if callback:
 			callback(x)
 		else:
-			print x
+			print (x)
 
 	try:
 		while 1:
 			dev.manage(myprint)
 	except KeyboardInterrupt:
-		print "Closing connection..."
+		print ("Closing connection...")
 		dev.sock.close()
-		print "Graceful shutdown..."
+		print ("Graceful shutdown...")
 
 
 
@@ -218,7 +218,7 @@ def setup(token,callback=None):
 if __name__=="__main__":
 
 	def callback(data):
-		print "Got : ",data
+		print ("Got : ",data)
 
 	TOKEN="cbda5b4ec5f249c68683316f8d84a4e3"
 	setup(TOKEN,callback)
