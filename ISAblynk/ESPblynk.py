@@ -1,4 +1,9 @@
-import socket,time
+import time
+
+try:
+	import usocket as socket
+except:
+	import socket
 
 class MSGTYPE:
 	RSP    = 0
@@ -24,12 +29,15 @@ class blynkDevice:
 		try:
 			try:
 				#raise
-				self.sock=socket.create_connection((self.server,self.port),timeout=10)
-			except Exception as e:
-				print ("Exception using socket.create_connection...",e)
-				print ("Falling back to lower level socket methods...")
+				#self.sock=socket.create_connection((self.server,self.port),timeout=10)
+			#except Exception as e:
+				#print ("Exception using socket.create_connection...",e)
+				#print ("Falling back to lower level socket methods...")
 				self.sock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+				self.sock.settimeout(5)
 				self.sock.connect(socket.getaddrinfo(self.server,self.port)[0][-1])
+			except:
+				print("xxx")
 			if self.sock:
 				print ("Connected...")
 				return True
@@ -46,7 +54,7 @@ class blynkDevice:
 			self.msgID = self.msgID+1
 			msgID=self.msgID
 		msglen = len(msg)
-		payload = chr(msgtype) + chr(msgID/256) + chr(msgID%256) + chr(msglen/256) + chr(msglen%256)
+		payload = chr(msgtype) + chr(int(msgID/256)) + chr(msgID%256) + chr(int(msglen/256)) + chr(msglen%256)
 		payload = payload + msg
 		#print payload
 		return payload
@@ -78,14 +86,18 @@ class blynkDevice:
 		try:
 			while True:
 				r = self.sock.recv(length-l)
-				rcv = rcv + r
+				#rcv=rcv+r
+				return r
+				rcv = rcv + "".join(list(map(chr,r))) #r is byte array, so we convert to string
 				l = len(rcv)
 				if l<length:
 					pass
 				else:
 					break
-		except socket.timeout:
+		#micropython raises OSError instead of timeout
+		except OSError:
 			rcv=""
+			print ('OSError')
 		except Exception as e:
 			print ("rx exception",e)
 			rcv=""
@@ -114,6 +126,7 @@ class blynkDevice:
 		try:
 			self.tx(payload)
 			response = self.rx(5)
+			return response
 			response=self.deframe(response)
 			if response[-1]==MSGSTATUS.OK:
 				print ("Authenticated...")
