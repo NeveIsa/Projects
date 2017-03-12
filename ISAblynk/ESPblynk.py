@@ -37,7 +37,7 @@ class blynkDevice:
 				self.sock.settimeout(5)
 				self.sock.connect(socket.getaddrinfo(self.server,self.port)[0][-1])
 			except:
-				print("xxx")
+				print("Failed to create new socket...")
 			if self.sock:
 				print ("Connected...")
 				return True
@@ -87,7 +87,7 @@ class blynkDevice:
 			while True:
 				r = self.sock.recv(length-l)
 				#rcv=rcv+r
-				return r
+				#return r
 				rcv = rcv + "".join(list(map(chr,r))) #r is byte array, so we convert to string
 				l = len(rcv)
 				if l<length:
@@ -97,7 +97,7 @@ class blynkDevice:
 		#micropython raises OSError instead of timeout
 		except OSError:
 			rcv=""
-			print ('OSError')
+			print ('---> OSError => socket.timeout for micropython (no worries)')
 		except Exception as e:
 			print ("rx exception",e)
 			rcv=""
@@ -126,7 +126,7 @@ class blynkDevice:
 		try:
 			self.tx(payload)
 			response = self.rx(5)
-			return response
+			#return response
 			response=self.deframe(response)
 			if response[-1]==MSGSTATUS.OK:
 				print ("Authenticated...")
