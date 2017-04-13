@@ -35,8 +35,9 @@ class stop:
 class filelist:
   #global sock
   def GET(self):
+    folder=web.input().folder
     import os,json
-    files=os.listdir("static/images")
+    files=os.listdir("static/%s" % folder)
     return json.dumps(files)
 
 
