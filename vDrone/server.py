@@ -1,7 +1,9 @@
 import web
 
 urls = ("/start", "start",
-       "/stop","stop")
+       "/stop","stop",
+       "/filelist","filelist")
+
 app = web.application(urls, globals())
 
 process=0
@@ -27,6 +29,16 @@ class stop:
     except:
       status= "Process not started yet"
     return status
+
+
+class filelist:
+  #global sock
+  def GET(self):
+    import os,json
+    files=os.listdir("static/images")
+    return json.dumps(files)
+
+
 
 if __name__ == "__main__":
     #import socket
