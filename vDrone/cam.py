@@ -16,6 +16,6 @@ while True:
   time=datetime.datetime.now()
   fname=time.strftime("%d-%m-%y---%H-%M-%S")
   #print fname
-  camera.capture('images/' +fname+ ".jpg")
+  camera.capture('static/images/' +fname+ ".jpg")
   sleep(3)
   
