@@ -9,13 +9,15 @@ sleep(2)
 
 
 import datetime
+import sys
 
+folder=sys.argv[1]
 
 
 while True:
   time=datetime.datetime.now()
   fname=time.strftime("%d-%m-%y---%H-%M-%S")
   #print fname
-  camera.capture('static/images/' +fname+ ".jpg")
+  camera.capture('static/%s/' % folder + fname+ ".jpg")
   sleep(3)
   

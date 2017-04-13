@@ -13,9 +13,10 @@ import subprocess
 class start:
   #global sock
   def GET(self):
+    folder=web.input().folder
     global process
     #sock.sendall("start\n")
-    process=subprocess.Popen(["python","cam.py"])
+    process=subprocess.Popen(["python","cam.py",folder])
     return 'started'
 
 class stop:
