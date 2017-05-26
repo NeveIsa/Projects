@@ -37,7 +37,7 @@ class filelist:
   def GET(self):
     folder=web.input().folder
     import os,json
-    files=os.listdir("static/%s" % folder)
+    files=os.listdir("static/images/%s" % folder)
     return json.dumps(files)
 
 

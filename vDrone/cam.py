@@ -1,8 +1,8 @@
 from time import sleep
-##from picamera import PiCamera
+from picamera import PiCamera
 
-##camera = PiCamera()
-##camera.resolution = (1024, 768)
+camera = PiCamera()
+camera.resolution = (1024, 768)
 #camera.start_preview()
 # Camera warm-up tim
 sleep(2)
