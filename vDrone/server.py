@@ -1,4 +1,4 @@
-import web
+import web,json
 
 urls = ("/start", "start",
        "/stop","stop",
@@ -17,7 +17,7 @@ class start:
     global process
     #sock.sendall("start\n")
     process=subprocess.Popen(["python","cam.py",folder])
-    return 'started'
+    return json.dumps(['started:',folder])
 
 class stop:
   #global sock
