@@ -10,5 +10,5 @@
 - localhost:8080/filelist?folder=XYZ123
 
 ### To retrieve the images named abc.jpg from the folder named XYZ123
-- localhost:8080/static/images/XYZ123/abc.jpgy
+- localhost:8080/static/images/XYZ123/abc.jpg
 
