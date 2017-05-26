@@ -62,4 +62,3 @@ sleep 1
 python server.py
 
 
-echo "\n goto http://localhost:8080/stop"
