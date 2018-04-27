@@ -53,5 +53,43 @@ glow(0,0,100)
 time.sleep_ms(500)
 glow(0,0,0)
 
+# Wait for wifi
+glow(250,100,150)
+
+import network
+wlan=network.WLAN()
+wlan.connect("Kalyani4","tp001998")
+
+wait_count=30 #seconds
+
+while not wlan.isconnected():
+  time.sleep_ms(1000)
+  wait_count-=1
+  if not wait_count:break
+
+
+
+#Attempt to connect to ISA
+
+
+if not wlan.isconnected():
+  glow(100,0,0)
+  time.sleep_ms(700)
+  glow(250,100,150)
+
+  wlan.connect("isa","infinity")
+
+  #wait forever
+  while not wlan.isconnected():
+    pass
+
+
+else:
+  glow(0,0,100)
+  time.sleep_ms(700)
+  glow(250,100,150)
+
+
+
 TOKEN="cbda5b4ec5f249c68683316f8d84a4e3"
 ISAblynk.setup(TOKEN,callback)
