@@ -6,6 +6,11 @@ IRcodes={
         "r":"F720DF",
         "g":"F7A05F",
         "b":"F7609F",
+
+	"red":"F720DF",
+        "green":"F7A05F",
+        "blue":"F7609F",
+
         "w":"F7E01F",
         "rg":"F710EF",
         "gr":"F728D7",

@@ -2,7 +2,7 @@
 
 touch MOS_IP
 ip=$(cat MOS_IP)
-curl --connect-timeout 0.5 -m 0.5 http://$ip/rpc/RPC.List
+curl -I --connect-timeout 0.5 -m 0.5 http://$ip/rpc/RPC.List
 if [ $? -eq 0 ]
 then
 echo "Found IP:$ip"
