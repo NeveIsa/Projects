@@ -3,6 +3,13 @@ import requests
 import sys,time,json
 
 
+
+# encoding=utf8
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
+
 TEMP_FILE="scrapi.txt"
 
 def getNextLink(soup):
@@ -49,10 +56,15 @@ def getVideos(soup,attributes2search=["title","href"]):
             # Finding No of views and age of video
             parentNode = v.parent.parent
             metaInfo = parentNode.select(".yt-lockup-meta-info > li")
+            
             vAge=metaInfo[0].text
             vViews=metaInfo[1].text
+            vDesc = parentNode.select(".yt-lockup-description")[0].text
+            
             thisVideo["age"]=vAge
             thisVideo["views"]=vViews
+            thisVideo["description"]=vDesc
+
         except Exception as e:
             print "EXCEPTION IN getVideos:",e
 
@@ -68,7 +80,8 @@ def getVideos(soup,attributes2search=["title","href"]):
                 print "\nERROR ---> VIDEO NO:",c
                 print e
                 print "DUMPING RAW VIDEO DATA:\n--------"
-                print v,"\n--------"
+                #print v,"\n--------"
+                print parentNode,"\n--------"
                 exceptionFound=True
 
 

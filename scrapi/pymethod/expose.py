@@ -32,7 +32,7 @@ class hello:
                 if line=="":break
                 dataArray.append(json.loads(line))
 
-        template="<hr><hr> <br> {} <br> {} <br> {} <br>\n" + '<iframe width="420" height="315" src="https://www.youtube.com/embed/{}"></iframe>' 
+        template="<hr><hr> <br> {} <br> {} <br> {} <br> {} <br> \n" + '<iframe width="420" height="315" src="https://www.youtube.com/embed/{}"></iframe>' 
         response=""
 
         csvG = open(CSV_FILE,"w")
@@ -40,8 +40,9 @@ class hello:
 
         for data in dataArray:
             for vid in data:
-                csvDATA += "\"{}\",\"{}\",\"{}\",\"{}\"\n".format(vid["title"],vid["views"],vid["age"],vid["href"].split("=")[-1])
-                response+=template.format(vid["title"],vid["views"],vid["age"],vid["href"].split("=")[-1])
+                #csvDATA += "\"{}\",\"{}\",\"{}\",\"{}\"\n".format(vid["title"],vid["views"],vid["age"],vid["href"].split("=")[-1])
+                csvDATA += "\"{}\",\"{}\",\"{}\",\"{}\",\"{}\"\n".format(vid["title"],vid["description"],vid["views"],vid["age"],"{}{}".format("https://www.youtube.com",vid["href"]))
+                response+=template.format(vid["title"],vid["views"],vid["age"],vid["href"].split("=")[-1],vid["description"])
 
         csvG.write(csvDATA)
 
