@@ -1,5 +1,9 @@
-set word = %1
-set pages = %2
+set word=%1
+set pages=%2
 
-wget "http://localhost:8080/?search=%word&nPages=%pages&csv" -O "data/%word.csv"
+
+echo %word%
+echo %pages%
+
+curl "http://localhost:8080/?search=%word%&nPages=%pages%&csv" -o "data/%word%.csv"
 

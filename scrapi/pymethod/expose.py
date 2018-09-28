@@ -9,6 +9,8 @@ app = web.application(urls, globals())
 
 class hello:
     def GET(self):
+        web.header('Content-Type','text/html; charset=utf-8', unique=True) 
+
         if "csv" in web.input():
             CSV_FLAG=1
         else:
