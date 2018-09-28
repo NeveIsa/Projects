@@ -3,7 +3,7 @@ import requests
 import sys,time,json
 
 
-
+# https://stackoverflow.com/questions/9942594/unicodeencodeerror-ascii-codec-cant-encode-character-u-xa0-in-position-20
 # encoding=utf8
 import sys
 reload(sys)
