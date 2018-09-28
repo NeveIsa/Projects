@@ -40,6 +40,7 @@ class hello:
 
         for data in dataArray:
             for vid in data:
+                print vid
                 #csvDATA += "\"{}\",\"{}\",\"{}\",\"{}\"\n".format(vid["title"],vid["views"],vid["age"],vid["href"].split("=")[-1])
                 csvDATA += "\"{}\",\"{}\",\"{}\",\"{}\",\"{}\"\n".format(vid["title"],vid["description"],vid["views"],vid["age"],"{}{}".format("https://www.youtube.com",vid["href"]))
                 response+=template.format(vid["title"],vid["views"],vid["age"],vid["href"].split("=")[-1],vid["description"])

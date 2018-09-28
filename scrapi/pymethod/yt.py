@@ -47,7 +47,7 @@ def getVideos(soup,attributes2search=["title","href"]):
 
         print "\n",c
         #time.sleep(0.05)
-        thisVideo={}
+        thisVideo={"description":"","age":"","views":""}
 
         try:
             for a in attributes2search:
@@ -56,14 +56,24 @@ def getVideos(soup,attributes2search=["title","href"]):
             # Finding No of views and age of video
             parentNode = v.parent.parent
             metaInfo = parentNode.select(".yt-lockup-meta-info > li")
-            
-            vAge=metaInfo[0].text
-            vViews=metaInfo[1].text
+            try:
+                vAge=metaInfo[0].text
+            except:
+                vAge=""
+            try:
+                vViews=metaInfo[1].text
+            except:
+                vViews=""
+
             vDesc = parentNode.select(".yt-lockup-description")[0].text
             
             thisVideo["age"]=vAge
             thisVideo["views"]=vViews
-            thisVideo["description"]=vDesc
+            try:
+                thisVideo["description"]=vDesc.encode('utf-8','ignore').decode()
+            except Exception as e:
+                print ("Excepiton in reading video description...",e)
+
 
         except Exception as e:
             print "EXCEPTION IN getVideos:",e
