@@ -483,39 +483,39 @@ main.rel                                  [  ]
 
 Libraries Linked                          [ object file ]
 
-/usr/local/bin/../share/sdcc/lib/small/libint.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/libint.lib
                                           [ _divuint.rel ]
-/usr/local/bin/../share/sdcc/lib/small/liblong.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/liblong.lib
                                           [ _modulong.rel ]
-/usr/local/bin/../share/sdcc/lib/small/liblong.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/liblong.lib
                                           [ _divulong.rel ]
-/usr/local/bin/../share/sdcc/lib/small/mcs51.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/mcs51.lib
                                           [ crtclear.rel ]
-/usr/local/bin/../share/sdcc/lib/small/mcs51.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/mcs51.lib
                                           [ crtxinit.rel ]
-/usr/local/bin/../share/sdcc/lib/small/libsdcc.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/libsdcc.lib
                                           [ _gptrput.rel ]
-/usr/local/bin/../share/sdcc/lib/small/libint.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/libint.lib
                                           [ _mulint.rel ]
-/usr/local/bin/../share/sdcc/lib/small/libint.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/libint.lib
                                           [ _moduint.rel ]
-/usr/local/bin/../share/sdcc/lib/small/liblong.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/liblong.lib
                                           [ _mullong.rel ]
-/usr/local/bin/../share/sdcc/lib/small/mcs51.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/mcs51.lib
                                           [ crtxclear.rel ]
-/usr/local/bin/../share/sdcc/lib/small/libsdcc.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/libsdcc.lib
                                           [ _bp.rel ]
-/usr/local/bin/../share/sdcc/lib/small/mcs51.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/mcs51.lib
                                           [ crtpagesfr.rel ]
-/usr/local/bin/../share/sdcc/lib/small/mcs51.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/mcs51.lib
                                           [ crtstart.rel ]
-/usr/local/bin/../share/sdcc/lib/small/libsdcc.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/libsdcc.lib
                                           [ _gptrget.rel ]
-/usr/local/bin/../share/sdcc/lib/small/libint.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/libint.lib
                                           [ _modsint.rel ]
-/usr/local/bin/../share/sdcc/lib/small/libint.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/libint.lib
                                           [ _divsint.rel ]
-/usr/local/bin/../share/sdcc/lib/small/libsdcc.lib
+/home/sampad/SOFTWARE/sdcc-3.9.0/bin/../share/sdcc/lib/small/libsdcc.lib
                                           [ _startup.rel ]
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 22.

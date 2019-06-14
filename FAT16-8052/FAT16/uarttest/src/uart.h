@@ -1,3 +1,6 @@
+#ifndef ISA_UART_H
+#define ISA_UART_H
+
 //HEX HELPERS
 
 unsigned char hexNibble2dec(char nibble)
@@ -207,3 +210,6 @@ uint8_t UartScanLine(uint8_t *dst, uint8_t maxLength) __reentrant
 }
 
 //////////// SCAN FUNTIONS ////////////////////
+
+
+#endif

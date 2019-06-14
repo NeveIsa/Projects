@@ -488,7 +488,7 @@ __sdcc_program_startup:
 ;------------------------------------------------------------
 ;nibble                    Allocated to registers r7 
 ;------------------------------------------------------------
-;	uart.h:3: unsigned char hexNibble2dec(char nibble)
+;	uart.h:6: unsigned char hexNibble2dec(char nibble)
 ;	-----------------------------------------
 ;	 function hexNibble2dec
 ;	-----------------------------------------
@@ -502,7 +502,7 @@ _hexNibble2dec:
 	ar1 = 0x01
 	ar0 = 0x00
 	mov	r7,dpl
-;	uart.h:5: if('0' <= nibble && nibble <= '9') return nibble - 0x30;
+;	uart.h:8: if('0' <= nibble && nibble <= '9') return nibble - 0x30;
 	cjne	r7,#0x30,00139$
 00139$:
 	jc	00110$
@@ -515,7 +515,7 @@ _hexNibble2dec:
 	mov	dpl,a
 	ret
 00110$:
-;	uart.h:6: else if('A' <= nibble && nibble <= 'F') return 10 + nibble - 'A';
+;	uart.h:9: else if('A' <= nibble && nibble <= 'F') return 10 + nibble - 'A';
 	cjne	r7,#0x41,00142$
 00142$:
 	jc	00106$
@@ -528,7 +528,7 @@ _hexNibble2dec:
 	mov	dpl,a
 	ret
 00106$:
-;	uart.h:7: else if('a' <= nibble && nibble <= 'f') return 10 + nibble - 'a';
+;	uart.h:10: else if('a' <= nibble && nibble <= 'f') return 10 + nibble - 'a';
 	cjne	r7,#0x61,00145$
 00145$:
 	jc	00102$
@@ -540,9 +540,9 @@ _hexNibble2dec:
 	mov	dpl,a
 	ret
 00102$:
-;	uart.h:8: else return 0;
+;	uart.h:11: else return 0;
 	mov	dpl,#0x00
-;	uart.h:9: }
+;	uart.h:12: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'hex2dec'
@@ -550,12 +550,12 @@ _hexNibble2dec:
 ;LSnibble                  Allocated with name '_hex2dec_PARM_2'
 ;MSnibble                  Allocated to registers r7 
 ;------------------------------------------------------------
-;	uart.h:11: unsigned char hex2dec(char MSnibble,char LSnibble)
+;	uart.h:14: unsigned char hex2dec(char MSnibble,char LSnibble)
 ;	-----------------------------------------
 ;	 function hex2dec
 ;	-----------------------------------------
 _hex2dec:
-;	uart.h:14: return 16*hexNibble2dec(MSnibble) + hexNibble2dec(LSnibble);
+;	uart.h:17: return 16*hexNibble2dec(MSnibble) + hexNibble2dec(LSnibble);
 	lcall	_hexNibble2dec
 	mov	a,dpl
 	swap	a
@@ -569,19 +569,19 @@ _hex2dec:
 	mov	a,r6
 	add	a,r7
 	mov	dpl,a
-;	uart.h:15: }
+;	uart.h:18: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'dec2hexNibble'
 ;------------------------------------------------------------
 ;dec                       Allocated to registers r7 
 ;------------------------------------------------------------
-;	uart.h:18: unsigned char dec2hexNibble(unsigned char dec)
+;	uart.h:21: unsigned char dec2hexNibble(unsigned char dec)
 ;	-----------------------------------------
 ;	 function dec2hexNibble
 ;	-----------------------------------------
 _dec2hexNibble:
-;	uart.h:21: if(dec>15) return 'X'; // X for invalid
+;	uart.h:24: if(dec>15) return 'X'; // X for invalid
 	mov	a,dpl
 	mov	r7,a
 	add	a,#0xff - 0x0f
@@ -589,7 +589,7 @@ _dec2hexNibble:
 	mov	dpl,#0x58
 	ret
 00102$:
-;	uart.h:23: if(dec<=9) return 0x30 + dec;
+;	uart.h:26: if(dec<=9) return 0x30 + dec;
 	mov	a,r7
 	add	a,#0xff - 0x09
 	jc	00104$
@@ -599,91 +599,91 @@ _dec2hexNibble:
 	mov	dpl,a
 	ret
 00104$:
-;	uart.h:24: else return 'A' + dec - 10;
+;	uart.h:27: else return 'A' + dec - 10;
 	mov	a,#0x37
 	add	a,r7
 	mov	dpl,a
-;	uart.h:25: }
+;	uart.h:28: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UartBegin'
 ;------------------------------------------------------------
-;	uart.h:30: void UartBegin()
+;	uart.h:33: void UartBegin()
 ;	-----------------------------------------
 ;	 function UartBegin
 ;	-----------------------------------------
 _UartBegin:
-;	uart.h:34: TMOD = 0X20; //TIMER1 8 BIT AUTO-RELOAD
+;	uart.h:37: TMOD = 0X20; //TIMER1 8 BIT AUTO-RELOAD
 	mov	_TMOD,#0x20
-;	uart.h:36: TH1 = 0XF3; //2400
+;	uart.h:39: TH1 = 0XF3; //2400
 	mov	_TH1,#0xf3
-;	uart.h:37: SCON = 0X50;
+;	uart.h:40: SCON = 0X50;
 	mov	_SCON,#0x50
-;	uart.h:39: PCON |= 1<<7; //double the baudrate - 4800
+;	uart.h:42: PCON |= 1<<7; //double the baudrate - 4800
 	orl	_PCON,#0x80
-;	uart.h:41: TR1 = 1; //START TIMER
+;	uart.h:44: TR1 = 1; //START TIMER
 ;	assignBit
 	setb	_TR1
-;	uart.h:42: }
+;	uart.h:45: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UartReadReady'
 ;------------------------------------------------------------
-;	uart.h:44: unsigned char UartReadReady()
+;	uart.h:47: unsigned char UartReadReady()
 ;	-----------------------------------------
 ;	 function UartReadReady
 ;	-----------------------------------------
 _UartReadReady:
-;	uart.h:46: if(RI==0)return 0; //not received any char
+;	uart.h:49: if(RI==0)return 0; //not received any char
 	jb	_RI,00102$
 	mov	dpl,#0x00
 	ret
 00102$:
-;	uart.h:47: else return 1; //received and ready
+;	uart.h:50: else return 1; //received and ready
 	mov	dpl,#0x01
-;	uart.h:48: }
+;	uart.h:51: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UartRead'
 ;------------------------------------------------------------
 ;value                     Allocated to registers 
 ;------------------------------------------------------------
-;	uart.h:50: unsigned char UartRead()
+;	uart.h:53: unsigned char UartRead()
 ;	-----------------------------------------
 ;	 function UartRead
 ;	-----------------------------------------
 _UartRead:
-;	uart.h:53: while(RI==0); //wait till RX
+;	uart.h:56: while(RI==0); //wait till RX
 00101$:
-;	uart.h:54: RI=0;
+;	uart.h:57: RI=0;
 ;	assignBit
 	jbc	_RI,00114$
 	sjmp	00101$
 00114$:
-;	uart.h:55: value = SBUF;
+;	uart.h:58: value = SBUF;
 	mov	dpl,_SBUF
-;	uart.h:56: return value;
-;	uart.h:57: }
+;	uart.h:59: return value;
+;	uart.h:60: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UartWrite'
 ;------------------------------------------------------------
 ;value                     Allocated to registers 
 ;------------------------------------------------------------
-;	uart.h:60: void UartWrite(unsigned char value)
+;	uart.h:63: void UartWrite(unsigned char value)
 ;	-----------------------------------------
 ;	 function UartWrite
 ;	-----------------------------------------
 _UartWrite:
 	mov	_SBUF,dpl
-;	uart.h:63: while(TI==0); // wait till TX
+;	uart.h:66: while(TI==0); // wait till TX
 00101$:
-;	uart.h:64: TI=0;
+;	uart.h:67: TI=0;
 ;	assignBit
 	jbc	_TI,00114$
 	sjmp	00101$
 00114$:
-;	uart.h:65: }
+;	uart.h:68: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UartWriteBuff'
@@ -692,7 +692,7 @@ _UartWrite:
 ;p                         Allocated to registers r5 r6 r7 
 ;i                         Allocated to registers r4 
 ;------------------------------------------------------------
-;	uart.h:67: void UartWriteBuff(unsigned char *p, unsigned char length)
+;	uart.h:70: void UartWriteBuff(unsigned char *p, unsigned char length)
 ;	-----------------------------------------
 ;	 function UartWriteBuff
 ;	-----------------------------------------
@@ -700,14 +700,14 @@ _UartWriteBuff:
 	mov	r5,dpl
 	mov	r6,dph
 	mov	r7,b
-;	uart.h:70: for (i=0;i<length;i++)
+;	uart.h:73: for (i=0;i<length;i++)
 	mov	r4,#0x00
 00103$:
 	clr	c
 	mov	a,r4
 	subb	a,_UartWriteBuff_PARM_2
 	jnc	00105$
-;	uart.h:72: UartWrite(p[i]);
+;	uart.h:75: UartWrite(p[i]);
 	mov	a,r4
 	add	a,r5
 	mov	r1,a
@@ -729,11 +729,11 @@ _UartWriteBuff:
 	pop	ar5
 	pop	ar6
 	pop	ar7
-;	uart.h:70: for (i=0;i<length;i++)
+;	uart.h:73: for (i=0;i<length;i++)
 	inc	r4
 	sjmp	00103$
 00105$:
-;	uart.h:74: }
+;	uart.h:77: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UartReadBuff'
@@ -742,7 +742,7 @@ _UartWriteBuff:
 ;p                         Allocated to registers r5 r6 r7 
 ;i                         Allocated to registers r4 
 ;------------------------------------------------------------
-;	uart.h:76: void UartReadBuff(unsigned char *p, unsigned char length)
+;	uart.h:79: void UartReadBuff(unsigned char *p, unsigned char length)
 ;	-----------------------------------------
 ;	 function UartReadBuff
 ;	-----------------------------------------
@@ -750,14 +750,14 @@ _UartReadBuff:
 	mov	r5,dpl
 	mov	r6,dph
 	mov	r7,b
-;	uart.h:79: for (i=0;i<length;i++)
+;	uart.h:82: for (i=0;i<length;i++)
 	mov	r4,#0x00
 00103$:
 	clr	c
 	mov	a,r4
 	subb	a,_UartReadBuff_PARM_2
 	jnc	00105$
-;	uart.h:81: p[i] = UartRead();
+;	uart.h:84: p[i] = UartRead();
 	mov	a,r4
 	add	a,r5
 	mov	r1,a
@@ -786,18 +786,18 @@ _UartReadBuff:
 	mov	b,r3
 	mov	a,r0
 	lcall	__gptrput
-;	uart.h:79: for (i=0;i<length;i++)
+;	uart.h:82: for (i=0;i<length;i++)
 	inc	r4
 	sjmp	00103$
 00105$:
-;	uart.h:83: }
+;	uart.h:86: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UartPrint'
 ;------------------------------------------------------------
 ;p                         Allocated to registers 
 ;------------------------------------------------------------
-;	uart.h:85: void UartPrint(unsigned char *p)
+;	uart.h:88: void UartPrint(unsigned char *p)
 ;	-----------------------------------------
 ;	 function UartPrint
 ;	-----------------------------------------
@@ -805,9 +805,9 @@ _UartPrint:
 	mov	r5,dpl
 	mov	r6,dph
 	mov	r7,b
-;	uart.h:87: do
+;	uart.h:90: do
 00101$:
-;	uart.h:89: UartWrite(*p);
+;	uart.h:92: UartWrite(*p);
 	mov	dpl,r5
 	mov	dph,r6
 	mov	b,r7
@@ -824,13 +824,13 @@ _UartPrint:
 	pop	ar5
 	pop	ar6
 	pop	ar7
-;	uart.h:90: }while(*(++p)!=0);
+;	uart.h:93: }while(*(++p)!=0);
 	mov	dpl,r5
 	mov	dph,r6
 	mov	b,r7
 	lcall	__gptrget
 	jnz	00101$
-;	uart.h:91: }
+;	uart.h:94: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UartWriteNumber'
@@ -841,7 +841,7 @@ _UartPrint:
 ;lsd                       Allocated to registers r6 
 ;extra                     Allocated to registers r3 
 ;------------------------------------------------------------
-;	uart.h:96: void UartWriteNumber(unsigned char num,unsigned char format) __reentrant
+;	uart.h:99: void UartWriteNumber(unsigned char num,unsigned char format) __reentrant
 ;	-----------------------------------------
 ;	 function UartWriteNumber
 ;	-----------------------------------------
@@ -849,12 +849,12 @@ _UartWriteNumber:
 	push	_bp
 	mov	_bp,sp
 	mov	r7,dpl
-;	uart.h:101: if(format==HEX)
+;	uart.h:104: if(format==HEX)
 	mov	a,_bp
 	add	a,#0xfd
 	mov	r0,a
 	mov	a,@r0
-;	uart.h:103: msd = num/16;
+;	uart.h:106: msd = num/16;
 	jnz	00104$
 	mov	ar5,r7
 	mov	r6,a
@@ -869,26 +869,26 @@ _UartWriteNumber:
 	mov	r3,dpl
 	pop	ar5
 	pop	ar6
-;	uart.h:104: lsd = num%16;
+;	uart.h:107: lsd = num%16;
 	anl	ar5,#0x0f
-;	uart.h:105: UartWrite(dec2hexNibble(msd));
+;	uart.h:108: UartWrite(dec2hexNibble(msd));
 	mov	dpl,r3
 	push	ar5
 	lcall	_dec2hexNibble
 	lcall	_UartWrite
 	pop	ar5
-;	uart.h:106: UartWrite(dec2hexNibble(lsd));
+;	uart.h:109: UartWrite(dec2hexNibble(lsd));
 	mov	dpl,r5
 	lcall	_dec2hexNibble
 	lcall	_UartWrite
 	sjmp	00106$
 00104$:
-;	uart.h:109: else if(format==DEC)
+;	uart.h:112: else if(format==DEC)
 	mov	a,_bp
 	add	a,#0xfd
 	mov	r0,a
 	cjne	@r0,#0x01,00106$
-;	uart.h:111: msd = num/100; // 100s place
+;	uart.h:114: msd = num/100; // 100s place
 	mov	r6,#0x00
 	mov	__divsint_PARM_2,#0x64
 ;	1-genFromRTrack replaced	mov	(__divsint_PARM_2 + 1),#0x00
@@ -901,7 +901,7 @@ _UartWriteNumber:
 	mov	r4,dpl
 	pop	ar6
 	pop	ar7
-;	uart.h:112: extra = (num%100)/10; //tenth place
+;	uart.h:115: extra = (num%100)/10; //tenth place
 	mov	__modsint_PARM_2,#0x64
 	mov	(__modsint_PARM_2 + 1),#0x00
 	mov	dpl,r7
@@ -917,7 +917,7 @@ _UartWriteNumber:
 	pop	ar4
 	pop	ar6
 	pop	ar7
-;	uart.h:113: lsd = num%10;
+;	uart.h:116: lsd = num%10;
 	mov	__modsint_PARM_2,#0x0a
 	mov	(__modsint_PARM_2 + 1),#0x00
 	mov	dpl,r7
@@ -928,7 +928,7 @@ _UartWriteNumber:
 	mov	r6,dpl
 	pop	ar3
 	pop	ar4
-;	uart.h:115: UartWrite(msd + 0x30);
+;	uart.h:118: UartWrite(msd + 0x30);
 	mov	a,#0x30
 	add	a,r4
 	mov	dpl,a
@@ -936,19 +936,19 @@ _UartWriteNumber:
 	push	ar3
 	lcall	_UartWrite
 	pop	ar3
-;	uart.h:116: UartWrite(extra + 0x30);
+;	uart.h:119: UartWrite(extra + 0x30);
 	mov	a,#0x30
 	add	a,r3
 	mov	dpl,a
 	lcall	_UartWrite
 	pop	ar6
-;	uart.h:117: UartWrite(lsd + 0x30);
+;	uart.h:120: UartWrite(lsd + 0x30);
 	mov	a,#0x30
 	add	a,r6
 	mov	dpl,a
 	lcall	_UartWrite
 00106$:
-;	uart.h:120: }
+;	uart.h:123: }
 	pop	_bp
 	ret
 ;------------------------------------------------------------
@@ -960,7 +960,7 @@ _UartWriteNumber:
 ;p                         Allocated to registers 
 ;i                         Allocated to registers r4 
 ;------------------------------------------------------------
-;	uart.h:122: void UartWriteNumbers(unsigned char *p, unsigned char length,unsigned char format,unsigned char delimiter) __reentrant
+;	uart.h:125: void UartWriteNumbers(unsigned char *p, unsigned char length,unsigned char format,unsigned char delimiter) __reentrant
 ;	-----------------------------------------
 ;	 function UartWriteNumbers
 ;	-----------------------------------------
@@ -970,7 +970,7 @@ _UartWriteNumbers:
 	mov	r5,dpl
 	mov	r6,dph
 	mov	r7,b
-;	uart.h:126: for(i=0;i<length;i++,p++)
+;	uart.h:129: for(i=0;i<length;i++,p++)
 	mov	r4,#0x00
 00103$:
 	mov	a,_bp
@@ -980,7 +980,7 @@ _UartWriteNumbers:
 	mov	a,r4
 	subb	a,@r0
 	jnc	00105$
-;	uart.h:128: UartWriteNumber(*p,format);
+;	uart.h:131: UartWriteNumber(*p,format);
 	mov	dpl,r5
 	mov	dph,r6
 	mov	b,r7
@@ -1001,7 +1001,7 @@ _UartWriteNumbers:
 	mov	dpl,r3
 	lcall	_UartWriteNumber
 	dec	sp
-;	uart.h:129: UartWrite(delimiter);
+;	uart.h:132: UartWrite(delimiter);
 	mov	a,_bp
 	add	a,#0xfb
 	mov	r0,a
@@ -1011,11 +1011,11 @@ _UartWriteNumbers:
 	pop	ar5
 	pop	ar6
 	pop	ar7
-;	uart.h:126: for(i=0;i<length;i++,p++)
+;	uart.h:129: for(i=0;i<length;i++,p++)
 	inc	r4
 	sjmp	00103$
 00105$:
-;	uart.h:131: }
+;	uart.h:134: }
 	pop	_bp
 	ret
 ;------------------------------------------------------------
@@ -1027,7 +1027,7 @@ _UartWriteNumbers:
 ;j                         Allocated to registers r4 
 ;sloc0                     Allocated to stack - _bp +5
 ;------------------------------------------------------------
-;	uart.h:133: void UartPrintNumber(unsigned long n) __reentrant
+;	uart.h:136: void UartPrintNumber(unsigned long n) __reentrant
 ;	-----------------------------------------
 ;	 function UartPrintNumber
 ;	-----------------------------------------
@@ -1041,10 +1041,10 @@ _UartPrintNumber:
 	mov	a,sp
 	add	a,#0x04
 	mov	sp,a
-;	uart.h:151: for(i=8;i>0;i--)
+;	uart.h:154: for(i=8;i>0;i--)
 	mov	r3,#0x08
 00106$:
-;	uart.h:153: digit=n;
+;	uart.h:156: digit=n;
 	mov	r0,_bp
 	inc	r0
 	mov	ar2,@r0
@@ -1054,7 +1054,7 @@ _UartPrintNumber:
 	mov	ar6,@r0
 	inc	r0
 	mov	ar7,@r0
-;	uart.h:154: for(j=1;j<i;j++) digit/=10;
+;	uart.h:157: for(j=1;j<i;j++) digit/=10;
 	mov	r4,#0x01
 00104$:
 	clr	c
@@ -1101,7 +1101,7 @@ _UartPrintNumber:
 	pop	ar3
 	sjmp	00104$
 00101$:
-;	uart.h:155: UartWrite(0x30 + digit%10);
+;	uart.h:158: UartWrite(0x30 + digit%10);
 	mov	__modulong_PARM_2,#0x0a
 	clr	a
 	mov	(__modulong_PARM_2 + 1),a
@@ -1119,9 +1119,9 @@ _UartPrintNumber:
 	mov	dpl,a
 	lcall	_UartWrite
 	pop	ar3
-;	uart.h:151: for(i=8;i>0;i--)
+;	uart.h:154: for(i=8;i>0;i--)
 	djnz	r3,00106$
-;	uart.h:157: }
+;	uart.h:160: }
 	mov	sp,_bp
 	pop	_bp
 	ret
@@ -1131,12 +1131,12 @@ _UartPrintNumber:
 ;unibble                   Allocated to registers r7 
 ;lnibble                   Allocated to registers r6 
 ;------------------------------------------------------------
-;	uart.h:160: uint8_t UartScanByte() __reentrant
+;	uart.h:163: uint8_t UartScanByte() __reentrant
 ;	-----------------------------------------
 ;	 function UartScanByte
 ;	-----------------------------------------
 _UartScanByte:
-;	uart.h:164: while(UartReadReady()) UartRead(); //flush
+;	uart.h:167: while(UartReadReady()) UartRead(); //flush
 00101$:
 	lcall	_UartReadReady
 	mov	a,dpl
@@ -1144,31 +1144,31 @@ _UartScanByte:
 	lcall	_UartRead
 	sjmp	00101$
 00103$:
-;	uart.h:165: UartPrint("Number in Hex - eg(FE for 254): ");
+;	uart.h:168: UartPrint("Number in Hex - eg(FE for 254): ");
 	mov	dptr,#___str_0
 	mov	b,#0x80
 	lcall	_UartPrint
-;	uart.h:167: unibble = UartRead();
+;	uart.h:170: unibble = UartRead();
 	lcall	_UartRead
-;	uart.h:168: UartWrite(unibble);
+;	uart.h:171: UartWrite(unibble);
 	mov  r7,dpl
 	push	ar7
 	lcall	_UartWrite
-;	uart.h:169: lnibble = UartRead();
+;	uart.h:172: lnibble = UartRead();
 	lcall	_UartRead
-;	uart.h:170: UartWrite(lnibble);
+;	uart.h:173: UartWrite(lnibble);
 	mov  r6,dpl
 	push	ar6
 	lcall	_UartWrite
-;	uart.h:172: UartWrite('\n');
+;	uart.h:175: UartWrite('\n');
 	mov	dpl,#0x0a
 	lcall	_UartWrite
 	pop	ar6
 	pop	ar7
-;	uart.h:174: return hex2dec(unibble,lnibble);
+;	uart.h:177: return hex2dec(unibble,lnibble);
 	mov	_hex2dec_PARM_2,r6
 	mov	dpl,r7
-;	uart.h:175: }
+;	uart.h:178: }
 	ljmp	_hex2dec
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UartScanLine'
@@ -1178,7 +1178,7 @@ _UartScanByte:
 ;recv                      Allocated to registers r2 
 ;count                     Allocated to registers r4 
 ;------------------------------------------------------------
-;	uart.h:177: uint8_t UartScanLine(uint8_t *dst, uint8_t maxLength) __reentrant
+;	uart.h:180: uint8_t UartScanLine(uint8_t *dst, uint8_t maxLength) __reentrant
 ;	-----------------------------------------
 ;	 function UartScanLine
 ;	-----------------------------------------
@@ -1188,9 +1188,9 @@ _UartScanLine:
 	push	dpl
 	push	dph
 	push	b
-;	uart.h:179: uint8_t recv,count=0;
+;	uart.h:182: uint8_t recv,count=0;
 	mov	r4,#0x00
-;	uart.h:181: while(UartReadReady()) UartRead(); //flush
+;	uart.h:184: while(UartReadReady()) UartRead(); //flush
 00101$:
 	push	ar4
 	lcall	_UartReadReady
@@ -1200,25 +1200,25 @@ _UartScanLine:
 	push	ar4
 	lcall	_UartRead
 	pop	ar4
-;	uart.h:183: while(1)
+;	uart.h:186: while(1)
 	sjmp	00101$
 00118$:
 	mov	r3,#0x00
 00110$:
-;	uart.h:186: recv=UartRead();
+;	uart.h:189: recv=UartRead();
 	push	ar4
 	push	ar3
 	lcall	_UartRead
-;	uart.h:187: UartWrite(recv);
+;	uart.h:190: UartWrite(recv);
 	mov  r2,dpl
 	push	ar2
 	lcall	_UartWrite
 	pop	ar2
 	pop	ar3
 	pop	ar4
-;	uart.h:188: if(recv == '\n') 
+;	uart.h:191: if(recv == '\n') 
 	cjne	r2,#0x0a,00105$
-;	uart.h:190: *(dst+count)=0; //add string terminate
+;	uart.h:193: *(dst+count)=0; //add string terminate
 	mov	r0,_bp
 	inc	r0
 	mov	a,r4
@@ -1235,10 +1235,10 @@ _UartScanLine:
 	mov	b,r7
 	clr	a
 	lcall	__gptrput
-;	uart.h:191: break;
+;	uart.h:194: break;
 	sjmp	00111$
 00105$:
-;	uart.h:193: else *(dst+count)=recv;
+;	uart.h:196: else *(dst+count)=recv;
 	mov	r0,_bp
 	inc	r0
 	mov	a,r3
@@ -1255,29 +1255,29 @@ _UartScanLine:
 	mov	b,r7
 	mov	a,r2
 	lcall	__gptrput
-;	uart.h:195: if(count==maxLength) 
+;	uart.h:198: if(count==maxLength) 
 	mov	a,_bp
 	add	a,#0xfd
 	mov	r0,a
 	mov	a,@r0
 	cjne	a,ar3,00108$
-;	uart.h:197: *(dst+count)=0; // terminate string.
+;	uart.h:200: *(dst+count)=0; // terminate string.
 	mov	dpl,r5
 	mov	dph,r6
 	mov	b,r7
 	clr	a
 	lcall	__gptrput
-;	uart.h:198: break;
+;	uart.h:201: break;
 	sjmp	00111$
 00108$:
-;	uart.h:201: count++;
+;	uart.h:204: count++;
 	inc	r3
 	mov	ar4,r3
 	sjmp	00110$
 00111$:
-;	uart.h:205: return count;
+;	uart.h:208: return count;
 	mov	dpl,r4
-;	uart.h:207: }
+;	uart.h:210: }
 	mov	sp,_bp
 	pop	_bp
 	ret
