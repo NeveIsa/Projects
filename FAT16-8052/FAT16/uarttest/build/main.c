@@ -14,18 +14,13 @@ void delay(void);
  
 void main(void)
 {
-    
-
-    __idata unsigned char fname[11]="world.txt\n";
-   
 
     UartBegin();
 
     while(1)
     {
-        UartPrint("hello.txt\n");
-        UartPrint(fname);
-        delay();
+       
+        SL_getcmd();
     }
         
    

@@ -5,21 +5,55 @@
 #error "IMPORT UART.H"
 #endif
 
-void delay(unsigned int millisec)
+void delay_ms(unsigned int millisec)
 {
     for(unsigned int i=0;i<millisec;i++)for(unsigned char j=0;j<255;j++); //wait millisec * 1ms
 }
-void SL_read()
+
+void SL_write()
 {
-    unsigned int addr;
     unsigned char data;
+    unsigned int addr;
+    __xdata unsigned char* xram_addr;
+
     while(UartReadReady()==0); //wait till we rcv data
-    delay(10);
     
     
-    addr = UartRead()
+    addr = UartRead(); //msb
+    addr = addr << 8;
+    addr |= UartRead(); //lsb
+
+    data = UartRead(); //read data
+
+    xram_addr = (__xdata char*) addr;
+
+    *(xram_addr) = data; //write to xram
+
+    UartWrite('W'); //ack
+
 }
 
+void SL_read()
+{
+    unsigned char data;
+    unsigned int addr;
+    __xdata unsigned char* xram_addr;
+
+    while(UartReadReady()==0); //wait till we rcv data
+    
+    
+    
+    addr = UartRead(); //msb
+    addr = addr << 8;
+    addr |= UartRead(); //lsb
+
+    xram_addr = (__xdata char*) addr;
+
+    data = *(xram_addr); //read from xram
+
+    UartWrite(data);
+    
+}
 
 void SL_getcmd()
 {
@@ -27,7 +61,7 @@ void SL_getcmd()
     while(UartReadReady()) UartRead(); //flush 
 
     while(UartReadReady()==0); //wait till we rcv data 
-    delay(10);
+    
 
     cmd = UartRead(); //read
 
@@ -41,6 +75,8 @@ void SL_getcmd()
             break;
         case 'W':
             SL_write();
+            break;
+        default:
             break;
     }
 }

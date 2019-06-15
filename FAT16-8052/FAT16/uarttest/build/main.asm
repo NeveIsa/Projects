@@ -10,6 +10,9 @@
 ;--------------------------------------------------------
 	.globl _main
 	.globl _SL_getcmd
+	.globl _SL_read
+	.globl _SL_write
+	.globl _delay_ms
 	.globl _UartScanLine
 	.globl _UartScanByte
 	.globl _UartPrintNumber
@@ -300,6 +303,7 @@ _UartReadBuff_PARM_2:
 	.area	OSEG    (OVR,DATA)
 	.area	OSEG    (OVR,DATA)
 	.area	OSEG    (OVR,DATA)
+	.area	OSEG    (OVR,DATA)
 ;--------------------------------------------------------
 ; Stack segment in internal ram 
 ;--------------------------------------------------------
@@ -311,8 +315,6 @@ __start__stack:
 ; indirectly addressable internal ram data
 ;--------------------------------------------------------
 	.area ISEG    (DATA)
-_main_fname_65536_45:
-	.ds 11
 ;--------------------------------------------------------
 ; absolute internal ram data
 ;--------------------------------------------------------
@@ -1180,73 +1182,207 @@ _UartScanLine:
 	pop	_bp
 	ret
 ;------------------------------------------------------------
+;Allocation info for local variables in function 'delay_ms'
+;------------------------------------------------------------
+;millisec                  Allocated to registers r6 r7 
+;i                         Allocated to registers r4 r5 
+;j                         Allocated to registers r3 
+;------------------------------------------------------------
+;	serialloader.h:8: void delay_ms(unsigned int millisec)
+;	-----------------------------------------
+;	 function delay_ms
+;	-----------------------------------------
+_delay_ms:
+	mov	r6,dpl
+	mov	r7,dph
+;	serialloader.h:10: for(unsigned int i=0;i<millisec;i++)for(unsigned char j=0;j<255;j++); //wait millisec * 1ms
+	mov	r4,#0x00
+	mov	r5,#0x00
+00107$:
+	clr	c
+	mov	a,r4
+	subb	a,r6
+	mov	a,r5
+	subb	a,r7
+	jnc	00109$
+	mov	r3,#0x00
+00104$:
+	cjne	r3,#0xff,00130$
+00130$:
+	jnc	00108$
+	inc	r3
+	sjmp	00104$
+00108$:
+	inc	r4
+	cjne	r4,#0x00,00107$
+	inc	r5
+	sjmp	00107$
+00109$:
+;	serialloader.h:11: }
+	ret
+;------------------------------------------------------------
+;Allocation info for local variables in function 'SL_write'
+;------------------------------------------------------------
+;data                      Allocated to registers r5 
+;addr                      Allocated to registers r7 r6 
+;xram_addr                 Allocated to registers 
+;------------------------------------------------------------
+;	serialloader.h:13: void SL_write()
+;	-----------------------------------------
+;	 function SL_write
+;	-----------------------------------------
+_SL_write:
+;	serialloader.h:19: while(UartReadReady()==0); //wait till we rcv data
+00101$:
+	lcall	_UartReadReady
+	mov	a,dpl
+	jz	00101$
+;	serialloader.h:22: addr = UartRead(); //msb
+	lcall	_UartRead
+;	serialloader.h:23: addr = addr << 8;
+	mov	r6,dpl
+	mov	r7,#0x00
+;	serialloader.h:24: addr |= UartRead(); //lsb
+	push	ar7
+	push	ar6
+	lcall	_UartRead
+	mov	r5,dpl
+	pop	ar6
+	pop	ar7
+	mov	r4,#0x00
+	mov	a,r5
+	orl	ar7,a
+	mov	a,r4
+	orl	ar6,a
+;	serialloader.h:26: data = UartRead(); //read data
+	push	ar7
+	push	ar6
+	lcall	_UartRead
+	mov	r5,dpl
+	pop	ar6
+	pop	ar7
+;	serialloader.h:28: xram_addr = (__xdata char*) addr;
+	mov	dpl,r7
+	mov	dph,r6
+;	serialloader.h:30: *(xram_addr) = data; //write to xram
+	mov	a,r5
+	movx	@dptr,a
+;	serialloader.h:32: UartWrite('W'); //ack
+	mov	dpl,#0x57
+;	serialloader.h:34: }
+	ljmp	_UartWrite
+;------------------------------------------------------------
+;Allocation info for local variables in function 'SL_read'
+;------------------------------------------------------------
+;data                      Allocated to registers r7 
+;addr                      Allocated to registers r7 r6 
+;xram_addr                 Allocated to registers 
+;------------------------------------------------------------
+;	serialloader.h:36: void SL_read()
+;	-----------------------------------------
+;	 function SL_read
+;	-----------------------------------------
+_SL_read:
+;	serialloader.h:42: while(UartReadReady()==0); //wait till we rcv data
+00101$:
+	lcall	_UartReadReady
+	mov	a,dpl
+	jz	00101$
+;	serialloader.h:46: addr = UartRead(); //msb
+	lcall	_UartRead
+;	serialloader.h:47: addr = addr << 8;
+	mov	r6,dpl
+	mov	r7,#0x00
+;	serialloader.h:48: addr |= UartRead(); //lsb
+	push	ar7
+	push	ar6
+	lcall	_UartRead
+	mov	r5,dpl
+	pop	ar6
+	pop	ar7
+	mov	r4,#0x00
+	mov	a,r5
+	orl	ar7,a
+	mov	a,r4
+	orl	ar6,a
+;	serialloader.h:50: xram_addr = (__xdata char*) addr;
+	mov	dpl,r7
+	mov	dph,r6
+;	serialloader.h:52: data = *(xram_addr); //read from xram
+	movx	a,@dptr
+;	serialloader.h:54: UartWrite(data);
+	mov	dpl,a
+;	serialloader.h:56: }
+	ljmp	_UartWrite
+;------------------------------------------------------------
 ;Allocation info for local variables in function 'SL_getcmd'
 ;------------------------------------------------------------
-;cmd                       Allocated with name '_SL_getcmd_cmd_65536_42'
+;cmd                       Allocated to registers r7 
 ;------------------------------------------------------------
-;	serialloader.h:8: void SL_getcmd()
+;	serialloader.h:58: void SL_getcmd()
 ;	-----------------------------------------
 ;	 function SL_getcmd
 ;	-----------------------------------------
 _SL_getcmd:
-;	serialloader.h:11: while(UartReadReady()) UartRead(); //flush 
+;	serialloader.h:61: while(UartReadReady()) UartRead(); //flush 
 00101$:
 	lcall	_UartReadReady
 	mov	a,dpl
 	jz	00104$
 	lcall	_UartRead
+;	serialloader.h:63: while(UartReadReady()==0); //wait till we rcv data 
 	sjmp	00101$
 00104$:
-;	serialloader.h:17: }
+	lcall	_UartReadReady
+	mov	a,dpl
+	jz	00104$
+;	serialloader.h:66: cmd = UartRead(); //read
+	lcall	_UartRead
+	mov	r7,dpl
+;	serialloader.h:68: switch(cmd)
+	cjne	r7,#0x52,00144$
+	sjmp	00108$
+00144$:
+	cjne	r7,#0x56,00145$
+	sjmp	00107$
+00145$:
+;	serialloader.h:70: case 'V':
+	cjne	r7,#0x57,00112$
+	sjmp	00109$
+00107$:
+;	serialloader.h:71: UartPrint("ISA_SERIAL_LOADER_V0.1:8052\n");
+	mov	dptr,#___str_1
+	mov	b,#0x80
+;	serialloader.h:72: break;
+;	serialloader.h:73: case 'R':
+	ljmp	_UartPrint
+00108$:
+;	serialloader.h:74: SL_read();
+;	serialloader.h:75: break;
+;	serialloader.h:76: case 'W':
+	ljmp	_SL_read
+00109$:
+;	serialloader.h:77: SL_write();
+;	serialloader.h:81: }
+;	serialloader.h:82: }
+	ljmp	_SL_write
+00112$:
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'main'
-;------------------------------------------------------------
-;fname                     Allocated with name '_main_fname_65536_45'
 ;------------------------------------------------------------
 ;	main.c:15: void main(void)
 ;	-----------------------------------------
 ;	 function main
 ;	-----------------------------------------
 _main:
-;	main.c:19: __idata unsigned char fname[11]="world.txt\n";
-	mov	r0,#_main_fname_65536_45
-	mov	@r0,#0x77
-	mov	r0,#(_main_fname_65536_45 + 0x0001)
-	mov	@r0,#0x6f
-	mov	r0,#(_main_fname_65536_45 + 0x0002)
-	mov	@r0,#0x72
-	mov	r0,#(_main_fname_65536_45 + 0x0003)
-	mov	@r0,#0x6c
-	mov	r0,#(_main_fname_65536_45 + 0x0004)
-	mov	@r0,#0x64
-	mov	r0,#(_main_fname_65536_45 + 0x0005)
-	mov	@r0,#0x2e
-	mov	r0,#(_main_fname_65536_45 + 0x0006)
-	mov	@r0,#0x74
-	mov	r0,#(_main_fname_65536_45 + 0x0007)
-	mov	@r0,#0x78
-	mov	r0,#(_main_fname_65536_45 + 0x0008)
-	mov	@r0,#0x74
-	mov	r0,#(_main_fname_65536_45 + 0x0009)
-	mov	@r0,#0x0a
-	mov	r0,#(_main_fname_65536_45 + 0x000a)
-	mov	@r0,#0x00
-;	main.c:22: UartBegin();
+;	main.c:18: UartBegin();
 	lcall	_UartBegin
-;	main.c:24: while(1)
+;	main.c:20: while(1)
 00102$:
-;	main.c:26: UartPrint("hello.txt\n");
-	mov	dptr,#___str_2
-	mov	b,#0x80
-	lcall	_UartPrint
-;	main.c:27: UartPrint(fname);
-	mov	dptr,#_main_fname_65536_45
-	mov	b,#0x40
-	lcall	_UartPrint
-;	main.c:28: delay();
-	lcall	_delay
-;	main.c:33: }
+;	main.c:23: SL_getcmd();
+	lcall	_SL_getcmd
+;	main.c:28: }
 	sjmp	00102$
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'delay'
@@ -1254,16 +1390,16 @@ _main:
 ;i                         Allocated to registers r6 r7 
 ;j                         Allocated to registers r4 r5 
 ;------------------------------------------------------------
-;	main.c:35: void delay(void)
+;	main.c:30: void delay(void)
 ;	-----------------------------------------
 ;	 function delay
 ;	-----------------------------------------
 _delay:
-;	main.c:38: for(i=0;i<0xff;i++)
+;	main.c:33: for(i=0;i<0xff;i++)
 	mov	r6,#0x00
 	mov	r7,#0x00
 00106$:
-;	main.c:39: for(j=0;j<0xff;j++);
+;	main.c:34: for(j=0;j<0xff;j++);
 	mov	r4,#0xff
 	mov	r5,#0x00
 00105$:
@@ -1278,7 +1414,7 @@ _delay:
 	mov	a,r2
 	orl	a,r3
 	jnz	00105$
-;	main.c:38: for(i=0;i<0xff;i++)
+;	main.c:33: for(i=0;i<0xff;i++)
 	inc	r6
 	cjne	r6,#0x00,00124$
 	inc	r7
@@ -1290,7 +1426,7 @@ _delay:
 	xrl	a,#0x80
 	subb	a,#0x80
 	jc	00106$
-;	main.c:40: }
+;	main.c:35: }
 	ret
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
@@ -1300,8 +1436,8 @@ ___str_0:
 	.db 0x00
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
-___str_2:
-	.ascii "hello.txt"
+___str_1:
+	.ascii "ISA_SERIAL_LOADER_V0.1:8052"
 	.db 0x0a
 	.db 0x00
 	.area CSEG    (CODE)
