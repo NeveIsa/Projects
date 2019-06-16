@@ -43,7 +43,7 @@ def BLdisableEEPROMWriteProtection():
     ser.read(ser.inWaiting())
     ser.write(b'D')
     time.sleep(_delay*5)
-    print('Disabling EEPROM write protection:',end="")
+    print('Disabling EEPROM write protection: ',end="")
     success=ser.read().decode()=='D'
     print("Done" if success else "Failed")
     return success
@@ -112,10 +112,10 @@ def verifyImage(filename):
             pbar=int((indx+1)*100/fsize)
             print("\r","[","#"*pbar," "*(100-pbar),"] [",indx+1,"/",fsize,"]",end="")
         else:
-            print("Verification Error...")
+            print("\nVerification Error...")
             print("addr:{} | file_val:{} | eeprom_val:{}".format(indx,fileInBinary[indx],r))
             break
-
+    print("")
 
 
 def dumpImage(filename):
@@ -136,12 +136,16 @@ def dumpImage(filename):
 if __name__=="__main__":
     time.sleep(1)
     print("\nFW-VERSION:",BLgetVersion())
-    usage="\nUSAGE:\n\tpython3 "+sys.argv[0]+" burn/dump filename" 
+    usage="\nUSAGE:\n\tpython3 "+sys.argv[0]+" burn/dump filename [ --deepwp (optional,Disable EEPROM Write Protection) ]" 
     
-    if len(sys.argv)<2:
+    if len(sys.argv)<3:
         print(usage)
         exit()
     else:
+        EEPROM_WRITE_PROTECTION=True
+        if len(sys.argv)==4 and sys.argv[3]=="--deepwp":
+            EEPROM_WRITE_PROTECTION=False
+
         action=sys.argv[1]
         if action in ["burn","dump"]:
             filename=sys.argv[2]
@@ -151,8 +155,11 @@ if __name__=="__main__":
 
     
     if action=="burn":
-        if not BLdisableEEPROMWriteProtection():
-            exit(0)
+        if EEPROM_WRITE_PROTECTION:pass
+        else:
+            if not BLdisableEEPROMWriteProtection():
+                exit(0)
+
         burnImage(filename)
         verifyImage(filename)
     elif action=="dump":
