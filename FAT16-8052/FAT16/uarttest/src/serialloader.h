@@ -25,6 +25,14 @@ void SL_write()
 
     data = UartRead(); //read data
 
+    //write protection
+    xram_addr=(__xdata char*)0x1555;
+    *(xram_addr) = 0xAA;
+    xram_addr=(__xdata char*)0x0AAA;
+    *(xram_addr) = 0x55;
+    xram_addr=(__xdata char*)0x1555;
+    *(xram_addr) = 0xA0;
+
     xram_addr = (__xdata char*) addr;
 
     *(xram_addr) = data; //write to xram

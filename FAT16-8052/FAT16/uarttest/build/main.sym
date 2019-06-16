@@ -288,8 +288,8 @@ Symbol Table
     _RXD                                                        =  0000B0 G
     _SBUF                                                       =  000099 G
     _SCON                                                       =  000098 G
- 18 _SL_getcmd                                                     000448 GR
- 18 _SL_read                                                       00041B GR
+ 18 _SL_getcmd                                                     000459 GR
+ 18 _SL_read                                                       00042C GR
  18 _SL_write                                                      0003DF GR
     _SM0                                                        =  00009F G
     _SM1                                                        =  00009E G
@@ -370,12 +370,12 @@ Symbol Table
   7 __start__stack                                                 000000 GR
     _bp                                                            ****** GX
  18 _dec2hexNibble                                                 000054 GR
- 18 _delay                                                         000487 GR
+ 18 _delay                                                         0004CE GR
  18 _delay_ms                                                      0003BE GR
  18 _hex2dec                                                       00003A GR
   5 _hex2dec_PARM_2                                                000000 GR
  18 _hexNibble2dec                                                 000000 GR
- 18 _main                                                          00047F GR
+ 18 _main                                                          000490 GR
     a                                                           =  0000E0 L
     a.0                                                         =  0000E0 L
     a.1                                                         =  0000E1 L
@@ -606,7 +606,7 @@ Area Table
   15 GSINIT5                                    size      0   flags   20
   16 GSINIT                                     size      0   flags   20
   17 GSFINAL                                    size      3   flags   20
-  18 CSEG                                       size    4B0   flags   20
+  18 CSEG                                       size    4F7   flags   20
   19 CONST                                      size     3E   flags   20
   1A XINIT                                      size      0   flags   20
   1B CABS                                       size      0   flags   28

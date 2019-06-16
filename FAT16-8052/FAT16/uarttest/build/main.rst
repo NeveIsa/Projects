@@ -377,7 +377,7 @@
                                     377 	.area HOME    (CODE)
                                     378 	.area HOME    (CODE)
       000003                        379 __sdcc_program_startup:
-      000003 02 04 E1         [24]  380 	ljmp	_main
+      000003 02 04 F2         [24]  380 	ljmp	_main
                                     381 ;	return from main will return to caller
                                     382 ;--------------------------------------------------------
                                     383 ; code
@@ -618,7 +618,7 @@
       000116 89 82            [24]  618 	mov	dpl,r1
       000118 8A 83            [24]  619 	mov	dph,r2
       00011A 8B F0            [24]  620 	mov	b,r3
-      00011C 12 06 8B         [24]  621 	lcall	__gptrget
+      00011C 12 06 D2         [24]  621 	lcall	__gptrget
       00011F F5 82            [12]  622 	mov	dpl,a
       000121 C0 07            [24]  623 	push	ar7
       000123 C0 06            [24]  624 	push	ar6
@@ -685,7 +685,7 @@
       000171 8A 83            [24]  685 	mov	dph,r2
       000173 8B F0            [24]  686 	mov	b,r3
       000175 E8               [12]  687 	mov	a,r0
-      000176 12 05 FA         [24]  688 	lcall	__gptrput
+      000176 12 06 41         [24]  688 	lcall	__gptrput
                                     689 ;	uart.h:82: for (i=0;i<length;i++)
       000179 0C               [12]  690 	inc	r4
       00017A 80 C4            [24]  691 	sjmp	00103$
@@ -711,7 +711,7 @@
       000183 8D 82            [24]  711 	mov	dpl,r5
       000185 8E 83            [24]  712 	mov	dph,r6
       000187 8F F0            [24]  713 	mov	b,r7
-      000189 12 06 8B         [24]  714 	lcall	__gptrget
+      000189 12 06 D2         [24]  714 	lcall	__gptrget
       00018C FC               [12]  715 	mov	r4,a
       00018D A3               [24]  716 	inc	dptr
       00018E AD 82            [24]  717 	mov	r5,dpl
@@ -728,7 +728,7 @@
       0001A3 8D 82            [24]  728 	mov	dpl,r5
       0001A5 8E 83            [24]  729 	mov	dph,r6
       0001A7 8F F0            [24]  730 	mov	b,r7
-      0001A9 12 06 8B         [24]  731 	lcall	__gptrget
+      0001A9 12 06 D2         [24]  731 	lcall	__gptrget
       0001AC 70 D5            [24]  732 	jnz	00101$
                                     733 ;	uart.h:94: }
       0001AE 22               [24]  734 	ret
@@ -765,7 +765,7 @@
       0001C8 8E 83            [24]  765 	mov	dph,r6
       0001CA C0 06            [24]  766 	push	ar6
       0001CC C0 05            [24]  767 	push	ar5
-      0001CE 12 06 DD         [24]  768 	lcall	__divsint
+      0001CE 12 07 24         [24]  768 	lcall	__divsint
       0001D1 AB 82            [24]  769 	mov	r3,dpl
       0001D3 D0 05            [24]  770 	pop	ar5
       0001D5 D0 06            [24]  771 	pop	ar6
@@ -797,7 +797,7 @@
       000201 8E 83            [24]  797 	mov	dph,r6
       000203 C0 07            [24]  798 	push	ar7
       000205 C0 06            [24]  799 	push	ar6
-      000207 12 06 DD         [24]  800 	lcall	__divsint
+      000207 12 07 24         [24]  800 	lcall	__divsint
       00020A AC 82            [24]  801 	mov	r4,dpl
       00020C D0 06            [24]  802 	pop	ar6
       00020E D0 07            [24]  803 	pop	ar7
@@ -809,10 +809,10 @@
       00021A C0 07            [24]  809 	push	ar7
       00021C C0 06            [24]  810 	push	ar6
       00021E C0 04            [24]  811 	push	ar4
-      000220 12 06 A7         [24]  812 	lcall	__modsint
+      000220 12 06 EE         [24]  812 	lcall	__modsint
       000223 75 0C 0A         [24]  813 	mov	__divsint_PARM_2,#0x0a
       000226 75 0D 00         [24]  814 	mov	(__divsint_PARM_2 + 1),#0x00
-      000229 12 06 DD         [24]  815 	lcall	__divsint
+      000229 12 07 24         [24]  815 	lcall	__divsint
       00022C AB 82            [24]  816 	mov	r3,dpl
       00022E D0 04            [24]  817 	pop	ar4
       000230 D0 06            [24]  818 	pop	ar6
@@ -824,7 +824,7 @@
       00023C 8E 83            [24]  824 	mov	dph,r6
       00023E C0 04            [24]  825 	push	ar4
       000240 C0 03            [24]  826 	push	ar3
-      000242 12 06 A7         [24]  827 	lcall	__modsint
+      000242 12 06 EE         [24]  827 	lcall	__modsint
       000245 AE 82            [24]  828 	mov	r6,dpl
       000247 D0 03            [24]  829 	pop	ar3
       000249 D0 04            [24]  830 	pop	ar4
@@ -884,7 +884,7 @@
       000285 8D 82            [24]  884 	mov	dpl,r5
       000287 8E 83            [24]  885 	mov	dph,r6
       000289 8F F0            [24]  886 	mov	b,r7
-      00028B 12 06 8B         [24]  887 	lcall	__gptrget
+      00028B 12 06 D2         [24]  887 	lcall	__gptrget
       00028E FB               [12]  888 	mov	r3,a
       00028F A3               [24]  889 	inc	dptr
       000290 AD 82            [24]  890 	mov	r5,dpl
@@ -973,7 +973,7 @@
       0002FF EF               [12]  973 	mov	a,r7
       000300 C0 04            [24]  974 	push	ar4
       000302 C0 03            [24]  975 	push	ar3
-      000304 12 05 95         [24]  976 	lcall	__divulong
+      000304 12 05 DC         [24]  976 	lcall	__divulong
       000307 C8               [12]  977 	xch	a,r0
       000308 E5 0B            [12]  978 	mov	a,_bp
       00030A 24 05            [12]  979 	add	a,#0x05
@@ -1012,7 +1012,7 @@
       00033E 8E F0            [24] 1012 	mov	b,r6
       000340 EF               [12] 1013 	mov	a,r7
       000341 C0 03            [24] 1014 	push	ar3
-      000343 12 05 12         [24] 1015 	lcall	__modulong
+      000343 12 05 59         [24] 1015 	lcall	__modulong
       000346 AC 82            [24] 1016 	mov	r4,dpl
       000348 74 30            [12] 1017 	mov	a,#0x30
       00034A 2C               [12] 1018 	add	a,r4
@@ -1045,7 +1045,7 @@
       000364 80 F4            [24] 1045 	sjmp	00101$
       000366                       1046 00103$:
                                    1047 ;	uart.h:168: UartPrint("Number in Hex - eg(FE for 254): ");
-      000366 90 07 19         [24] 1048 	mov	dptr,#___str_0
+      000366 90 07 60         [24] 1048 	mov	dptr,#___str_0
       000369 75 F0 80         [24] 1049 	mov	b,#0x80
       00036C 12 01 7D         [24] 1050 	lcall	_UartPrint
                                    1051 ;	uart.h:170: unibble = UartRead();
@@ -1134,7 +1134,7 @@
       0003DD 8E 83            [24] 1134 	mov	dph,r6
       0003DF 8F F0            [24] 1135 	mov	b,r7
       0003E1 E4               [12] 1136 	clr	a
-      0003E2 12 05 FA         [24] 1137 	lcall	__gptrput
+      0003E2 12 06 41         [24] 1137 	lcall	__gptrput
                                    1138 ;	uart.h:194: break;
       0003E5 80 31            [24] 1139 	sjmp	00111$
       0003E7                       1140 00105$:
@@ -1154,7 +1154,7 @@
       0003F6 8E 83            [24] 1154 	mov	dph,r6
       0003F8 8F F0            [24] 1155 	mov	b,r7
       0003FA EA               [12] 1156 	mov	a,r2
-      0003FB 12 05 FA         [24] 1157 	lcall	__gptrput
+      0003FB 12 06 41         [24] 1157 	lcall	__gptrput
                                    1158 ;	uart.h:198: if(count==maxLength) 
       0003FE E5 0B            [12] 1159 	mov	a,_bp
       000400 24 FD            [12] 1160 	add	a,#0xfd
@@ -1166,7 +1166,7 @@
       000409 8E 83            [24] 1166 	mov	dph,r6
       00040B 8F F0            [24] 1167 	mov	b,r7
       00040D E4               [12] 1168 	clr	a
-      00040E 12 05 FA         [24] 1169 	lcall	__gptrput
+      00040E 12 06 41         [24] 1169 	lcall	__gptrput
                                    1170 ;	uart.h:201: break;
       000411 80 05            [24] 1171 	sjmp	00111$
       000413                       1172 00108$:
@@ -1261,192 +1261,241 @@
       00046B AD 82            [24] 1261 	mov	r5,dpl
       00046D D0 06            [24] 1262 	pop	ar6
       00046F D0 07            [24] 1263 	pop	ar7
-                                   1264 ;	serialloader.h:28: xram_addr = (__xdata char*) addr;
-      000471 8F 82            [24] 1265 	mov	dpl,r7
-      000473 8E 83            [24] 1266 	mov	dph,r6
-                                   1267 ;	serialloader.h:30: *(xram_addr) = data; //write to xram
-      000475 ED               [12] 1268 	mov	a,r5
-      000476 F0               [24] 1269 	movx	@dptr,a
-                                   1270 ;	serialloader.h:32: UartWrite('W'); //ack
-      000477 75 82 57         [24] 1271 	mov	dpl,#0x57
-                                   1272 ;	serialloader.h:34: }
-      00047A 02 00 F7         [24] 1273 	ljmp	_UartWrite
-                                   1274 ;------------------------------------------------------------
-                                   1275 ;Allocation info for local variables in function 'SL_read'
-                                   1276 ;------------------------------------------------------------
-                                   1277 ;data                      Allocated to registers r7 
-                                   1278 ;addr                      Allocated to registers r7 r6 
-                                   1279 ;xram_addr                 Allocated to registers 
-                                   1280 ;------------------------------------------------------------
-                                   1281 ;	serialloader.h:36: void SL_read()
-                                   1282 ;	-----------------------------------------
-                                   1283 ;	 function SL_read
-                                   1284 ;	-----------------------------------------
-      00047D                       1285 _SL_read:
-                                   1286 ;	serialloader.h:42: while(UartReadReady()==0); //wait till we rcv data
-      00047D                       1287 00101$:
-      00047D 12 00 E3         [24] 1288 	lcall	_UartReadReady
-      000480 E5 82            [12] 1289 	mov	a,dpl
-      000482 60 F9            [24] 1290 	jz	00101$
-                                   1291 ;	serialloader.h:46: addr = UartRead(); //msb
-      000484 12 00 EE         [24] 1292 	lcall	_UartRead
-                                   1293 ;	serialloader.h:47: addr = addr << 8;
-      000487 AE 82            [24] 1294 	mov	r6,dpl
-      000489 7F 00            [12] 1295 	mov	r7,#0x00
-                                   1296 ;	serialloader.h:48: addr |= UartRead(); //lsb
-      00048B C0 07            [24] 1297 	push	ar7
-      00048D C0 06            [24] 1298 	push	ar6
-      00048F 12 00 EE         [24] 1299 	lcall	_UartRead
-      000492 AD 82            [24] 1300 	mov	r5,dpl
-      000494 D0 06            [24] 1301 	pop	ar6
-      000496 D0 07            [24] 1302 	pop	ar7
-      000498 7C 00            [12] 1303 	mov	r4,#0x00
-      00049A ED               [12] 1304 	mov	a,r5
-      00049B 42 07            [12] 1305 	orl	ar7,a
-      00049D EC               [12] 1306 	mov	a,r4
-      00049E 42 06            [12] 1307 	orl	ar6,a
-                                   1308 ;	serialloader.h:50: xram_addr = (__xdata char*) addr;
-      0004A0 8F 82            [24] 1309 	mov	dpl,r7
-      0004A2 8E 83            [24] 1310 	mov	dph,r6
-                                   1311 ;	serialloader.h:52: data = *(xram_addr); //read from xram
-      0004A4 E0               [24] 1312 	movx	a,@dptr
-                                   1313 ;	serialloader.h:54: UartWrite(data);
-      0004A5 F5 82            [12] 1314 	mov	dpl,a
-                                   1315 ;	serialloader.h:56: }
-      0004A7 02 00 F7         [24] 1316 	ljmp	_UartWrite
-                                   1317 ;------------------------------------------------------------
-                                   1318 ;Allocation info for local variables in function 'SL_getcmd'
-                                   1319 ;------------------------------------------------------------
-                                   1320 ;cmd                       Allocated to registers r7 
-                                   1321 ;------------------------------------------------------------
-                                   1322 ;	serialloader.h:58: void SL_getcmd()
-                                   1323 ;	-----------------------------------------
-                                   1324 ;	 function SL_getcmd
-                                   1325 ;	-----------------------------------------
-      0004AA                       1326 _SL_getcmd:
-                                   1327 ;	serialloader.h:61: while(UartReadReady()) UartRead(); //flush 
-      0004AA                       1328 00101$:
-      0004AA 12 00 E3         [24] 1329 	lcall	_UartReadReady
-      0004AD E5 82            [12] 1330 	mov	a,dpl
-      0004AF 60 05            [24] 1331 	jz	00104$
-      0004B1 12 00 EE         [24] 1332 	lcall	_UartRead
-                                   1333 ;	serialloader.h:63: while(UartReadReady()==0); //wait till we rcv data 
-      0004B4 80 F4            [24] 1334 	sjmp	00101$
-      0004B6                       1335 00104$:
-      0004B6 12 00 E3         [24] 1336 	lcall	_UartReadReady
-      0004B9 E5 82            [12] 1337 	mov	a,dpl
-      0004BB 60 F9            [24] 1338 	jz	00104$
-                                   1339 ;	serialloader.h:66: cmd = UartRead(); //read
-      0004BD 12 00 EE         [24] 1340 	lcall	_UartRead
-      0004C0 AF 82            [24] 1341 	mov	r7,dpl
-                                   1342 ;	serialloader.h:68: switch(cmd)
-      0004C2 BF 52 02         [24] 1343 	cjne	r7,#0x52,00144$
-      0004C5 80 13            [24] 1344 	sjmp	00108$
-      0004C7                       1345 00144$:
-      0004C7 BF 56 02         [24] 1346 	cjne	r7,#0x56,00145$
-      0004CA 80 05            [24] 1347 	sjmp	00107$
-      0004CC                       1348 00145$:
-                                   1349 ;	serialloader.h:70: case 'V':
-      0004CC BF 57 11         [24] 1350 	cjne	r7,#0x57,00112$
-      0004CF 80 0C            [24] 1351 	sjmp	00109$
-      0004D1                       1352 00107$:
-                                   1353 ;	serialloader.h:71: UartPrint("ISA_SERIAL_LOADER_V0.1:8052\n");
-      0004D1 90 07 3A         [24] 1354 	mov	dptr,#___str_1
-      0004D4 75 F0 80         [24] 1355 	mov	b,#0x80
-                                   1356 ;	serialloader.h:72: break;
-                                   1357 ;	serialloader.h:73: case 'R':
-      0004D7 02 01 7D         [24] 1358 	ljmp	_UartPrint
-      0004DA                       1359 00108$:
-                                   1360 ;	serialloader.h:74: SL_read();
-                                   1361 ;	serialloader.h:75: break;
-                                   1362 ;	serialloader.h:76: case 'W':
-      0004DA 02 04 7D         [24] 1363 	ljmp	_SL_read
-      0004DD                       1364 00109$:
-                                   1365 ;	serialloader.h:77: SL_write();
-                                   1366 ;	serialloader.h:81: }
-                                   1367 ;	serialloader.h:82: }
-      0004DD 02 04 41         [24] 1368 	ljmp	_SL_write
-      0004E0                       1369 00112$:
-      0004E0 22               [24] 1370 	ret
-                                   1371 ;------------------------------------------------------------
-                                   1372 ;Allocation info for local variables in function 'main'
-                                   1373 ;------------------------------------------------------------
-                                   1374 ;	main.c:15: void main(void)
-                                   1375 ;	-----------------------------------------
-                                   1376 ;	 function main
-                                   1377 ;	-----------------------------------------
-      0004E1                       1378 _main:
-                                   1379 ;	main.c:18: UartBegin();
-      0004E1 12 00 D4         [24] 1380 	lcall	_UartBegin
-                                   1381 ;	main.c:20: while(1)
-      0004E4                       1382 00102$:
-                                   1383 ;	main.c:23: SL_getcmd();
-      0004E4 12 04 AA         [24] 1384 	lcall	_SL_getcmd
-                                   1385 ;	main.c:28: }
-      0004E7 80 FB            [24] 1386 	sjmp	00102$
-                                   1387 ;------------------------------------------------------------
-                                   1388 ;Allocation info for local variables in function 'delay'
-                                   1389 ;------------------------------------------------------------
-                                   1390 ;i                         Allocated to registers r6 r7 
-                                   1391 ;j                         Allocated to registers r4 r5 
-                                   1392 ;------------------------------------------------------------
-                                   1393 ;	main.c:30: void delay(void)
-                                   1394 ;	-----------------------------------------
-                                   1395 ;	 function delay
-                                   1396 ;	-----------------------------------------
-      0004E9                       1397 _delay:
-                                   1398 ;	main.c:33: for(i=0;i<0xff;i++)
-      0004E9 7E 00            [12] 1399 	mov	r6,#0x00
-      0004EB 7F 00            [12] 1400 	mov	r7,#0x00
-      0004ED                       1401 00106$:
-                                   1402 ;	main.c:34: for(j=0;j<0xff;j++);
-      0004ED 7C FF            [12] 1403 	mov	r4,#0xff
-      0004EF 7D 00            [12] 1404 	mov	r5,#0x00
-      0004F1                       1405 00105$:
-      0004F1 EC               [12] 1406 	mov	a,r4
-      0004F2 24 FF            [12] 1407 	add	a,#0xff
-      0004F4 FA               [12] 1408 	mov	r2,a
-      0004F5 ED               [12] 1409 	mov	a,r5
-      0004F6 34 FF            [12] 1410 	addc	a,#0xff
-      0004F8 FB               [12] 1411 	mov	r3,a
-      0004F9 8A 04            [24] 1412 	mov	ar4,r2
-      0004FB 8B 05            [24] 1413 	mov	ar5,r3
-      0004FD EA               [12] 1414 	mov	a,r2
-      0004FE 4B               [12] 1415 	orl	a,r3
-      0004FF 70 F0            [24] 1416 	jnz	00105$
-                                   1417 ;	main.c:33: for(i=0;i<0xff;i++)
-      000501 0E               [12] 1418 	inc	r6
-      000502 BE 00 01         [24] 1419 	cjne	r6,#0x00,00124$
-      000505 0F               [12] 1420 	inc	r7
-      000506                       1421 00124$:
-      000506 C3               [12] 1422 	clr	c
-      000507 EE               [12] 1423 	mov	a,r6
-      000508 94 FF            [12] 1424 	subb	a,#0xff
-      00050A EF               [12] 1425 	mov	a,r7
-      00050B 64 80            [12] 1426 	xrl	a,#0x80
-      00050D 94 80            [12] 1427 	subb	a,#0x80
-      00050F 40 DC            [24] 1428 	jc	00106$
-                                   1429 ;	main.c:35: }
-      000511 22               [24] 1430 	ret
-                                   1431 	.area CSEG    (CODE)
-                                   1432 	.area CONST   (CODE)
-                                   1433 	.area CONST   (CODE)
-      000719                       1434 ___str_0:
-      000719 4E 75 6D 62 65 72 20  1435 	.ascii "Number in Hex - eg(FE for 254): "
+                                   1264 ;	serialloader.h:30: *(xram_addr) = 0xAA;
+      000471 90 15 55         [24] 1265 	mov	dptr,#0x1555
+      000474 74 AA            [12] 1266 	mov	a,#0xaa
+      000476 F0               [24] 1267 	movx	@dptr,a
+                                   1268 ;	serialloader.h:32: *(xram_addr) = 0x55;
+      000477 90 0A AA         [24] 1269 	mov	dptr,#0x0aaa
+      00047A F4               [12] 1270 	cpl	a
+      00047B F0               [24] 1271 	movx	@dptr,a
+                                   1272 ;	serialloader.h:34: *(xram_addr) = 0xA0;
+      00047C 90 15 55         [24] 1273 	mov	dptr,#0x1555
+      00047F 74 A0            [12] 1274 	mov	a,#0xa0
+      000481 F0               [24] 1275 	movx	@dptr,a
+                                   1276 ;	serialloader.h:36: xram_addr = (__xdata char*) addr;
+      000482 8F 82            [24] 1277 	mov	dpl,r7
+      000484 8E 83            [24] 1278 	mov	dph,r6
+                                   1279 ;	serialloader.h:38: *(xram_addr) = data; //write to xram
+      000486 ED               [12] 1280 	mov	a,r5
+      000487 F0               [24] 1281 	movx	@dptr,a
+                                   1282 ;	serialloader.h:40: UartWrite('W'); //ack
+      000488 75 82 57         [24] 1283 	mov	dpl,#0x57
+                                   1284 ;	serialloader.h:42: }
+      00048B 02 00 F7         [24] 1285 	ljmp	_UartWrite
+                                   1286 ;------------------------------------------------------------
+                                   1287 ;Allocation info for local variables in function 'SL_read'
+                                   1288 ;------------------------------------------------------------
+                                   1289 ;data                      Allocated to registers r7 
+                                   1290 ;addr                      Allocated to registers r7 r6 
+                                   1291 ;xram_addr                 Allocated to registers 
+                                   1292 ;------------------------------------------------------------
+                                   1293 ;	serialloader.h:44: void SL_read()
+                                   1294 ;	-----------------------------------------
+                                   1295 ;	 function SL_read
+                                   1296 ;	-----------------------------------------
+      00048E                       1297 _SL_read:
+                                   1298 ;	serialloader.h:50: while(UartReadReady()==0); //wait till we rcv data
+      00048E                       1299 00101$:
+      00048E 12 00 E3         [24] 1300 	lcall	_UartReadReady
+      000491 E5 82            [12] 1301 	mov	a,dpl
+      000493 60 F9            [24] 1302 	jz	00101$
+                                   1303 ;	serialloader.h:54: addr = UartRead(); //msb
+      000495 12 00 EE         [24] 1304 	lcall	_UartRead
+                                   1305 ;	serialloader.h:55: addr = addr << 8;
+      000498 AE 82            [24] 1306 	mov	r6,dpl
+      00049A 7F 00            [12] 1307 	mov	r7,#0x00
+                                   1308 ;	serialloader.h:56: addr |= UartRead(); //lsb
+      00049C C0 07            [24] 1309 	push	ar7
+      00049E C0 06            [24] 1310 	push	ar6
+      0004A0 12 00 EE         [24] 1311 	lcall	_UartRead
+      0004A3 AD 82            [24] 1312 	mov	r5,dpl
+      0004A5 D0 06            [24] 1313 	pop	ar6
+      0004A7 D0 07            [24] 1314 	pop	ar7
+      0004A9 7C 00            [12] 1315 	mov	r4,#0x00
+      0004AB ED               [12] 1316 	mov	a,r5
+      0004AC 42 07            [12] 1317 	orl	ar7,a
+      0004AE EC               [12] 1318 	mov	a,r4
+      0004AF 42 06            [12] 1319 	orl	ar6,a
+                                   1320 ;	serialloader.h:58: xram_addr = (__xdata char*) addr;
+      0004B1 8F 82            [24] 1321 	mov	dpl,r7
+      0004B3 8E 83            [24] 1322 	mov	dph,r6
+                                   1323 ;	serialloader.h:60: data = *(xram_addr); //read from xram
+      0004B5 E0               [24] 1324 	movx	a,@dptr
+                                   1325 ;	serialloader.h:62: UartWrite(data);
+      0004B6 F5 82            [12] 1326 	mov	dpl,a
+                                   1327 ;	serialloader.h:64: }
+      0004B8 02 00 F7         [24] 1328 	ljmp	_UartWrite
+                                   1329 ;------------------------------------------------------------
+                                   1330 ;Allocation info for local variables in function 'SL_getcmd'
+                                   1331 ;------------------------------------------------------------
+                                   1332 ;cmd                       Allocated to registers r7 
+                                   1333 ;------------------------------------------------------------
+                                   1334 ;	serialloader.h:66: void SL_getcmd()
+                                   1335 ;	-----------------------------------------
+                                   1336 ;	 function SL_getcmd
+                                   1337 ;	-----------------------------------------
+      0004BB                       1338 _SL_getcmd:
+                                   1339 ;	serialloader.h:69: while(UartReadReady()) UartRead(); //flush 
+      0004BB                       1340 00101$:
+      0004BB 12 00 E3         [24] 1341 	lcall	_UartReadReady
+      0004BE E5 82            [12] 1342 	mov	a,dpl
+      0004C0 60 05            [24] 1343 	jz	00104$
+      0004C2 12 00 EE         [24] 1344 	lcall	_UartRead
+                                   1345 ;	serialloader.h:71: while(UartReadReady()==0); //wait till we rcv data 
+      0004C5 80 F4            [24] 1346 	sjmp	00101$
+      0004C7                       1347 00104$:
+      0004C7 12 00 E3         [24] 1348 	lcall	_UartReadReady
+      0004CA E5 82            [12] 1349 	mov	a,dpl
+      0004CC 60 F9            [24] 1350 	jz	00104$
+                                   1351 ;	serialloader.h:74: cmd = UartRead(); //read
+      0004CE 12 00 EE         [24] 1352 	lcall	_UartRead
+      0004D1 AF 82            [24] 1353 	mov	r7,dpl
+                                   1354 ;	serialloader.h:76: switch(cmd)
+      0004D3 BF 52 02         [24] 1355 	cjne	r7,#0x52,00144$
+      0004D6 80 13            [24] 1356 	sjmp	00108$
+      0004D8                       1357 00144$:
+      0004D8 BF 56 02         [24] 1358 	cjne	r7,#0x56,00145$
+      0004DB 80 05            [24] 1359 	sjmp	00107$
+      0004DD                       1360 00145$:
+                                   1361 ;	serialloader.h:78: case 'V':
+      0004DD BF 57 11         [24] 1362 	cjne	r7,#0x57,00112$
+      0004E0 80 0C            [24] 1363 	sjmp	00109$
+      0004E2                       1364 00107$:
+                                   1365 ;	serialloader.h:79: UartPrint("ISA_SERIAL_LOADER_V0.1:8052\n");
+      0004E2 90 07 81         [24] 1366 	mov	dptr,#___str_1
+      0004E5 75 F0 80         [24] 1367 	mov	b,#0x80
+                                   1368 ;	serialloader.h:80: break;
+                                   1369 ;	serialloader.h:81: case 'R':
+      0004E8 02 01 7D         [24] 1370 	ljmp	_UartPrint
+      0004EB                       1371 00108$:
+                                   1372 ;	serialloader.h:82: SL_read();
+                                   1373 ;	serialloader.h:83: break;
+                                   1374 ;	serialloader.h:84: case 'W':
+      0004EB 02 04 8E         [24] 1375 	ljmp	_SL_read
+      0004EE                       1376 00109$:
+                                   1377 ;	serialloader.h:85: SL_write();
+                                   1378 ;	serialloader.h:89: }
+                                   1379 ;	serialloader.h:90: }
+      0004EE 02 04 41         [24] 1380 	ljmp	_SL_write
+      0004F1                       1381 00112$:
+      0004F1 22               [24] 1382 	ret
+                                   1383 ;------------------------------------------------------------
+                                   1384 ;Allocation info for local variables in function 'main'
+                                   1385 ;------------------------------------------------------------
+                                   1386 ;x                         Allocated to registers 
+                                   1387 ;i                         Allocated to registers r6 r7 
+                                   1388 ;------------------------------------------------------------
+                                   1389 ;	main.c:15: void main(void)
+                                   1390 ;	-----------------------------------------
+                                   1391 ;	 function main
+                                   1392 ;	-----------------------------------------
+      0004F2                       1393 _main:
+                                   1394 ;	main.c:19: UartBegin();
+      0004F2 12 00 D4         [24] 1395 	lcall	_UartBegin
+                                   1396 ;	main.c:23: for(unsigned int i=0;i<60000;i++)
+      0004F5                       1397 00112$:
+      0004F5 7E 00            [12] 1398 	mov	r6,#0x00
+      0004F7 7F 00            [12] 1399 	mov	r7,#0x00
+      0004F9                       1400 00106$:
+      0004F9 C3               [12] 1401 	clr	c
+      0004FA EE               [12] 1402 	mov	a,r6
+      0004FB 94 60            [12] 1403 	subb	a,#0x60
+      0004FD EF               [12] 1404 	mov	a,r7
+      0004FE 94 EA            [12] 1405 	subb	a,#0xea
+      000500 50 F3            [24] 1406 	jnc	00112$
+                                   1407 ;	main.c:25: x = (__xdata char*)i;
+      000502 8E 82            [24] 1408 	mov	dpl,r6
+      000504 8F 83            [24] 1409 	mov	dph,r7
+                                   1410 ;	main.c:26: *(x)=1;
+      000506 74 01            [12] 1411 	mov	a,#0x01
+      000508 F0               [24] 1412 	movx	@dptr,a
+                                   1413 ;	main.c:28: UartPrintNumber(i);
+      000509 8E 02            [24] 1414 	mov	ar2,r6
+      00050B 8F 03            [24] 1415 	mov	ar3,r7
+      00050D 7C 00            [12] 1416 	mov	r4,#0x00
+      00050F 7D 00            [12] 1417 	mov	r5,#0x00
+      000511 8A 82            [24] 1418 	mov	dpl,r2
+      000513 8B 83            [24] 1419 	mov	dph,r3
+      000515 8C F0            [24] 1420 	mov	b,r4
+      000517 ED               [12] 1421 	mov	a,r5
+      000518 C0 07            [24] 1422 	push	ar7
+      00051A C0 06            [24] 1423 	push	ar6
+      00051C 12 02 C3         [24] 1424 	lcall	_UartPrintNumber
+                                   1425 ;	main.c:29: UartWrite('\n');
+      00051F 75 82 0A         [24] 1426 	mov	dpl,#0x0a
+      000522 12 00 F7         [24] 1427 	lcall	_UartWrite
+      000525 D0 06            [24] 1428 	pop	ar6
+      000527 D0 07            [24] 1429 	pop	ar7
+                                   1430 ;	main.c:23: for(unsigned int i=0;i<60000;i++)
+      000529 0E               [12] 1431 	inc	r6
+      00052A BE 00 CC         [24] 1432 	cjne	r6,#0x00,00106$
+      00052D 0F               [12] 1433 	inc	r7
+                                   1434 ;	main.c:37: }
+      00052E 80 C9            [24] 1435 	sjmp	00106$
+                                   1436 ;------------------------------------------------------------
+                                   1437 ;Allocation info for local variables in function 'delay'
+                                   1438 ;------------------------------------------------------------
+                                   1439 ;i                         Allocated to registers r6 r7 
+                                   1440 ;j                         Allocated to registers r4 r5 
+                                   1441 ;------------------------------------------------------------
+                                   1442 ;	main.c:39: void delay(void)
+                                   1443 ;	-----------------------------------------
+                                   1444 ;	 function delay
+                                   1445 ;	-----------------------------------------
+      000530                       1446 _delay:
+                                   1447 ;	main.c:42: for(i=0;i<0xff;i++)
+      000530 7E 00            [12] 1448 	mov	r6,#0x00
+      000532 7F 00            [12] 1449 	mov	r7,#0x00
+      000534                       1450 00106$:
+                                   1451 ;	main.c:43: for(j=0;j<0xff;j++);
+      000534 7C FF            [12] 1452 	mov	r4,#0xff
+      000536 7D 00            [12] 1453 	mov	r5,#0x00
+      000538                       1454 00105$:
+      000538 EC               [12] 1455 	mov	a,r4
+      000539 24 FF            [12] 1456 	add	a,#0xff
+      00053B FA               [12] 1457 	mov	r2,a
+      00053C ED               [12] 1458 	mov	a,r5
+      00053D 34 FF            [12] 1459 	addc	a,#0xff
+      00053F FB               [12] 1460 	mov	r3,a
+      000540 8A 04            [24] 1461 	mov	ar4,r2
+      000542 8B 05            [24] 1462 	mov	ar5,r3
+      000544 EA               [12] 1463 	mov	a,r2
+      000545 4B               [12] 1464 	orl	a,r3
+      000546 70 F0            [24] 1465 	jnz	00105$
+                                   1466 ;	main.c:42: for(i=0;i<0xff;i++)
+      000548 0E               [12] 1467 	inc	r6
+      000549 BE 00 01         [24] 1468 	cjne	r6,#0x00,00124$
+      00054C 0F               [12] 1469 	inc	r7
+      00054D                       1470 00124$:
+      00054D C3               [12] 1471 	clr	c
+      00054E EE               [12] 1472 	mov	a,r6
+      00054F 94 FF            [12] 1473 	subb	a,#0xff
+      000551 EF               [12] 1474 	mov	a,r7
+      000552 64 80            [12] 1475 	xrl	a,#0x80
+      000554 94 80            [12] 1476 	subb	a,#0x80
+      000556 40 DC            [24] 1477 	jc	00106$
+                                   1478 ;	main.c:44: }
+      000558 22               [24] 1479 	ret
+                                   1480 	.area CSEG    (CODE)
+                                   1481 	.area CONST   (CODE)
+                                   1482 	.area CONST   (CODE)
+      000760                       1483 ___str_0:
+      000760 4E 75 6D 62 65 72 20  1484 	.ascii "Number in Hex - eg(FE for 254): "
              69 6E 20 48 65 78 20
              2D 20 65 67 28 46 45
              20 66 6F 72 20 32 35
              34 29 3A 20
-      000739 00                    1436 	.db 0x00
-                                   1437 	.area CSEG    (CODE)
-                                   1438 	.area CONST   (CODE)
-      00073A                       1439 ___str_1:
-      00073A 49 53 41 5F 53 45 52  1440 	.ascii "ISA_SERIAL_LOADER_V0.1:8052"
+      000780 00                    1485 	.db 0x00
+                                   1486 	.area CSEG    (CODE)
+                                   1487 	.area CONST   (CODE)
+      000781                       1488 ___str_1:
+      000781 49 53 41 5F 53 45 52  1489 	.ascii "ISA_SERIAL_LOADER_V0.1:8052"
              49 41 4C 5F 4C 4F 41
              44 45 52 5F 56 30 2E
              31 3A 38 30 35 32
-      000755 0A                    1441 	.db 0x0a
-      000756 00                    1442 	.db 0x00
-                                   1443 	.area CSEG    (CODE)
-                                   1444 	.area XINIT   (CODE)
-                                   1445 	.area CABS    (ABS,CODE)
+      00079C 0A                    1490 	.db 0x0a
+      00079D 00                    1491 	.db 0x00
+                                   1492 	.area CSEG    (CODE)
+                                   1493 	.area XINIT   (CODE)
+                                   1494 	.area CABS    (ABS,CODE)

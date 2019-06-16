@@ -14,6 +14,9 @@ void setup_addr_pins()
   pinMode(A10,OUTPUT);
   pinMode(A11,OUTPUT);
   pinMode(A12,OUTPUT);
+  pinMode(A13,OUTPUT);
+  pinMode(A14,OUTPUT);
+  pinMode(A15,OUTPUT);
 }
 
 void setup_data_pins_out()
@@ -120,6 +123,12 @@ void put_addr(unsigned int addr)
   else digitalWrite(A11,LOW);
   if(addr & 1<<12) digitalWrite(A12,HIGH);
   else digitalWrite(A12,LOW);
+  if(addr & 1<<13) digitalWrite(A13,HIGH);
+  else digitalWrite(A13,LOW);
+  if(addr & 1<<14) digitalWrite(A14,HIGH);
+  else digitalWrite(A14,LOW);
+  if(addr & 1<<15) digitalWrite(A15,HIGH);
+  else digitalWrite(A15,LOW);
 
 }
 

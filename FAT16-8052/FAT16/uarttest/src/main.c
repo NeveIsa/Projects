@@ -14,13 +14,22 @@ void delay(void);
  
 void main(void)
 {
+    __xdata char* x=0;
 
     UartBegin();
 
     while(1)
     {
+        for(unsigned int i=0;i<60000;i++)
+        {
+            x = (__xdata char*)i;
+            *(x)=1;
+            //delay_ms(1000);
+            UartPrintNumber(i);
+            UartWrite('\n');
+        }
        
-        SL_getcmd();
+        //SL_getcmd();
     }
         
    
