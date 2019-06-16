@@ -1,3 +1,5 @@
+volatile unsigned char EEP_WRITE_PROTECTION=1;
+
 
 void setup_addr_pins()
 {
@@ -249,6 +251,18 @@ void EEPwriteWithProtection(unsigned int addr,unsigned char data)
   delay(3); //maximum page write cycle time is 10ms according to DataSheet, we are optimistic that it will be done in 3ms
 }
 
+void EEPdisableWriteProtection()
+{
+  EEPwrite(0x1555,0xAA);
+  EEPwrite(0x0AAA,0x55);
+  EEPwrite(0x1555,0x80);
+  
+  EEPwrite(0x1555,0xAA);
+  EEPwrite(0x0AAA,0x55);
+  EEPwrite(0x1555,0x20);
+  delay(3);
+}
+
 ///////////////////////////////////// EEPROM METHODS //////////////////////////////////////////
 
 
@@ -276,7 +290,16 @@ void BLwriteByte()
 
   data=Serial.read();
 
-  EEPwriteWithProtection(addr,data);
+  if(EEP_WRITE_PROTECTION)
+  {
+    EEPwriteWithProtection(addr,data);
+  }
+  else
+  {
+    EEPwrite(addr,data);
+    delay(3);
+  }
+  
   Serial.write("W");
 
 }
@@ -326,6 +349,10 @@ unsigned char BLgetcmd()
     case 'R':
       BLreadByte();
       break;
+    case 'D':
+      EEPdisableWriteProtection();
+      EEP_WRITE_PROTECTION=0;
+      Serial.write('D');
     case 'V':
       BLversion();
   }
@@ -344,6 +371,8 @@ void setup() {
   CEhigh();
   OEhigh();
   WEhigh();
+  
+  delay(100);
 
   Serial.begin(460800);
 }
@@ -356,10 +385,7 @@ void loop() {
     EEPwriteWithProtection(addr,addr + 90);
   }
 */
- for(unsigned int addr=0;addr<60;addr++)
- {
-  Serial.print(addr);Serial.print(" ");Serial.println(EEPread(addr));
- }
+
 
   
  

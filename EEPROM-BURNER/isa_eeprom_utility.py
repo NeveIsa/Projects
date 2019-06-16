@@ -38,6 +38,17 @@ def BLgetVersion():
     return ser.readline().decode().strip()
 
 
+
+def BLdisableEEPROMWriteProtection():
+    ser.read(ser.inWaiting())
+    ser.write(b'D')
+    time.sleep(_delay*5)
+    print('Disabling EEPROM write protection:',end="")
+    success=ser.read().decode()=='D'
+    print("Done" if success else "Failed")
+    return success
+
+
 def BLwrite(addr,data):
     ser.read(ser.inWaiting()) #flush
 
@@ -140,6 +151,8 @@ if __name__=="__main__":
 
     
     if action=="burn":
+        if not BLdisableEEPROMWriteProtection():
+            exit(0)
         burnImage(filename)
         verifyImage(filename)
     elif action=="dump":
