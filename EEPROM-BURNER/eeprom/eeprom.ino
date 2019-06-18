@@ -261,6 +261,15 @@ void EEPdisableWriteProtection()
   EEPwrite(0x0AAA,0x55);
   EEPwrite(0x1555,0x20);
   delay(3);
+
+  EEP_WRITE_PROTECTION=0;
+  Serial.write('D');
+}
+
+void EEPenableWriteProtection()
+{
+  EEP_WRITE_PROTECTION=1;
+  Serial.write('E');
 }
 
 ///////////////////////////////////// EEPROM METHODS //////////////////////////////////////////
@@ -351,10 +360,13 @@ unsigned char BLgetcmd()
       break;
     case 'D':
       EEPdisableWriteProtection();
-      EEP_WRITE_PROTECTION=0;
-      Serial.write('D');
+      break;
+    case 'E':
+      EEPenableWriteProtection();
+      break;
     case 'V':
       BLversion();
+      break;
   }
 }
 

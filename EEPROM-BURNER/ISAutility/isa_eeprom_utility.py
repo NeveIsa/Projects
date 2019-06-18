@@ -21,7 +21,7 @@ else:
     print("Select Serial Port No. (",",".join(map(str,range(len(_ports)))),"):")
     port=_ports[int(input())].device
 
-baud=460800
+baud=4800#460800
 tout=3 #secs
 print("Opening > port:",port,"baudrate:",baud,"timeout:",tout)
 ser=serial.Serial(port,baudrate=baud,timeout=3)
@@ -37,8 +37,6 @@ def BLgetVersion():
     time.sleep(_delay*5)
     return ser.readline().decode().strip()
 
-
-
 def BLdisableEEPROMWriteProtection():
     ser.read(ser.inWaiting())
     ser.write(b'D')
@@ -48,6 +46,14 @@ def BLdisableEEPROMWriteProtection():
     print("Done" if success else "Failed")
     return success
 
+def BLenableEEPROMWriteProtection():
+    ser.read(ser.inWaiting())
+    ser.write(b'E')
+    time.sleep(_delay*5)
+    print('Enabling EEPROM write protection: ',end="")
+    success=ser.read().decode()=='E'
+    print("Done" if success else "Failed")
+    return success
 
 def BLwrite(addr,data):
     ser.read(ser.inWaiting()) #flush
@@ -145,6 +151,8 @@ if __name__=="__main__":
         EEPROM_WRITE_PROTECTION=True
         if len(sys.argv)==4 and sys.argv[3]=="--deepwp":
             EEPROM_WRITE_PROTECTION=False
+        else:
+            print("\nNOTE: EEPROM write protection is enabled by default. Pass --deepwp as last argument to disable.")
 
         action=sys.argv[1]
         if action in ["burn","dump"]:
@@ -155,7 +163,8 @@ if __name__=="__main__":
 
     
     if action=="burn":
-        if EEPROM_WRITE_PROTECTION:pass
+        if EEPROM_WRITE_PROTECTION:
+            BLenableEEPROMWriteProtection()
         else:
             if not BLdisableEEPROMWriteProtection():
                 exit(0)

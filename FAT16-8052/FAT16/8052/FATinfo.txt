@@ -1,2 +1,0 @@
-VBR DETAILS: start,bps,spc,reservedSectors,nfat,nroote,spf,fat_start,roote_start,data_start
-00002048,00000512,00000016,00000016,00000002,00000512,00000160,00002064,00002384,00002416,
