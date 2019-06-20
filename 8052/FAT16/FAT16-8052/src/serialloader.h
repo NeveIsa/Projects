@@ -104,7 +104,7 @@ void SL_read()
     
 }
 
-void SL_getcmd()
+unsigned char SL_getcmd()
 {
     unsigned char cmd;
     while(UartReadReady()) UartRead(); //flush 
@@ -134,6 +134,8 @@ void SL_getcmd()
         default:
             break;
     }
+
+    return cmd;
 }
 
 

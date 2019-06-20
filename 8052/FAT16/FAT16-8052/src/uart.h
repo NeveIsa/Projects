@@ -148,14 +148,17 @@ void UartPrintNumber(unsigned long n) __reentrant
 	}*/
 
 	//LOW memory tradeoff to computation
-
 	unsigned long digit;
-	char i,j;
+	char i,j,leading_zeroes_flag=1;
 	for(i=8;i>0;i--)
 	{
 		digit=n;
 		for(j=1;j<i;j++) digit/=10;
-		UartWrite(0x30 + digit%10);
+
+		if(leading_zeroes_flag && digit%10) leading_zeroes_flag=0; //flag to start printing
+
+		if(leading_zeroes_flag); //pass - do not print
+		else UartWrite(0x30 + digit%10);
 	}
 }
 
@@ -165,7 +168,7 @@ uint8_t UartScanByte() __reentrant
 	uint8_t unibble,lnibble;
 
 	while(UartReadReady()) UartRead(); //flush
-	UartPrint("Number in Hex - eg(FE for 254): ");
+	UartPrint("Number(HEX, eg FE for 254): ");
 	
 	unibble = UartRead();
 	UartWrite(unibble);

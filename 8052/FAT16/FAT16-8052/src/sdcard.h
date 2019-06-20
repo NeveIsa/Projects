@@ -151,10 +151,6 @@ uint8_t sd_acmd(uint8_t cmd, uint32_t arg)
 }
 
 
-
-
-
-
 // let compiler know the below function is defined latter as it is called in sd_init()
 //uint8_t sd_read_block(char *buff, unsigned long block_byte_addr, unsigned int offset, unsigned int readlength);
 
@@ -211,6 +207,14 @@ uint8_t SDread(uint32_t block_addr, uint16_t offset, uint16_t count, uint8_t* ds
 {
 
 	uint8_t retries=0,response=0;
+
+	#ifdef SD_DEBUG
+			UartPrint("\nSDread-blk:");
+			UartPrintNumber(block_addr);//UartWrite(',');
+			//UartPrintNumber(offset);UartWrite(',');
+			//UartPrintNumber(count);UartWrite(',');
+			UartWrite('\n');
+	#endif
 
 	//return 0 - success, else fail
 

@@ -408,7 +408,7 @@ uint8_t VBR_MOUNT_VBR(uint8_t partition_number)
 
 
 	#ifdef FAT_DEBUG
-		VBR_DUMP()
+		VBR_DUMP();
 	#endif
 
 	return 0;

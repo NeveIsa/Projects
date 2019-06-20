@@ -354,8 +354,6 @@ __sdcc_program_startup:
 ;------------------------------------------------------------
 ;i                         Allocated to registers r6 r7 
 ;i                         Allocated to registers r6 r7 
-;i                         Allocated to registers r6 r7 
-;i                         Allocated to registers r6 r7 
 ;------------------------------------------------------------
 ;	main.c:4: int main()
 ;	-----------------------------------------
@@ -371,72 +369,42 @@ _main:
 	ar1 = 0x01
 	ar0 = 0x00
 ;	main.c:6: while(1){
-00106$:
+00104$:
 ;	main.c:7: P1=255;
 	mov	_P1,#0xff
-;	main.c:8: for(unsigned int i=0;i<50000;i++); //delay
+;	main.c:8: for(unsigned int i=0;i<20000;i++); //delay
 	mov	r6,#0x00
 	mov	r7,#0x00
-00109$:
+00107$:
 	clr	c
 	mov	a,r6
-	subb	a,#0x50
+	subb	a,#0x20
 	mov	a,r7
-	subb	a,#0xc3
+	subb	a,#0x4e
 	jnc	00101$
 	inc	r6
-	cjne	r6,#0x00,00109$
+	cjne	r6,#0x00,00107$
 	inc	r7
-	sjmp	00109$
+	sjmp	00107$
 00101$:
-;	main.c:9: for(unsigned int i=0;i<50000;i++); //delay
-	mov	r6,#0x00
-	mov	r7,#0x00
-00112$:
-	clr	c
-	mov	a,r6
-	subb	a,#0x50
-	mov	a,r7
-	subb	a,#0xc3
-	jnc	00102$
-	inc	r6
-	cjne	r6,#0x00,00112$
-	inc	r7
-	sjmp	00112$
-00102$:
 ;	main.c:11: P1=0;
 	mov	_P1,#0x00
-;	main.c:13: for(unsigned int i=0;i<50000;i++); //delay
+;	main.c:13: for(unsigned int i=0;i<20000;i++); //delay
 	mov	r6,#0x00
 	mov	r7,#0x00
-00115$:
+00110$:
 	clr	c
 	mov	a,r6
-	subb	a,#0x50
+	subb	a,#0x20
 	mov	a,r7
-	subb	a,#0xc3
-	jnc	00103$
-	inc	r6
-	cjne	r6,#0x00,00115$
-	inc	r7
-	sjmp	00115$
-00103$:
-;	main.c:14: for(unsigned int i=0;i<50000;i++); //delay
-	mov	r6,#0x00
-	mov	r7,#0x00
-00118$:
-	clr	c
-	mov	a,r6
-	subb	a,#0x50
-	mov	a,r7
-	subb	a,#0xc3
-	jnc	00106$
+	subb	a,#0x4e
+	jnc	00104$
 	inc	r6
 ;	main.c:17: return 0;
-	cjne	r6,#0x00,00118$
+	cjne	r6,#0x00,00110$
 	inc	r7
 ;	main.c:18: }
-	sjmp	00118$
+	sjmp	00110$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 	.area XINIT   (CODE)

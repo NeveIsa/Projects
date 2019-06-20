@@ -24,3 +24,6 @@ reset:
 
 clean:
 	cd build && touch xyz.xyz && rm -r *
+
+blinker:
+	cd ISAutils && python3 isa_8052_serial_loader.py burn build.bin
