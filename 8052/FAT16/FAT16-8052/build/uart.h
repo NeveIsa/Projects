@@ -168,7 +168,7 @@ uint8_t UartScanByte() __reentrant
 	uint8_t unibble,lnibble;
 
 	while(UartReadReady()) UartRead(); //flush
-	UartPrint("Number(HEX, eg FE for 254): ");
+	UartPrint("Number(hex) < ");
 	
 	unibble = UartRead();
 	UartWrite(unibble);

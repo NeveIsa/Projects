@@ -1,3 +1,7 @@
+
+//#define SPI_USE_DELAY 1
+
+#ifdef SPI_USE_DELAY 
 void spi_delay(unsigned int ms)
 {
 	unsigned int j=0,i=0;
@@ -6,6 +10,7 @@ void spi_delay(unsigned int ms)
 		for(;j<120;j++);
 	}
 }
+#endif
 
 
 #define SPI_PORT	P1

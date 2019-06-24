@@ -5,18 +5,21 @@
 #error "IMPORT UART.H"
 #endif
 
+#ifndef SELF_RESET_PORT
+#define SELF_RESET_PORT P1
+#endif
+
+#ifndef SELF_RESET_PIN
+#define SELF_RESET_PIN  4
+#endif
+
 
 //// GLOBALS ///
 
+const unsigned char SERIAL_LOADER_VERSION_INFO[]="ISA:S0:8052\n";
 volatile unsigned char EEPROM_WRITE_PROTECTION=1;
 
 //// GLOBALS ///
-
-
-void delay_ms(unsigned int millisec)
-{
-    for(unsigned int i=0;i<millisec;i++)for(unsigned char j=0;j<255;j++); //wait millisec * 1ms
-}
 
 void SL_disable_write_protection()
 {
@@ -104,6 +107,7 @@ void SL_read()
     
 }
 
+
 unsigned char SL_getcmd()
 {
     unsigned char cmd;
@@ -117,7 +121,7 @@ unsigned char SL_getcmd()
     switch(cmd)
     {
         case 'V':
-            UartPrint("ISA_SERIAL_LOADER_V0.1:8052\n");
+            UartPrint(SERIAL_LOADER_VERSION_INFO);
             break;
         case 'R':
             SL_read();
@@ -130,6 +134,9 @@ unsigned char SL_getcmd()
             break;
         case 'E':
             SL_enable_write_protection();
+            break;
+        case 'X': //execute
+            SELF_RESET_PORT &= ~(1<<SELF_RESET_PIN);
             break;
         default:
             break;

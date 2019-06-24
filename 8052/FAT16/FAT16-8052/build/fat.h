@@ -159,7 +159,7 @@ uint8_t HELPER_rootentry_type(ROOTENTRY *re)
 
 
 
-void HELPER_to_uppercase(char *s)
+void HELPER_to_uppercase(unsigned char *s)
 {
 	for(uint8_t i=0;i<255;i++)
 	{
@@ -167,6 +167,7 @@ void HELPER_to_uppercase(char *s)
 		if('a'<=s[i] && s[i]<='z') s[i] = s[i] - 32;
 	}
 }
+
 
 uint8_t HELPER_filename_to_8dot3filename( char *fname,  char *fname83)
 {

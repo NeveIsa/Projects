@@ -1,0 +1,11 @@
+Device PIC12F508
+set system.disableerrormsg true
+set poweroptions.powerenable true
+set voltagevalue 4.5
+
+Hwtool pickit3 -p
+
+Program "./reset.hex"
+Reset MCLR
+
+Quit

@@ -39,7 +39,7 @@ def BLgetVersion():
     if "8052" in rcv and "ISA" in rcv:
         return rcv
     else:
-        print("Expected version string. Got: {} | Synchronising...".format(rcv))
+        print("Expected version string. Got: {} | Synchronising... [Try reseting 8052 now]".format(rcv))
         return BLgetVersion()
 
 
