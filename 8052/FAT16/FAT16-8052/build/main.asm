@@ -5151,7 +5151,7 @@ _SL_getcmd:
 	lcall	_SL_enable_write_protection
 	pop	ar7
 ;	serialloader.h:137: break;
-;	serialloader.h:138: case 'X':
+;	serialloader.h:138: case 'X': //execute
 	sjmp	00114$
 00112$:
 ;	serialloader.h:139: SELF_RESET_PORT &= ~(1<<SELF_RESET_PIN);

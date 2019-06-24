@@ -135,7 +135,7 @@ unsigned char SL_getcmd()
         case 'E':
             SL_enable_write_protection();
             break;
-        case 'X':
+        case 'X': //execute
             SELF_RESET_PORT &= ~(1<<SELF_RESET_PIN);
             break;
         default:

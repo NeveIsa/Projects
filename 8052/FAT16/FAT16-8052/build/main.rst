@@ -5151,7 +5151,7 @@
       001878 12 17 8F         [24] 5151 	lcall	_SL_enable_write_protection
       00187B D0 07            [24] 5152 	pop	ar7
                                    5153 ;	serialloader.h:137: break;
-                                   5154 ;	serialloader.h:138: case 'X':
+                                   5154 ;	serialloader.h:138: case 'X': //execute
       00187D 80 03            [24] 5155 	sjmp	00114$
       00187F                       5156 00112$:
                                    5157 ;	serialloader.h:139: SELF_RESET_PORT &= ~(1<<SELF_RESET_PIN);

@@ -1,4 +1,4 @@
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-24-2019  16:34:26         PAGE  1
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-24-2019  18:18:44         PAGE  1
 
 
 LOC    OBJECT CODE    LINE  SOURCE TEXT
@@ -57,7 +57,7 @@ LOC    OBJECT CODE    LINE  SOURCE TEXT
                       00040 
 0008                  00041 delayY:
 0008   0901           00042                 call delayms
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-24-2019  16:34:26         PAGE  2
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-24-2019  18:18:44         PAGE  2
 
 
 LOC    OBJECT CODE    LINE  SOURCE TEXT
@@ -116,7 +116,7 @@ LOC    OBJECT CODE    LINE  SOURCE TEXT
                       00093                 
 0024   0506           00094                 bsf GPIO,INPUT_SIGNAL_PIN_8052  ; keep pullup on INPUT_SIGNAL_PIN_8052 as
                       00095                                                 ; it might have been affected by the bsf
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-24-2019  16:34:26         PAGE  3
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-24-2019  18:18:44         PAGE  3
 
 
 LOC    OBJECT CODE    LINE  SOURCE TEXT
@@ -175,7 +175,7 @@ LOC    OBJECT CODE    LINE  SOURCE TEXT
                       00146                 
                       00147                 
                       00148                 ;enable pullup on gpio0 while using as input
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-24-2019  16:34:26         PAGE  4
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-24-2019  18:18:44         PAGE  4
 
 
 LOC    OBJECT CODE    LINE  SOURCE TEXT
@@ -218,7 +218,7 @@ LOC    OBJECT CODE    LINE  SOURCE TEXT
                       00183                         
                       00184 
                       00185         end
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-24-2019  16:34:26         PAGE  5
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-24-2019  18:18:44         PAGE  5
 
 
 SYMBOL TABLE
@@ -277,7 +277,7 @@ _CONFIG                           00000FFF
 _CP_OFF                           00000FFF
 _CP_ON                            00000FF7
 _ExtRC_OSC                        00000FFF
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-24-2019  16:34:26         PAGE  6
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-24-2019  18:18:44         PAGE  6
 
 
 SYMBOL TABLE
