@@ -46,21 +46,33 @@ delayY:
 		
 		
 
-readinput:
+readinput:	; reads if long or short 0V[low] signal/pulse on INPUT_SIGNAL_PIN_8052
+
 		btfsc GPIO,INPUT_SIGNAL_PIN_8052 ; check PIN0 AS INPUT, skip if clear
 		goto $-1
 		
-		;debounce 100ms
-		movlw d'100'
+		;debounce 50ms
+		movlw d'50'
 		movwf VAR_Y
 		call delayms
 		decfsz VAR_Y,F
 		goto $-2
 		
+		; debounce, if signal is less than 50ms
 		btfsc GPIO,INPUT_SIGNAL_PIN_8052 ; check PIN0 AS INPUT, skip if clear
 		goto readinput
+
+		;wait 250ms to detect short or long signal/pulse
+		movlw d'250'
+		movwf VAR_Y
+		call delayms
+		decfsz VAR_Y,F
+		goto $-2
 		
-		retlw 0	
+		; detect long signal i.e if still the pin INPUT_SIGNAL_PIN_8052 is pulled low
+		btfsc GPIO,INPUT_SIGNAL_PIN_8052
+		retlw 1	; if bit is high (not clear), short signal
+		retlw 0 ; if bit still pulled low (clear), long signal
 		
 		
 enable_8052_EA:
@@ -155,30 +167,27 @@ setup:
 	
 loop:		
 		call readinput
-		;disable EA
-		call enable_8052_EA
 		
-		;delay510ms
+		movwf VAR_Z		; move return value to VAR_Z
+		
+		btfsc VAR_Z,0		; if return is 1(short signal/pulse), then run the next line
+		call disable_8052_EA	; if short signal(return is 1) - disable EA, i.e. use Internal ROM 
+		
+		btfss VAR_Z,0		; if return is 0(long), then run the next line
+		call enable_8052_EA	; if long signal (return is 0)- use External ROM
+
+		;delay 510ms
 		movlw d'255'
+
 		movwf VAR_Y
-		call delayY
-		movlw d'255'
+		call delayY		; 255ms delay
+
 		movwf VAR_Y
-		call delayY
+		call delayY		; 255ms delay
 		
 		
-		call readinput
-		;disable EA
-		call disable_8052_EA
-		
-		;delay510ms
-		movlw d'255'
-		movwf VAR_Y
-		call delayY
-		movlw d'255'
-		movwf VAR_Y
-		call delayY
-		
+
+	
 		goto loop;
 			
 
