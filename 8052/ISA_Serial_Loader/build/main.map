@@ -69,10 +69,10 @@ CABS                                00000000    00000000 =           0. bytes (A
 C:   00000018  s_REG_BANK_3                    
 C:   00000020  s_BSEG_BYTES                    
 C:   00000020  s__CODE                         
+C:   00000021  l_CONST                         
 C:   00000022  l_GSINIT3                       
 C:   0000002A  l_GSINIT4                       
 C:   00000035  s_GSINIT4                       
-C:   0000003E  l_CONST                         
 C:   0000005F  s_GSINIT                        
 C:   0000005F  s_GSINIT5                       
 C:   00000062  s_GSFINAL                       
@@ -80,9 +80,9 @@ C:   00000065  s_CSEG
 C:   00000080  l_DSEG                          
 C:   000000EF  l_SSEG                          
 C:   00000100  l_IRAM                          
-C:   0000070E  l_CSEG                          
-C:   00000773  s_CONST                         
-C:   000007B1  s_XINIT                         
+C:   00000722  l_CSEG                          
+C:   00000787  s_CONST                         
+C:   000007A8  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -366,7 +366,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000065    0000070E =        1806. bytes (REL,CON,CODE)
+CSEG                                00000065    00000722 =        1826. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -385,30 +385,30 @@ C:   00000271  _UartWriteNumbers                  main
 C:   000002C6  _UartPrintNumber                   main
 C:   0000035D  _UartScanByte                      main
 C:   00000397  _UartScanLine                      main
-C:   00000423  _delay_ms                          main
-C:   00000444  _SL_disable_write_protection       main
-C:   0000046D  _SL_enable_write_protection        main
-C:   00000476  _SL_write                          main
-C:   000004C7  _SL_read                           main
-C:   000004F4  _SL_getcmd                         main
-C:   0000053B  _main                              main
-C:   00000543  _delay                             main
-C:   0000056C  __modulong                         _modulong
-C:   000005EF  __divulong                         _divulong
-C:   00000654  __gptrput                          _gptrput
-C:   0000066F  __moduint                          _moduint
-C:   000006BC  __divuint                          _divuint
-C:   000006E5  __gptrget                          _gptrget
-C:   00000701  __modsint                          _modsint
-C:   00000737  __divsint                          _divsint
-C:   0000076F  __sdcc_external_startup            _startup
+C:   00000423  _SL_disable_write_protection       main
+C:   0000044C  _SL_enable_write_protection        main
+C:   00000455  _SL_write                          main
+C:   000004A6  _SL_read                           main
+C:   000004D3  _SL_getcmd                         main
+C:   00000542  _main                              main
+C:   0000054A  _delay                             main
+C:   00000573  _SERIAL_LOADER_VERSION_INFO        main
+C:   00000580  __modulong                         _modulong
+C:   00000603  __divulong                         _divulong
+C:   00000668  __gptrput                          _gptrput
+C:   00000683  __moduint                          _moduint
+C:   000006D0  __divuint                          _divuint
+C:   000006F9  __gptrget                          _gptrget
+C:   00000715  __modsint                          _modsint
+C:   0000074B  __divsint                          _divsint
+C:   00000783  __sdcc_external_startup            _startup
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 18.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CONST                               00000773    0000003E =          62. bytes (REL,CON,CODE)
+CONST                               00000787    00000021 =          33. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------

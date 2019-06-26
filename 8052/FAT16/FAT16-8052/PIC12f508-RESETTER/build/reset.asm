@@ -145,21 +145,20 @@ disable_8052_EA:
 		retlw 0 
 		
 		
-setup:		
+setup:			
 		;set gpio4 and gpio5 as o/p, gpio0 i/p
-		movlw b'11001111'   ; make GPIO4,GPIO5 o/p
-		tris GPIO	    ; set TRIS for GPIO reg
-		
+		movlw b'11001111'   		; make GPIO4,GPIO5 o/p
+		tris GPIO	    		; set TRIS for GPIO reg
+
+
 		;enable pull-ups
 		movlw b'10111111'
 		option
+	
 		
-		
-		
-		
-		;enable pullup on gpio0 while using as input
-		;bsf GPIO,INPUT_SIGNAL_PIN_8052
-		
+		;enable pullup on INPUT_SIGNAL_PIN_8052 while  using as input
+		bsf GPIO,INPUT_SIGNAL_PIN_8052
+
 		call disable_8052_EA
 		
 

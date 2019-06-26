@@ -120,6 +120,14 @@ def verifyImage(filename):
         else:
             print("\nVerification Error...")
             print("addr:{} | file_val:{} | eeprom_val:{}".format(indx,fileInBinary[indx],r))
+            if indx==2730:
+                print("-----"*15)
+                print("Verification failed exactly at address: ", indx,"[ hex: ",hex(indx),"]")
+                print("This is most likely because this is one of the special addresses used for EEPROM Write Protection.")
+                print("Only ATMEL EEPROMs support this Write Protection Feature.")
+                print("\nIf using other EEPROMs or a RAM chip -")
+                print("Try Disabling EEPROM Write Protection by passing --deepwp as the final argument to this script.")
+                print("-----"*15)
             break
     print("")
 

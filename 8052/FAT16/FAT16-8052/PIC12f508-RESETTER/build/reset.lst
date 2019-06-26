@@ -1,4 +1,4 @@
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-25-2019  10:41:39         PAGE  1
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  12:24:28         PAGE  1
 
 
 LOC    OBJECT CODE    LINE  SOURCE TEXT
@@ -57,7 +57,7 @@ LOC    OBJECT CODE    LINE  SOURCE TEXT
                       00040 
 0008                  00041 delayY:
 0008   0901           00042                 call delayms
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-25-2019  10:41:39         PAGE  2
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  12:24:28         PAGE  2
 
 
 LOC    OBJECT CODE    LINE  SOURCE TEXT
@@ -116,7 +116,7 @@ LOC    OBJECT CODE    LINE  SOURCE TEXT
                       00093                                                 ; at 12MHz, 2 machine cycles = 2us
                       00094                                                 
                       00095                 ; making a 100ms delay -> cant call delayY as stack depth is only 2
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-25-2019  10:41:39         PAGE  3
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  12:24:28         PAGE  3
 
 
 LOC    OBJECT CODE    LINE  SOURCE TEXT
@@ -174,61 +174,60 @@ LOC    OBJECT CODE    LINE  SOURCE TEXT
 003C   0800           00145                 retlw 0 
                       00146                 
                       00147                 
-003D                  00148 setup:          
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-25-2019  10:41:39         PAGE  4
+003D                  00148 setup:                  
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  12:24:28         PAGE  4
 
 
 LOC    OBJECT CODE    LINE  SOURCE TEXT
   VALUE
 
                       00149                 ;set gpio4 and gpio5 as o/p, gpio0 i/p
-003D   0CCF           00150                 movlw b'11001111'   ; make GPIO4,GPIO5 o/p
-003E   0006           00151                 tris GPIO           ; set TRIS for GPIO reg
-                      00152                 
-                      00153                 ;enable pull-ups
-003F   0CBF           00154                 movlw b'10111111'
-0040   0002           00155                 option
-                      00156                 
-                      00157                 
+003D   0CCF           00150                 movlw b'11001111'               ; make GPIO4,GPIO5 o/p
+003E   0006           00151                 tris GPIO                       ; set TRIS for GPIO reg
+                      00152 
+                      00153 
+                      00154                 ;enable pull-ups
+003F   0CBF           00155                 movlw b'10111111'
+0040   0002           00156                 option
+                      00157         
                       00158                 
-                      00159                 
-                      00160                 ;enable pullup on gpio0 while using as input
-                      00161                 ;bsf GPIO,INPUT_SIGNAL_PIN_8052
-                      00162                 
-0041   092D           00163                 call disable_8052_EA
-                      00164                 
+                      00159                 ;enable pullup on INPUT_SIGNAL_PIN_8052 while  using as input
+0041   0506           00160                 bsf GPIO,INPUT_SIGNAL_PIN_8052
+                      00161 
+0042   092D           00162                 call disable_8052_EA
+                      00163                 
+                      00164 
                       00165 
-                      00166 
-                      00167         
-0042                  00168 loop:           
-0042   090C           00169                 call readinput
-                      00170                 
-0043   0029           00171                 movwf VAR_Z             ; move return value to VAR_Z
-                      00172                 
-0044   0609           00173                 btfsc VAR_Z,0           ; if return is 1(short signal/pulse), then run the next line
-0045   092D           00174                 call disable_8052_EA    ; if short signal(return is 1) - disable EA, i.e. use Internal R
+                      00166         
+0043                  00167 loop:           
+0043   090C           00168                 call readinput
+                      00169                 
+0044   0029           00170                 movwf VAR_Z             ; move return value to VAR_Z
+                      00171                 
+0045   0609           00172                 btfsc VAR_Z,0           ; if return is 1(short signal/pulse), then run the next line
+0046   092D           00173                 call disable_8052_EA    ; if short signal(return is 1) - disable EA, i.e. use Internal R
                             OM 
-                      00175                 
-0046   0709           00176                 btfss VAR_Z,0           ; if return is 0(long), then run the next line
-0047   091D           00177                 call enable_8052_EA     ; if long signal (return is 0)- use External ROM
-                      00178 
-                      00179                 ;delay 510ms
-0048   0CFF           00180                 movlw d'255'
-                      00181 
-0049   0028           00182                 movwf VAR_Y
-004A   0908           00183                 call delayY             ; 255ms delay
-                      00184 
-004B   0028           00185                 movwf VAR_Y
-004C   0908           00186                 call delayY             ; 255ms delay
+                      00174                 
+0047   0709           00175                 btfss VAR_Z,0           ; if return is 0(long), then run the next line
+0048   091D           00176                 call enable_8052_EA     ; if long signal (return is 0)- use External ROM
+                      00177 
+                      00178                 ;delay 510ms
+0049   0CFF           00179                 movlw d'255'
+                      00180 
+004A   0028           00181                 movwf VAR_Y
+004B   0908           00182                 call delayY             ; 255ms delay
+                      00183 
+004C   0028           00184                 movwf VAR_Y
+004D   0908           00185                 call delayY             ; 255ms delay
+                      00186                 
                       00187                 
-                      00188                 
-                      00189 
-                      00190         
-004D   0A42           00191                 goto loop;
-                      00192                         
-                      00193 
-                      00194         end
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-25-2019  10:41:39         PAGE  5
+                      00188 
+                      00189         
+004E   0A43           00190                 goto loop;
+                      00191                         
+                      00192 
+                      00193         end
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  12:24:28         PAGE  5
 
 
 SYMBOL TABLE
@@ -287,7 +286,7 @@ _CONFIG                           00000FFF
 _CP_OFF                           00000FFF
 _CP_ON                            00000FF7
 _ExtRC_OSC                        00000FFF
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-25-2019  10:41:39         PAGE  6
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  12:24:28         PAGE  6
 
 
 SYMBOL TABLE
@@ -313,7 +312,7 @@ delayY                            00000008
 delayms                           00000001
 disable_8052_EA                   0000002D
 enable_8052_EA                    0000001D
-loop                              00000042
+loop                              00000043
 readinput                         0000000C
 setup                             0000003D
 
@@ -321,13 +320,13 @@ setup                             0000003D
 MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
 
 0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
-0040 : XXXXXXXXXXXXXX-- ---------------- ---------------- ----------------
+0040 : XXXXXXXXXXXXXXX- ---------------- ---------------- ----------------
 0FC0 : ---------------- ---------------- ---------------- ---------------X
 
 All other memory blocks unused.
 
-Program Memory Words Used:    78
-Program Memory Words Free:   434
+Program Memory Words Used:    79
+Program Memory Words Free:   433
 
 
 Errors   :     0

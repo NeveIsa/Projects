@@ -8,13 +8,13 @@
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
+	.globl _SERIAL_LOADER_VERSION_INFO
 	.globl _main
 	.globl _SL_getcmd
 	.globl _SL_read
 	.globl _SL_write
 	.globl _SL_enable_write_protection
 	.globl _SL_disable_write_protection
-	.globl _delay_ms
 	.globl _UartScanLine
 	.globl _UartScanByte
 	.globl _UartPrintNumber
@@ -308,7 +308,6 @@ _EEPROM_WRITE_PROTECTION::
 	.area	OSEG    (OVR,DATA)
 	.area	OSEG    (OVR,DATA)
 	.area	OSEG    (OVR,DATA)
-	.area	OSEG    (OVR,DATA)
 ;--------------------------------------------------------
 ; Stack segment in internal ram 
 ;--------------------------------------------------------
@@ -374,7 +373,7 @@ __interrupt_vect:
 	.globl __mcs51_genXINIT
 	.globl __mcs51_genXRAMCLEAR
 	.globl __mcs51_genRAMCLEAR
-;	serialloader.h:11: volatile unsigned char EEPROM_WRITE_PROTECTION=1;
+;	serialloader.h:20: volatile unsigned char EEPROM_WRITE_PROTECTION=1;
 	mov	_EEPROM_WRITE_PROTECTION,#0x01
 	.area GSFINAL (CODE)
 	ljmp	__sdcc_program_startup
@@ -1189,97 +1188,58 @@ _UartScanLine:
 	pop	_bp
 	ret
 ;------------------------------------------------------------
-;Allocation info for local variables in function 'delay_ms'
-;------------------------------------------------------------
-;millisec                  Allocated to registers r6 r7 
-;i                         Allocated to registers r4 r5 
-;j                         Allocated to registers r3 
-;------------------------------------------------------------
-;	serialloader.h:16: void delay_ms(unsigned int millisec)
-;	-----------------------------------------
-;	 function delay_ms
-;	-----------------------------------------
-_delay_ms:
-	mov	r6,dpl
-	mov	r7,dph
-;	serialloader.h:18: for(unsigned int i=0;i<millisec;i++)for(unsigned char j=0;j<255;j++); //wait millisec * 1ms
-	mov	r4,#0x00
-	mov	r5,#0x00
-00107$:
-	clr	c
-	mov	a,r4
-	subb	a,r6
-	mov	a,r5
-	subb	a,r7
-	jnc	00109$
-	mov	r3,#0x00
-00104$:
-	cjne	r3,#0xff,00130$
-00130$:
-	jnc	00108$
-	inc	r3
-	sjmp	00104$
-00108$:
-	inc	r4
-	cjne	r4,#0x00,00107$
-	inc	r5
-	sjmp	00107$
-00109$:
-;	serialloader.h:19: }
-	ret
-;------------------------------------------------------------
 ;Allocation info for local variables in function 'SL_disable_write_protection'
 ;------------------------------------------------------------
 ;xram_addr                 Allocated to registers 
 ;------------------------------------------------------------
-;	serialloader.h:21: void SL_disable_write_protection()
+;	serialloader.h:24: void SL_disable_write_protection()
 ;	-----------------------------------------
 ;	 function SL_disable_write_protection
 ;	-----------------------------------------
 _SL_disable_write_protection:
-;	serialloader.h:26: *(xram_addr) = 0xAA;
+;	serialloader.h:29: *(xram_addr) = 0xAA;
 	mov	dptr,#0x1555
 	mov	a,#0xaa
 	movx	@dptr,a
-;	serialloader.h:28: *(xram_addr) = 0x55;
+;	serialloader.h:31: *(xram_addr) = 0x55;
 	mov	dptr,#0x0aaa
 	cpl	a
 	movx	@dptr,a
-;	serialloader.h:30: *(xram_addr) = 0x80;
-;	serialloader.h:34: *(xram_addr) = 0xAA;
+;	serialloader.h:33: *(xram_addr) = 0x80;
+;	serialloader.h:37: *(xram_addr) = 0xAA;
 	mov	dptr,#0x1555
 	mov	a,#0x80
 	movx	@dptr,a
 	mov	a,#0xaa
 	movx	@dptr,a
-;	serialloader.h:36: *(xram_addr) = 0x55;
+;	serialloader.h:39: *(xram_addr) = 0x55;
 	mov	dptr,#0x0aaa
 	cpl	a
 	movx	@dptr,a
-;	serialloader.h:38: *(xram_addr) = 0x20;
+;	serialloader.h:41: *(xram_addr) = 0x20;
 	mov	dptr,#0x1555
 	mov	a,#0x20
 	movx	@dptr,a
-;	serialloader.h:40: UartWrite('D'); //ack
+;	serialloader.h:43: UartWrite('D'); //ack
 	mov	dpl,#0x44
 	lcall	_UartWrite
-;	serialloader.h:42: EEPROM_WRITE_PROTECTION=0; //change flag
+;	serialloader.h:45: EEPROM_WRITE_PROTECTION=0; //change flag
 	mov	_EEPROM_WRITE_PROTECTION,#0x00
-;	serialloader.h:43: }
+;	serialloader.h:46: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'SL_enable_write_protection'
 ;------------------------------------------------------------
-;	serialloader.h:45: void SL_enable_write_protection()
+;	serialloader.h:48: void SL_enable_write_protection()
 ;	-----------------------------------------
 ;	 function SL_enable_write_protection
 ;	-----------------------------------------
 _SL_enable_write_protection:
-;	serialloader.h:47: EEPROM_WRITE_PROTECTION=1; //change flag
+;	serialloader.h:50: EEPROM_WRITE_PROTECTION=1; //change flag
 	mov	_EEPROM_WRITE_PROTECTION,#0x01
-;	serialloader.h:48: UartWrite('E'); 
+;	serialloader.h:51: UartWrite('E'); 
 	mov	dpl,#0x45
-;	serialloader.h:49: }
+;	serialloader.h:52: }
 	ljmp	_UartWrite
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'SL_write'
@@ -1288,22 +1248,22 @@ _SL_enable_write_protection:
 ;addr                      Allocated to registers r7 r6 
 ;xram_addr                 Allocated to registers 
 ;------------------------------------------------------------
-;	serialloader.h:51: void SL_write()
+;	serialloader.h:54: void SL_write()
 ;	-----------------------------------------
 ;	 function SL_write
 ;	-----------------------------------------
 _SL_write:
-;	serialloader.h:57: while(UartReadReady()==0); //wait till we rcv data
+;	serialloader.h:60: while(UartReadReady()==0); //wait till we rcv data
 00101$:
 	lcall	_UartReadReady
 	mov	a,dpl
 	jz	00101$
-;	serialloader.h:60: addr = UartRead(); //msb
+;	serialloader.h:63: addr = UartRead(); //msb
 	lcall	_UartRead
-;	serialloader.h:61: addr = addr << 8;
+;	serialloader.h:64: addr = addr << 8;
 	mov	r6,dpl
 	mov	r7,#0x00
-;	serialloader.h:62: addr |= UartRead(); //lsb
+;	serialloader.h:65: addr |= UartRead(); //lsb
 	push	ar7
 	push	ar6
 	lcall	_UartRead
@@ -1315,38 +1275,38 @@ _SL_write:
 	orl	ar7,a
 	mov	a,r4
 	orl	ar6,a
-;	serialloader.h:64: data = UartRead(); //read data
+;	serialloader.h:67: data = UartRead(); //read data
 	push	ar7
 	push	ar6
 	lcall	_UartRead
 	mov	r5,dpl
 	pop	ar6
 	pop	ar7
-;	serialloader.h:66: if(EEPROM_WRITE_PROTECTION)
+;	serialloader.h:69: if(EEPROM_WRITE_PROTECTION)
 	mov	a,_EEPROM_WRITE_PROTECTION
 	jz	00105$
-;	serialloader.h:70: *(xram_addr) = 0xAA;
+;	serialloader.h:73: *(xram_addr) = 0xAA;
 	mov	dptr,#0x1555
 	mov	a,#0xaa
 	movx	@dptr,a
-;	serialloader.h:72: *(xram_addr) = 0x55;
+;	serialloader.h:75: *(xram_addr) = 0x55;
 	mov	dptr,#0x0aaa
 	cpl	a
 	movx	@dptr,a
-;	serialloader.h:74: *(xram_addr) = 0xA0;
+;	serialloader.h:77: *(xram_addr) = 0xA0;
 	mov	dptr,#0x1555
 	mov	a,#0xa0
 	movx	@dptr,a
 00105$:
-;	serialloader.h:77: xram_addr = (__xdata char*) addr;
+;	serialloader.h:80: xram_addr = (__xdata unsigned char*) addr;
 	mov	dpl,r7
 	mov	dph,r6
-;	serialloader.h:79: *(xram_addr) = data; //write to xram
+;	serialloader.h:82: *(xram_addr) = data; //write to xram
 	mov	a,r5
 	movx	@dptr,a
-;	serialloader.h:81: UartWrite('W'); //ack
+;	serialloader.h:84: UartWrite('W'); //ack
 	mov	dpl,#0x57
-;	serialloader.h:83: }
+;	serialloader.h:86: }
 	ljmp	_UartWrite
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'SL_read'
@@ -1355,22 +1315,22 @@ _SL_write:
 ;addr                      Allocated to registers r7 r6 
 ;xram_addr                 Allocated to registers 
 ;------------------------------------------------------------
-;	serialloader.h:85: void SL_read()
+;	serialloader.h:88: void SL_read()
 ;	-----------------------------------------
 ;	 function SL_read
 ;	-----------------------------------------
 _SL_read:
-;	serialloader.h:91: while(UartReadReady()==0); //wait till we rcv data
+;	serialloader.h:94: while(UartReadReady()==0); //wait till we rcv data
 00101$:
 	lcall	_UartReadReady
 	mov	a,dpl
 	jz	00101$
-;	serialloader.h:95: addr = UartRead(); //msb
+;	serialloader.h:98: addr = UartRead(); //msb
 	lcall	_UartRead
-;	serialloader.h:96: addr = addr << 8;
+;	serialloader.h:99: addr = addr << 8;
 	mov	r6,dpl
 	mov	r7,#0x00
-;	serialloader.h:97: addr |= UartRead(); //lsb
+;	serialloader.h:100: addr |= UartRead(); //lsb
 	push	ar7
 	push	ar6
 	lcall	_UartRead
@@ -1382,84 +1342,109 @@ _SL_read:
 	orl	ar7,a
 	mov	a,r4
 	orl	ar6,a
-;	serialloader.h:99: xram_addr = (__xdata char*) addr;
+;	serialloader.h:102: xram_addr = (__xdata unsigned char*) addr;
 	mov	dpl,r7
 	mov	dph,r6
-;	serialloader.h:101: data = *(xram_addr); //read from xram
+;	serialloader.h:104: data = *(xram_addr); //read from xram
 	movx	a,@dptr
-;	serialloader.h:103: UartWrite(data);
+;	serialloader.h:106: UartWrite(data);
 	mov	dpl,a
-;	serialloader.h:105: }
+;	serialloader.h:108: }
 	ljmp	_UartWrite
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'SL_getcmd'
 ;------------------------------------------------------------
 ;cmd                       Allocated to registers r7 
 ;------------------------------------------------------------
-;	serialloader.h:107: void SL_getcmd()
+;	serialloader.h:111: unsigned char SL_getcmd()
 ;	-----------------------------------------
 ;	 function SL_getcmd
 ;	-----------------------------------------
 _SL_getcmd:
-;	serialloader.h:110: while(UartReadReady()) UartRead(); //flush 
+;	serialloader.h:114: while(UartReadReady()) UartRead(); //flush 
 00101$:
 	lcall	_UartReadReady
 	mov	a,dpl
 	jz	00104$
 	lcall	_UartRead
-;	serialloader.h:112: while(UartReadReady()==0); //wait till we rcv data 
+;	serialloader.h:116: while(UartReadReady()==0); //wait till we rcv data 
 	sjmp	00101$
 00104$:
 	lcall	_UartReadReady
 	mov	a,dpl
 	jz	00104$
-;	serialloader.h:115: cmd = UartRead(); //read
+;	serialloader.h:119: cmd = UartRead(); //read
 	lcall	_UartRead
 	mov	r7,dpl
-;	serialloader.h:117: switch(cmd)
-	cjne	r7,#0x44,00154$
+;	serialloader.h:121: switch(cmd)
+	cjne	r7,#0x44,00159$
 	sjmp	00110$
-00154$:
-	cjne	r7,#0x45,00155$
+00159$:
+	cjne	r7,#0x45,00160$
 	sjmp	00111$
-00155$:
-	cjne	r7,#0x52,00156$
+00160$:
+	cjne	r7,#0x52,00161$
 	sjmp	00108$
-00156$:
-	cjne	r7,#0x56,00157$
+00161$:
+	cjne	r7,#0x56,00162$
 	sjmp	00107$
-00157$:
-;	serialloader.h:119: case 'V':
-	cjne	r7,#0x57,00114$
+00162$:
+	cjne	r7,#0x57,00163$
 	sjmp	00109$
+00163$:
+;	serialloader.h:123: case 'V':
+	cjne	r7,#0x58,00114$
+	sjmp	00112$
 00107$:
-;	serialloader.h:120: UartPrint("ISA_SERIAL_LOADER_V0.1:8052\n");
-	mov	dptr,#___str_1
+;	serialloader.h:124: UartPrint(SERIAL_LOADER_VERSION_INFO);
+	mov	dptr,#_SERIAL_LOADER_VERSION_INFO
 	mov	b,#0x80
-;	serialloader.h:121: break;
-;	serialloader.h:122: case 'R':
-	ljmp	_UartPrint
+	push	ar7
+	lcall	_UartPrint
+	pop	ar7
+;	serialloader.h:125: break;
+;	serialloader.h:126: case 'R':
+	sjmp	00114$
 00108$:
-;	serialloader.h:123: SL_read();
-;	serialloader.h:124: break;
-;	serialloader.h:125: case 'W':
-	ljmp	_SL_read
+;	serialloader.h:127: SL_read();
+	push	ar7
+	lcall	_SL_read
+	pop	ar7
+;	serialloader.h:128: break;
+;	serialloader.h:129: case 'W':
+	sjmp	00114$
 00109$:
-;	serialloader.h:126: SL_write();
-;	serialloader.h:127: break;
-;	serialloader.h:128: case 'D':
-	ljmp	_SL_write
+;	serialloader.h:130: SL_write();
+	push	ar7
+	lcall	_SL_write
+	pop	ar7
+;	serialloader.h:131: break;
+;	serialloader.h:132: case 'D':
+	sjmp	00114$
 00110$:
-;	serialloader.h:129: SL_disable_write_protection();
-;	serialloader.h:130: break;
-;	serialloader.h:131: case 'E':
-	ljmp	_SL_disable_write_protection
+;	serialloader.h:133: SL_disable_write_protection();
+	push	ar7
+	lcall	_SL_disable_write_protection
+	pop	ar7
+;	serialloader.h:134: break;
+;	serialloader.h:135: case 'E':
+	sjmp	00114$
 00111$:
-;	serialloader.h:132: SL_enable_write_protection();
-;	serialloader.h:136: }
-;	serialloader.h:137: }
-	ljmp	_SL_enable_write_protection
+;	serialloader.h:136: SL_enable_write_protection();
+	push	ar7
+	lcall	_SL_enable_write_protection
+	pop	ar7
+;	serialloader.h:137: break;
+;	serialloader.h:138: case 'X': //execute
+	sjmp	00114$
+00112$:
+;	serialloader.h:139: SELF_RESET_PORT &= ~(1<<SELF_RESET_PIN);
+	anl	_P1,#0xef
+;	serialloader.h:143: }
 00114$:
+;	serialloader.h:145: return cmd;
+	mov	dpl,r7
+;	serialloader.h:146: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'main'
@@ -1530,11 +1515,9 @@ ___str_0:
 	.ascii "Number in Hex - eg(FE for 254): "
 	.db 0x00
 	.area CSEG    (CODE)
-	.area CONST   (CODE)
-___str_1:
-	.ascii "ISA_SERIAL_LOADER_V0.1:8052"
+_SERIAL_LOADER_VERSION_INFO:
+	.ascii "ISA:S0:8052"
 	.db 0x0a
 	.db 0x00
-	.area CSEG    (CODE)
 	.area XINIT   (CODE)
 	.area CABS    (ABS,CODE)
