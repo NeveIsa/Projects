@@ -204,10 +204,6 @@ void main(void)
         if(_resp==0) break;
         for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
         { 
-            UartPrintNumber(__global_rootEntry.bytes_read);
-            UartWrite('/');
-            UartPrintNumber(__global_rootEntry.size);
-            UartPrint("\r");
 
             //UartWrite(buff[i]);
             
@@ -223,7 +219,13 @@ void main(void)
                 UartPrint("\nVerif. fail");
                 while(1);
             }
-        }   
+        }  
+	
+	//print the nuber of bytes written and verified
+    	UartPrintNumber(__global_rootEntry.bytes_read);
+    	UartWrite('/');
+    	UartPrintNumber(__global_rootEntry.size);
+    	UartPrint("\r");
     }
 
     //SELF RESET

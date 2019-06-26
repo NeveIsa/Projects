@@ -75,10 +75,14 @@ readinput:	; reads if long or short 0V[low] signal/pulse on INPUT_SIGNAL_PIN_805
 		retlw 0 ; if bit still pulled low (clear), long signal
 		
 		
-enable_8052_EA:
-		bcf GPIO,EA_PIN_8052		;make EA_PIN low -> external access
+enable_8052_EA:	
+		bsf GPIO,RESET_PIN_8052		; 8052 RESET_PIN high -> trigger reset
+						; note 8052 reset is ACTIVE HIGH
+						; and reset signal must be applied 
+						; for atleast 2 machine cycles
+						; at 12MHz, 2 machine cycles = 2us
 		
-		
+	
 		; making a 100ms delay -> cant call delayY as stack depth is only 2
 		movlw d'100'
 		movwf VAR_Y
@@ -86,12 +90,10 @@ enable_8052_EA:
 		decfsz VAR_Y,F
 		goto $-2
 		
-		bsf GPIO,RESET_PIN_8052		; 8052 RESET_PIN high -> trigger reset
-						; note 8052 reset is ACTIVE HIGH
-						; and reset signal must be applied 
-						; for atleast 2 machine cycles
-						; at 12MHz, 2 machine cycles = 2us
 						
+		bcf GPIO,EA_PIN_8052		;make EA_PIN low -> external access
+		
+	
 		; making a 100ms delay -> cant call delayY as stack depth is only 2
 		movlw d'100'
 		movwf VAR_Y
@@ -111,9 +113,12 @@ enable_8052_EA:
 		
 		
 disable_8052_EA:
-		bsf GPIO,EA_PIN_8052		;make EA_PIN high -> internal access
-		
-		
+		bsf GPIO,RESET_PIN_8052		; 8052 RESET_PIN high -> trigger reset
+						; note 8052 reset is ACTIVE HIGH
+						; and reset signal must be applied 
+						; for atleast 2 machine cycles
+						; at 12MHz, 2 machine cycles = 2us
+	
 		; making a 100ms delay -> cant call delayY as stack depth is only 2
 		movlw d'100'
 		movwf VAR_Y
@@ -121,12 +126,10 @@ disable_8052_EA:
 		decfsz VAR_Y,F
 		goto $-2
 		
-		bsf GPIO,RESET_PIN_8052		; 8052 RESET_PIN high -> trigger reset
-						; note 8052 reset is ACTIVE HIGH
-						; and reset signal must be applied 
-						; for atleast 2 machine cycles
-						; at 12MHz, 2 machine cycles = 2us
 						
+		bsf GPIO,EA_PIN_8052		;make EA_PIN high -> internal access	
+
+	
 		; making a 100ms delay -> cant call delayY as stack depth is only 2
 		movlw d'100'
 		movwf VAR_Y

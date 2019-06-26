@@ -371,8 +371,6 @@ _EEPROM_WRITE_PROTECTION::
 	.ds 1
 _main_buff_65536_216:
 	.ds 16
-_main_xram_addr_65536_216:
-	.ds 2
 ;--------------------------------------------------------
 ; overlayable items in internal ram 
 ;--------------------------------------------------------
@@ -5526,11 +5524,11 @@ _SelectFileAndFileOpen:
 ;------------------------------------------------------------
 ;buff                      Allocated with name '_main_buff_65536_216'
 ;_resp                     Allocated to registers r7 
-;xram_addr                 Allocated with name '_main_xram_addr_65536_216'
+;xram_addr                 Allocated to registers r6 r7 
 ;_t                        Allocated to registers r5 r6 
 ;wastetime                 Allocated to registers r4 
 ;i                         Allocated to registers r5 
-;i                         Allocated to registers r7 
+;i                         Allocated to registers r5 
 ;------------------------------------------------------------
 ;	main.c:134: void main(void)
 ;	-----------------------------------------
@@ -5628,21 +5626,21 @@ _main:
 ;	main.c:196: UartWrite('\n');
 	mov	dpl,#0x0a
 	lcall	_UartWrite
-	sjmp	00159$
+	sjmp	00163$
 00115$:
 ;	main.c:198: else SelectFileAndFileOpen();
 	lcall	_SelectFileAndFileOpen
 ;	main.c:200: while(1)
-00159$:
+00163$:
 00127$:
 ;	main.c:202: xram_addr=(__xdata unsigned char*)(uint16_t)__global_rootEntry.bytes_read;        
 	mov	r0,#(___global_rootEntry + 0x0014)
 	mov	ar6,@r0
 	inc	r0
 	mov	ar7,@r0
-	mov	_main_xram_addr_65536_216,r6
-	mov	(_main_xram_addr_65536_216 + 1),r7
 ;	main.c:203: _resp=FAT16_FILE_READ(FILE_BUFF_SIZE,buff);
+	push	ar7
+	push	ar6
 	mov	a,#_main_buff_65536_216
 	push	acc
 	mov	a,#(_main_buff_65536_216 >> 8)
@@ -5655,6 +5653,8 @@ _main:
 	dec	sp
 	dec	sp
 	dec	sp
+	pop	ar6
+	pop	ar7
 ;	main.c:204: if(_resp==0) break;
 	mov	a,r5
 	jnz	00234$
@@ -5666,102 +5666,100 @@ _main:
 	cjne	r5,#0x10,00235$
 00235$:
 	jnc	00119$
-;	main.c:207: UartPrintNumber(__global_rootEntry.bytes_read);
-	mov	r0,#(___global_rootEntry + 0x0014)
-	mov	ar2,@r0
-	inc	r0
-	mov	ar3,@r0
-	inc	r0
-	mov	ar4,@r0
-	inc	r0
-	mov	ar7,@r0
-	mov	dpl,r2
-	mov	dph,r3
-	mov	b,r4
-	mov	a,r7
-	push	ar5
-	lcall	_UartPrintNumber
-;	main.c:208: UartWrite('/');
-	mov	dpl,#0x2f
-	lcall	_UartWrite
-;	main.c:209: UartPrintNumber(__global_rootEntry.size);
-	mov	r0,#(___global_rootEntry + 0x000e)
-	mov	ar3,@r0
-	inc	r0
-	mov	ar4,@r0
-	inc	r0
-	mov	ar6,@r0
-	inc	r0
-	mov	ar7,@r0
-	mov	dpl,r3
-	mov	dph,r4
-	mov	b,r6
-	mov	a,r7
-	lcall	_UartPrintNumber
-;	main.c:210: UartPrint("\r");
-	mov	dptr,#___str_23
-	mov	b,#0x80
-	lcall	_UartPrint
-	pop	ar5
-;	main.c:215: *(xram_addr+i) = buff[i];
+;	main.c:211: *(xram_addr+i) = buff[i];
 	mov	a,r5
-	add	a,_main_xram_addr_65536_216
+	add	a,r6
 	mov	dpl,a
 	clr	a
-	addc	a,(_main_xram_addr_65536_216 + 1)
+	addc	a,r7
 	mov	dph,a
 	mov	a,r5
 	add	a,#_main_buff_65536_216
 	mov	r1,a
 	mov	a,@r1
-	mov	r7,a
+	mov	r4,a
 	movx	@dptr,a
 ;	main.c:205: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
 	inc	r5
 	sjmp	00139$
 00119$:
-;	main.c:219: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
-	mov	r7,#0x00
+;	main.c:215: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
+	mov	r5,#0x00
 00142$:
-	cjne	r7,#0x10,00237$
+	cjne	r5,#0x10,00237$
 00237$:
-	jc	00238$
-	ljmp	00127$
-00238$:
-;	main.c:221: if(buff[i]!=*(xram_addr+i)) 
-	mov	a,r7
+	jnc	00125$
+;	main.c:217: if(buff[i]!=*(xram_addr+i)) 
+	mov	a,r5
 	add	a,#_main_buff_65536_216
 	mov	r1,a
-	mov	ar6,@r1
-	mov	a,r7
-	add	a,_main_xram_addr_65536_216
+	mov	ar4,@r1
+	mov	a,r5
+	add	a,r6
 	mov	dpl,a
 	clr	a
-	addc	a,(_main_xram_addr_65536_216 + 1)
+	addc	a,r7
 	mov	dph,a
 	movx	a,@dptr
-	mov	r5,a
-	mov	a,r6
-	cjne	a,ar5,00239$
+	mov	r3,a
+	mov	a,r4
+	cjne	a,ar3,00239$
 	sjmp	00143$
 00239$:
-;	main.c:223: UartPrint("\nVerif. fail");
-	mov	dptr,#___str_24
+;	main.c:219: UartPrint("\nVerif. fail");
+	mov	dptr,#___str_23
 	mov	b,#0x80
 	lcall	_UartPrint
-;	main.c:224: while(1);
+;	main.c:220: while(1);
 00121$:
 	sjmp	00121$
 00143$:
-;	main.c:219: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
-	inc	r7
+;	main.c:215: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
+	inc	r5
 	sjmp	00142$
+00125$:
+;	main.c:225: UartPrintNumber(__global_rootEntry.bytes_read);
+	mov	r0,#(___global_rootEntry + 0x0014)
+	mov	ar4,@r0
+	inc	r0
+	mov	ar5,@r0
+	inc	r0
+	mov	ar6,@r0
+	inc	r0
+	mov	ar7,@r0
+	mov	dpl,r4
+	mov	dph,r5
+	mov	b,r6
+	mov	a,r7
+	lcall	_UartPrintNumber
+;	main.c:226: UartWrite('/');
+	mov	dpl,#0x2f
+	lcall	_UartWrite
+;	main.c:227: UartPrintNumber(__global_rootEntry.size);
+	mov	r0,#(___global_rootEntry + 0x000e)
+	mov	ar4,@r0
+	inc	r0
+	mov	ar5,@r0
+	inc	r0
+	mov	ar6,@r0
+	inc	r0
+	mov	ar7,@r0
+	mov	dpl,r4
+	mov	dph,r5
+	mov	b,r6
+	mov	a,r7
+	lcall	_UartPrintNumber
+;	main.c:228: UartPrint("\r");
+	mov	dptr,#___str_24
+	mov	b,#0x80
+	lcall	_UartPrint
+	ljmp	00127$
 00128$:
-;	main.c:230: SELF_RESET_PORT &= ~(1<<SELF_RESET_PIN);
+;	main.c:232: SELF_RESET_PORT &= ~(1<<SELF_RESET_PIN);
 	anl	_P1,#0xef
-;	main.c:233: while(1);    
+;	main.c:235: while(1);    
 00130$:
-;	main.c:235: }
+;	main.c:237: }
 	sjmp	00130$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
@@ -5907,13 +5905,13 @@ ___str_22:
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 ___str_23:
-	.db 0x0d
+	.db 0x0a
+	.ascii "Verif. fail"
 	.db 0x00
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 ___str_24:
-	.db 0x0a
-	.ascii "Verif. fail"
+	.db 0x0d
 	.db 0x00
 	.area CSEG    (CODE)
 	.area XINIT   (CODE)

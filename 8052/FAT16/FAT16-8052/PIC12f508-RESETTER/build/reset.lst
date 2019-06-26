@@ -1,4 +1,4 @@
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  12:24:28         PAGE  1
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  21:51:11         PAGE  1
 
 
 LOC    OBJECT CODE    LINE  SOURCE TEXT
@@ -57,7 +57,7 @@ LOC    OBJECT CODE    LINE  SOURCE TEXT
                       00040 
 0008                  00041 delayY:
 0008   0901           00042                 call delayms
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  12:24:28         PAGE  2
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  21:51:11         PAGE  2
 
 
 LOC    OBJECT CODE    LINE  SOURCE TEXT
@@ -98,136 +98,139 @@ LOC    OBJECT CODE    LINE  SOURCE TEXT
 001C   0800           00075                 retlw 0 ; if bit still pulled low (clear), long signal
                       00076                 
                       00077                 
-001D                  00078 enable_8052_EA:
-001D   04A6           00079                 bcf GPIO,EA_PIN_8052            ;make EA_PIN low -> external access
-                      00080                 
-                      00081                 
-                      00082                 ; making a 100ms delay -> cant call delayY as stack depth is only 2
-001E   0C64           00083                 movlw d'100'
-001F   0028           00084                 movwf VAR_Y
-0020   0901           00085                 call delayms
-0021   02E8           00086                 decfsz VAR_Y,F
-0022   0A20           00087                 goto $-2
-                      00088                 
-0023   0586           00089                 bsf GPIO,RESET_PIN_8052         ; 8052 RESET_PIN high -> trigger reset
-                      00090                                                 ; note 8052 reset is ACTIVE HIGH
-                      00091                                                 ; and reset signal must be applied 
-                      00092                                                 ; for atleast 2 machine cycles
-                      00093                                                 ; at 12MHz, 2 machine cycles = 2us
-                      00094                                                 
-                      00095                 ; making a 100ms delay -> cant call delayY as stack depth is only 2
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  12:24:28         PAGE  3
+001D                  00078 enable_8052_EA: 
+001D   0586           00079                 bsf GPIO,RESET_PIN_8052         ; 8052 RESET_PIN high -> trigger reset
+                      00080                                                 ; note 8052 reset is ACTIVE HIGH
+                      00081                                                 ; and reset signal must be applied 
+                      00082                                                 ; for atleast 2 machine cycles
+                      00083                                                 ; at 12MHz, 2 machine cycles = 2us
+                      00084                 
+                      00085         
+                      00086                 ; making a 100ms delay -> cant call delayY as stack depth is only 2
+001E   0C64           00087                 movlw d'100'
+001F   0028           00088                 movwf VAR_Y
+0020   0901           00089                 call delayms
+0021   02E8           00090                 decfsz VAR_Y,F
+0022   0A20           00091                 goto $-2
+                      00092                 
+                      00093                                                 
+0023   04A6           00094                 bcf GPIO,EA_PIN_8052            ;make EA_PIN low -> external access
+                      00095                 
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  21:51:11         PAGE  3
 
 
 LOC    OBJECT CODE    LINE  SOURCE TEXT
   VALUE
 
-0024   0C64           00096                 movlw d'100'
-0025   0028           00097                 movwf VAR_Y
-0026   0901           00098                 call delayms
-0027   02E8           00099                 decfsz VAR_Y,F
-0028   0A26           00100                 goto $-2
-                      00101                 
-0029   0486           00102                 bcf GPIO,RESET_PIN_8052         ; make RESET_PIN low -> stop trigger reset
+                      00096         
+                      00097                 ; making a 100ms delay -> cant call delayY as stack depth is only 2
+0024   0C64           00098                 movlw d'100'
+0025   0028           00099                 movwf VAR_Y
+0026   0901           00100                 call delayms
+0027   02E8           00101                 decfsz VAR_Y,F
+0028   0A26           00102                 goto $-2
                       00103                 
-002A   0901           00104                 call delayms
+0029   0486           00104                 bcf GPIO,RESET_PIN_8052         ; make RESET_PIN low -> stop trigger reset
                       00105                 
-002B   0506           00106                 bsf GPIO,INPUT_SIGNAL_PIN_8052  ; keep pullup on INPUT_SIGNAL_PIN_8052 as
-                      00107                                                 ; it might have been affected by the bsf
-                      00108                                                 ; read-modify-write command - check Dsheet for more
-                      00109                 
-002C   0800           00110                 retlw 0
+002A   0901           00106                 call delayms
+                      00107                 
+002B   0506           00108                 bsf GPIO,INPUT_SIGNAL_PIN_8052  ; keep pullup on INPUT_SIGNAL_PIN_8052 as
+                      00109                                                 ; it might have been affected by the bsf
+                      00110                                                 ; read-modify-write command - check Dsheet for more
                       00111                 
-                      00112                 
-002D                  00113 disable_8052_EA:
-002D   05A6           00114                 bsf GPIO,EA_PIN_8052            ;make EA_PIN high -> internal access
-                      00115                 
-                      00116                 
-                      00117                 ; making a 100ms delay -> cant call delayY as stack depth is only 2
-002E   0C64           00118                 movlw d'100'
-002F   0028           00119                 movwf VAR_Y
-0030   0901           00120                 call delayms
-0031   02E8           00121                 decfsz VAR_Y,F
-0032   0A30           00122                 goto $-2
-                      00123                 
-0033   0586           00124                 bsf GPIO,RESET_PIN_8052         ; 8052 RESET_PIN high -> trigger reset
-                      00125                                                 ; note 8052 reset is ACTIVE HIGH
-                      00126                                                 ; and reset signal must be applied 
-                      00127                                                 ; for atleast 2 machine cycles
-                      00128                                                 ; at 12MHz, 2 machine cycles = 2us
+002C   0800           00112                 retlw 0
+                      00113                 
+                      00114                 
+002D                  00115 disable_8052_EA:
+002D   0586           00116                 bsf GPIO,RESET_PIN_8052         ; 8052 RESET_PIN high -> trigger reset
+                      00117                                                 ; note 8052 reset is ACTIVE HIGH
+                      00118                                                 ; and reset signal must be applied 
+                      00119                                                 ; for atleast 2 machine cycles
+                      00120                                                 ; at 12MHz, 2 machine cycles = 2us
+                      00121         
+                      00122                 ; making a 100ms delay -> cant call delayY as stack depth is only 2
+002E   0C64           00123                 movlw d'100'
+002F   0028           00124                 movwf VAR_Y
+0030   0901           00125                 call delayms
+0031   02E8           00126                 decfsz VAR_Y,F
+0032   0A30           00127                 goto $-2
+                      00128                 
                       00129                                                 
-                      00130                 ; making a 100ms delay -> cant call delayY as stack depth is only 2
-0034   0C64           00131                 movlw d'100'
-0035   0028           00132                 movwf VAR_Y
-0036   0901           00133                 call delayms
-0037   02E8           00134                 decfsz VAR_Y,F
-0038   0A36           00135                 goto $-2
-                      00136                 
-0039   0486           00137                 bcf GPIO,RESET_PIN_8052         ; make RESET_PIN low -> stop trigger reset
-                      00138                 
-003A   0901           00139                 call delayms 
-                      00140                 
-003B   0506           00141                 bsf GPIO,INPUT_SIGNAL_PIN_8052  ; keep pullup on INPUT_SIGNAL_PIN_8052 as
-                      00142                                                 ; it might have been affected by the bsf
-                      00143                                                 ; read-modify-write command - check Dsheet for more
-                      00144                 
-003C   0800           00145                 retlw 0 
-                      00146                 
+0033   05A6           00130                 bsf GPIO,EA_PIN_8052            ;make EA_PIN high -> internal access    
+                      00131 
+                      00132         
+                      00133                 ; making a 100ms delay -> cant call delayY as stack depth is only 2
+0034   0C64           00134                 movlw d'100'
+0035   0028           00135                 movwf VAR_Y
+0036   0901           00136                 call delayms
+0037   02E8           00137                 decfsz VAR_Y,F
+0038   0A36           00138                 goto $-2
+                      00139                 
+0039   0486           00140                 bcf GPIO,RESET_PIN_8052         ; make RESET_PIN low -> stop trigger reset
+                      00141                 
+003A   0901           00142                 call delayms 
+                      00143                 
+003B   0506           00144                 bsf GPIO,INPUT_SIGNAL_PIN_8052  ; keep pullup on INPUT_SIGNAL_PIN_8052 as
+                      00145                                                 ; it might have been affected by the bsf
+                      00146                                                 ; read-modify-write command - check Dsheet for more
                       00147                 
-003D                  00148 setup:                  
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  12:24:28         PAGE  4
+003C   0800           00148                 retlw 0 
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  21:51:11         PAGE  4
 
 
 LOC    OBJECT CODE    LINE  SOURCE TEXT
   VALUE
 
-                      00149                 ;set gpio4 and gpio5 as o/p, gpio0 i/p
-003D   0CCF           00150                 movlw b'11001111'               ; make GPIO4,GPIO5 o/p
-003E   0006           00151                 tris GPIO                       ; set TRIS for GPIO reg
-                      00152 
-                      00153 
-                      00154                 ;enable pull-ups
-003F   0CBF           00155                 movlw b'10111111'
-0040   0002           00156                 option
-                      00157         
-                      00158                 
-                      00159                 ;enable pullup on INPUT_SIGNAL_PIN_8052 while  using as input
-0041   0506           00160                 bsf GPIO,INPUT_SIGNAL_PIN_8052
-                      00161 
-0042   092D           00162                 call disable_8052_EA
-                      00163                 
+                      00149                 
+                      00150                 
+003D                  00151 setup:                  
+                      00152                 ;set gpio4 and gpio5 as o/p, gpio0 i/p
+003D   0CCF           00153                 movlw b'11001111'               ; make GPIO4,GPIO5 o/p
+003E   0006           00154                 tris GPIO                       ; set TRIS for GPIO reg
+                      00155 
+                      00156 
+                      00157                 ;enable pull-ups
+003F   0CBF           00158                 movlw b'10111111'
+0040   0002           00159                 option
+                      00160         
+                      00161                 
+                      00162                 ;enable pullup on INPUT_SIGNAL_PIN_8052 while  using as input
+0041   0506           00163                 bsf GPIO,INPUT_SIGNAL_PIN_8052
                       00164 
-                      00165 
-                      00166         
-0043                  00167 loop:           
-0043   090C           00168                 call readinput
-                      00169                 
-0044   0029           00170                 movwf VAR_Z             ; move return value to VAR_Z
-                      00171                 
-0045   0609           00172                 btfsc VAR_Z,0           ; if return is 1(short signal/pulse), then run the next line
-0046   092D           00173                 call disable_8052_EA    ; if short signal(return is 1) - disable EA, i.e. use Internal R
-                            OM 
+0042   092D           00165                 call disable_8052_EA
+                      00166                 
+                      00167 
+                      00168 
+                      00169         
+0043                  00170 loop:           
+0043   090C           00171                 call readinput
+                      00172                 
+0044   0029           00173                 movwf VAR_Z             ; move return value to VAR_Z
                       00174                 
-0047   0709           00175                 btfss VAR_Z,0           ; if return is 0(long), then run the next line
-0048   091D           00176                 call enable_8052_EA     ; if long signal (return is 0)- use External ROM
-                      00177 
-                      00178                 ;delay 510ms
-0049   0CFF           00179                 movlw d'255'
+0045   0609           00175                 btfsc VAR_Z,0           ; if return is 1(short signal/pulse), then run the next line
+0046   092D           00176                 call disable_8052_EA    ; if short signal(return is 1) - disable EA, i.e. use Internal R
+                            OM 
+                      00177                 
+0047   0709           00178                 btfss VAR_Z,0           ; if return is 0(long), then run the next line
+0048   091D           00179                 call enable_8052_EA     ; if long signal (return is 0)- use External ROM
                       00180 
-004A   0028           00181                 movwf VAR_Y
-004B   0908           00182                 call delayY             ; 255ms delay
+                      00181                 ;delay 510ms
+0049   0CFF           00182                 movlw d'255'
                       00183 
-004C   0028           00184                 movwf VAR_Y
-004D   0908           00185                 call delayY             ; 255ms delay
-                      00186                 
-                      00187                 
-                      00188 
-                      00189         
-004E   0A43           00190                 goto loop;
-                      00191                         
-                      00192 
-                      00193         end
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  12:24:28         PAGE  5
+004A   0028           00184                 movwf VAR_Y
+004B   0908           00185                 call delayY             ; 255ms delay
+                      00186 
+004C   0028           00187                 movwf VAR_Y
+004D   0908           00188                 call delayY             ; 255ms delay
+                      00189                 
+                      00190                 
+                      00191 
+                      00192         
+004E   0A43           00193                 goto loop;
+                      00194                         
+                      00195 
+                      00196         end
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  21:51:11         PAGE  5
 
 
 SYMBOL TABLE
@@ -286,7 +289,7 @@ _CONFIG                           00000FFF
 _CP_OFF                           00000FFF
 _CP_ON                            00000FF7
 _ExtRC_OSC                        00000FFF
-gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  12:24:28         PAGE  6
+gpasm-1.4.0 #1107 (Apr  3 2018)     reset.asm   6-26-2019  21:51:11         PAGE  6
 
 
 SYMBOL TABLE

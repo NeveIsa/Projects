@@ -7,7 +7,7 @@ void spi_delay(unsigned int ms)
 	unsigned int j=0,i=0;
 	for( i=0;i<ms;i++)
 	{
-		for(;j<120;j++);
+		for(j=0;j<120;j++);
 	}
 }
 #endif
