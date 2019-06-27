@@ -40,53 +40,54 @@ void SelectFAT16PartitionPrompt() __reentrant
     }
 
     
-    _resp=MBR_DETECT_FAT16();
+    _resp=MBR_DETECT_FAT16(); 	// _resp now contains the bit set for the partitions which have valid FAT16 ID
+    				// i.e, if partition 0 and partition 3 are valid FAT16 partitions, then _resp = b00001001
+
     if(_resp)
     {
-        //check if _resp is power of two - if it is, then we have only one valid FAT16 partition,
+	
+	//print partitions
+        for(uint8_t i=0;i<4;i++)
+        {
+            UartPrint("\nPtn. ");UartWriteNumber(i,HEX);UartWrite('> ');
+            if(_resp & 1<<i) UartPrint("FAT16");
+            else UartPrint("Unknown");
+        }
+
+        
+	//check if _resp is power of two - if it is, then we have only one valid FAT16 partition,
         // hence load that FAT16 partition without asking the user to select
         if( (_resp & (_resp-1)) == 0)
         {
             for(uint8_t i=0;i<4;i++)
             {
                 if(_resp & 1<<i) 
-                {
-                    VBR_MOUNT_VBR(i);
-                    UartPrint("Ptn. Mounted:");UartWriteNumber(i,HEX);
-                    if(VBR_FAT16_CHECK_COMPATIBILITY(i))
-                    {
-                        UartPrint("Incmpat. FAT16\n");
-                        UartPrint(HALTING_MSG); while(1);
-                    }
+                {	
+		    _temp=i; // select the i-th partition
                     break; //break from for loop
                 }
             }
         }
+	// else if more than one partition detected, ask the user to selec the partition
         else
         {
-            for(uint8_t i=0;i<4;i++)
-            {
-                UartPrint("Ptn. ");UartWriteNumber(i,HEX);UartWrite('> ');
-                if(_resp & 1<<i) UartPrint("FAT16\n");
-                else UartPrint("Unknown\n");
-            }
-
-            UartPrint("\nSlct Ptn. >\n");
+            UartPrint("Slct Ptn. >\n");
             _temp=UartScanByte();
-            if( _temp<4 && (_resp & (1<<_temp)) )
-            {
-                UartPrint("Ptn. Mounted:");UartWriteNumber(_temp,HEX);
-                UartWrite('\n');
-                VBR_MOUNT_VBR(_temp);
-            }
-            else
-            {
-                UartPrint("Bad Ptn.\n");
-                UartPrint(HALTING_MSG); while(1);
+	}
 
-            }
-            
+	//mount selected
+        if( _temp<4 && (_resp & (1<<_temp)) )
+        {
+            UartPrint("\nPtn. Mounted:");UartWriteNumber(_temp,HEX);
+            UartWrite('\n');
+            VBR_MOUNT_VBR(_temp);
         }
+        else
+        {
+            UartPrint("\nBad Ptn.\n");
+            UartPrint(HALTING_MSG); while(1);
+        }
+        
     }
     else
     {

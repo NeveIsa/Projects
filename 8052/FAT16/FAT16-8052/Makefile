@@ -13,7 +13,8 @@ main:
 
 
 load:	genhex 
-	avrdude -V -C avrdude8052conf/8052.conf -c usbasp -p 89s52 -U flash:w:build/main.ihx
+	#avrdude -V -C avrdude8052conf/8052.conf -c usbasp -p 89s52 -U flash:w:build/main.ihx
+	avrdude -C avrdude8052conf/8052.conf -c usbasp -p 89s52 -U flash:w:build/main.ihx
 
 mockload:	genhex 
 	avrdude -n -V -C avrdude8052conf/8052.conf -c usbasp -p 89s52 -U flash:w:build/main.ihx

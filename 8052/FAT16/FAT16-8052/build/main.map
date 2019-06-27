@@ -79,10 +79,10 @@ C:   00000080  l_DSEG
 C:   00000081  l_ISEG                          
 C:   000000C2  s_SSEG                          
 C:   00000100  l_IRAM                          
-C:   00000150  l_CONST                         
-C:   00001E3E  l_CSEG                          
-C:   00001EA7  s_CONST                         
-C:   00001FF7  s_XINIT                         
+C:   00000140  l_CONST                         
+C:   00001E24  l_CSEG                          
+C:   00001E8D  s_CONST                         
+C:   00001FCD  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -387,7 +387,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000069    00001E3E =        7742. bytes (REL,CON,CODE)
+CSEG                                00000069    00001E24 =        7716. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -446,7 +446,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000069    00001E3E =        7742. bytes (REL,CON,CODE)
+CSEG                                00000069    00001E24 =        7716. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -455,29 +455,29 @@ C:   00001798  _SL_write                          main
 C:   000017E9  _SL_read                           main
 C:   00001816  _SL_getcmd                         main
 C:   00001885  _SelectFAT16PartitionPrompt        main
-C:   00001A1F  _SelectFileAndFileOpen             main
-C:   00001A9D  _main                              main
-C:   00001C02  _SERIAL_LOADER_VERSION_INFO        main
-C:   00001C15  __divuint                          _divuint
-C:   00001C3E  __modulong                         _modulong
-C:   00001CC1  __divulong                         _divulong
-C:   00001D26  __gptrput                          _gptrput
-C:   00001D41  __mulint                           _mulint
-C:   00001D41  __mulint_dummy                     _mulint
-C:   00001D5E  __moduint                          _moduint
-C:   00001DAB  __mullong                          _mullong
-C:   00001DAB  __mullong_dummy                    _mullong
-C:   00001E19  __gptrget                          _gptrget
-C:   00001E35  __modsint                          _modsint
-C:   00001E6B  __divsint                          _divsint
-C:   00001EA3  __sdcc_external_startup            _startup
+C:   00001A05  _SelectFileAndFileOpen             main
+C:   00001A83  _main                              main
+C:   00001BE8  _SERIAL_LOADER_VERSION_INFO        main
+C:   00001BFB  __divuint                          _divuint
+C:   00001C24  __modulong                         _modulong
+C:   00001CA7  __divulong                         _divulong
+C:   00001D0C  __gptrput                          _gptrput
+C:   00001D27  __mulint                           _mulint
+C:   00001D27  __mulint_dummy                     _mulint
+C:   00001D44  __moduint                          _moduint
+C:   00001D91  __mullong                          _mullong
+C:   00001D91  __mullong_dummy                    _mullong
+C:   00001DFF  __gptrget                          _gptrget
+C:   00001E1B  __modsint                          _modsint
+C:   00001E51  __divsint                          _divsint
+C:   00001E89  __sdcc_external_startup            _startup
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 20.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CONST                               00001EA7    00000150 =         336. bytes (REL,CON,CODE)
+CONST                               00001E8D    00000140 =         320. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
