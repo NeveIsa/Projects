@@ -4,7 +4,7 @@ genhex: clean main
 	cd build && packihx *.ihx > build.hex && objcopy --input-target=ihex --output-target=binary build.hex build.bin
 
 connect:
-	sudo chown sampad:sampad /dev/ttyUSB0
+	sudo chown $$(whoami):$$(whoami) /dev/ttyUSB0
 	picocom /dev/ttyUSB0 -b4800 --imap lfcrlf
 
 main:
