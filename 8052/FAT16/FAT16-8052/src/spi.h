@@ -14,10 +14,11 @@ void spi_delay(unsigned int ms)
 
 
 #define SPI_PORT	P1
-#define SPI_CLK		0
-#define SPI_MOSI	1
-#define SPI_MISO	2
+
 #define SPI_CS		3
+#define SPI_CLK		2
+#define SPI_MOSI	1
+#define SPI_MISO	0
 
 #define spi_clk_high()	do{SPI_PORT |= 1<<SPI_CLK;}while(0)
 #define spi_clk_low()		do{SPI_PORT &= ~(1<<SPI_CLK);}while(0)
