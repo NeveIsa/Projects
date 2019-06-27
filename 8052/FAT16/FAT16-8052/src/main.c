@@ -78,7 +78,7 @@ void SelectFAT16PartitionPrompt() __reentrant
 	//mount selected
         if( _temp<4 && (_resp & (1<<_temp)) )
         {
-            UartPrint("\nPtn. Mounted:");UartWriteNumber(_temp,HEX);
+            UartPrint("\n\nPtn. Mounted:");UartWriteNumber(_temp,HEX);
             UartWrite('\n');
             VBR_MOUNT_VBR(_temp);
         }
@@ -101,7 +101,7 @@ void SelectFileAndFileOpen() __reentrant
 {
     unsigned char _result;
     FAT16_ROOTENTRY_SCAN_RESET();
-    UartPrint("INDEX\t\tFILE\n\n");
+    UartPrint("\nINDEX\t\tFILE\n");
 
     //scan only upto 254 files
     for(uint8_t i=0;i<255;i++) 
@@ -118,7 +118,7 @@ void SelectFileAndFileOpen() __reentrant
         }
     }
 
-    UartPrint("Slct index >\n");
+    UartPrint("\nSlct index >\n");
     _result=UartScanByte();
     FAT16_ROOTENTRY_READ(_result); //load the selected
 }
@@ -153,6 +153,8 @@ void main(void)
     SDinit();
     //setup peripherals
 
+    //print welcome message
+    UartPrint("\nSYAMPUTER:V0\n");
     
     while(UartReadReady())UartRead(); //flush
   
@@ -202,7 +204,11 @@ void main(void)
     {
         xram_addr=(__xdata unsigned char*)(uint16_t)__global_rootEntry.bytes_read;        
         _resp=FAT16_FILE_READ(FILE_BUFF_SIZE,buff);
-        if(_resp==0) break;
+        if(_resp==0) 
+	{
+		UartPrint("\n<RUN>\n");
+		break;
+	}
         for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
         { 
 
@@ -218,15 +224,21 @@ void main(void)
             if(buff[i]!=*(xram_addr+i)) 
             {
                 UartPrint("\nVerif. fail");
+		//UartPrintNumber((uint16_t)xram_addr+i);
                 while(1);
             }
         }  
 	
-	//print the nuber of bytes written and verified
-    	UartPrintNumber(__global_rootEntry.bytes_read);
-    	UartWrite('/');
-    	UartPrintNumber(__global_rootEntry.size);
-    	UartPrint("\r");
+	//print the number of bytes written and verified
+	//print only once in 64 bytes so as to save time spent in UART write
+	if(__global_rootEntry.bytes_read % 64 == 0)
+	{
+	    //UartWrite('\r');
+    	    UartPrintNumber(__global_rootEntry.bytes_read);
+    	    UartWrite('/');
+    	    UartPrintNumber(__global_rootEntry.size);
+    	    UartWrite('\r');
+	}
     }
 
     //SELF RESET

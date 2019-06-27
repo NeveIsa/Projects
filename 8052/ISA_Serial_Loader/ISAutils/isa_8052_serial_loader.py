@@ -3,7 +3,6 @@ import time
 import sys
 
 
-
 print("ISA EEPROM UTILITY - V0.1")
 
 import serial.tools.list_ports

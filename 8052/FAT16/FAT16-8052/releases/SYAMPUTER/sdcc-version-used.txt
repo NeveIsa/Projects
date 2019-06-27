@@ -1,0 +1,2 @@
+SDCC : mcs51/z80/z180/r2k/r3ka/gbz80/tlcs90/ez80_z80/ds390/pic16/pic14/TININative/ds400/hc08/s08/stm8/pdk14/pdk15 3.9.0 #11195 (Linux)
+published under GNU General Public License (GPL)

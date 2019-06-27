@@ -310,6 +310,7 @@ uint8_t MBR_DETECT_FAT16()
 
 ////////////////////////////// VBR methods /////////////////////////////////
 
+#ifdef FAT_DEBUG 
 void VBR_DUMP() __reentrant
 {
 	UartPrint("VBR: start,bps,spc,reservedSectors,nfat,nroote,spf,fat_start,roote_start,data_start\n"); 
@@ -326,7 +327,7 @@ void VBR_DUMP() __reentrant
 	UartPrintNumber(__global_vbr.addr_data_start);UartWrite(',');
 	UartWrite('\n');
 }
-
+#endif
 
 uint8_t VBR_MOUNT_VBR(uint8_t partition_number)
 { 
