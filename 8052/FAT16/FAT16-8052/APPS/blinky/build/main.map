@@ -352,14 +352,14 @@ CSEG                                00000062    000001D7 =         471. bytes (R
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
 C:   00000062  _exitApp                           main
-C:   000000C6  _UartBegin                         main
-C:   000000D5  _UartReadReady                     main
-C:   000000E0  _UartRead                          main
-C:   000000E9  _UartWrite                         main
-C:   000000F2  _UartWriteBuff                     main
-C:   0000012A  _UartReadBuff                      main
-C:   0000016F  _UartPrint                         main
-C:   000001A1  _delayms                           main
+C:   000000C6  _delayms                           main
+C:   000000F1  _UartBegin                         main
+C:   00000100  _UartReadReady                     main
+C:   0000010B  _UartRead                          main
+C:   00000114  _UartWrite                         main
+C:   0000011D  _UartWriteBuff                     main
+C:   00000155  _UartReadBuff                      main
+C:   0000019A  _UartPrint                         main
 C:   000001CC  _main                              main
 C:   000001FE  __gptrput                          _gptrput
 C:   00000219  __gptrget                          _gptrget

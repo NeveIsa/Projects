@@ -1364,20 +1364,20 @@
                                    1364 ;------------------------------------------------------------
                                    1365 ;Allocation info for local variables in function 'spi_init'
                                    1366 ;------------------------------------------------------------
-                                   1367 ;	spi.h:37: void spi_init()
+                                   1367 ;	spi.h:38: void spi_init()
                                    1368 ;	-----------------------------------------
                                    1369 ;	 function spi_init
                                    1370 ;	-----------------------------------------
       00048A                       1371 _spi_init:
-                                   1372 ;	spi.h:40: spi_miso_high(); //make MISO input
-      00048A 43 90 04         [24] 1373 	orl	_P1,#0x04
-                                   1374 ;	spi.h:41: spi_mosi_high(); //recommended in sd card tutorial
+                                   1372 ;	spi.h:41: spi_miso_high(); //make MISO input
+      00048A 43 90 01         [24] 1373 	orl	_P1,#0x01
+                                   1374 ;	spi.h:42: spi_mosi_high(); //recommended in sd card tutorial
       00048D 43 90 02         [24] 1375 	orl	_P1,#0x02
-                                   1376 ;	spi.h:42: spi_cs_high(); //deselect
+                                   1376 ;	spi.h:43: spi_cs_high(); //deselect
       000490 43 90 08         [24] 1377 	orl	_P1,#0x08
-                                   1378 ;	spi.h:43: spi_clk_low(); //mode 0, idle clk is low
-      000493 53 90 FE         [24] 1379 	anl	_P1,#0xfe
-                                   1380 ;	spi.h:44: }
+                                   1378 ;	spi.h:44: spi_clk_low(); //mode 0, idle clk is low
+      000493 53 90 FB         [24] 1379 	anl	_P1,#0xfb
+                                   1380 ;	spi.h:45: }
       000496 22               [24] 1381 	ret
                                    1382 ;------------------------------------------------------------
                                    1383 ;Allocation info for local variables in function 'spi_transfer'
@@ -1387,67 +1387,67 @@
                                    1387 ;rx                        Allocated to registers r6 
                                    1388 ;i                         Allocated to registers r5 
                                    1389 ;------------------------------------------------------------
-                                   1390 ;	spi.h:46: uint8_t spi_transfer(uint8_t tx,uint8_t handle_cs)
+                                   1390 ;	spi.h:47: uint8_t spi_transfer(uint8_t tx,uint8_t handle_cs)
                                    1391 ;	-----------------------------------------
                                    1392 ;	 function spi_transfer
                                    1393 ;	-----------------------------------------
       000497                       1394 _spi_transfer:
       000497 AF 82            [24] 1395 	mov	r7,dpl
-                                   1396 ;	spi.h:49: rx=0; //clear the rx - sdcc compiler throws warning otherwise
+                                   1396 ;	spi.h:50: rx=0; //clear the rx - sdcc compiler throws warning otherwise
       000499 7E 00            [12] 1397 	mov	r6,#0x00
-                                   1398 ;	spi.h:52: spi_clk_low();
-      00049B 53 90 FE         [24] 1399 	anl	_P1,#0xfe
-                                   1400 ;	spi.h:55: if(handle_cs)
+                                   1398 ;	spi.h:53: spi_clk_low();
+      00049B 53 90 FB         [24] 1399 	anl	_P1,#0xfb
+                                   1400 ;	spi.h:56: if(handle_cs)
       00049E E5 3D            [12] 1401 	mov	a,_spi_transfer_PARM_2
       0004A0 60 03            [24] 1402 	jz	00139$
-                                   1403 ;	spi.h:56: spi_cs_low();
+                                   1403 ;	spi.h:57: spi_cs_low();
       0004A2 53 90 F7         [24] 1404 	anl	_P1,#0xf7
-                                   1405 ;	spi.h:59: for(i=0;i<8;i++)
+                                   1405 ;	spi.h:60: for(i=0;i<8;i++)
       0004A5                       1406 00139$:
       0004A5 7D 00            [12] 1407 	mov	r5,#0x00
       0004A7                       1408 00132$:
-                                   1409 ;	spi.h:62: if(tx & 0x80) spi_mosi_high();
+                                   1409 ;	spi.h:63: if(tx & 0x80) spi_mosi_high();
       0004A7 EF               [12] 1410 	mov	a,r7
       0004A8 30 E7 05         [24] 1411 	jnb	acc.7,00112$
       0004AB 43 90 02         [24] 1412 	orl	_P1,#0x02
-                                   1413 ;	spi.h:63: else spi_mosi_low();
+                                   1413 ;	spi.h:64: else spi_mosi_low();
       0004AE 80 03            [24] 1414 	sjmp	00117$
       0004B0                       1415 00112$:
       0004B0 53 90 FD         [24] 1416 	anl	_P1,#0xfd
       0004B3                       1417 00117$:
-                                   1418 ;	spi.h:65: tx <<=1;
+                                   1418 ;	spi.h:66: tx <<=1;
       0004B3 8F 04            [24] 1419 	mov	ar4,r7
       0004B5 EC               [12] 1420 	mov	a,r4
       0004B6 2C               [12] 1421 	add	a,r4
       0004B7 FF               [12] 1422 	mov	r7,a
-                                   1423 ;	spi.h:70: rx <<=1;
+                                   1423 ;	spi.h:71: rx <<=1;
       0004B8 8E 04            [24] 1424 	mov	ar4,r6
       0004BA EC               [12] 1425 	mov	a,r4
       0004BB 2C               [12] 1426 	add	a,r4
       0004BC FE               [12] 1427 	mov	r6,a
-                                   1428 ;	spi.h:73: spi_clk_high();
-      0004BD 43 90 01         [24] 1429 	orl	_P1,#0x01
-                                   1430 ;	spi.h:76: if(spi_read_miso()) rx |=1;
+                                   1428 ;	spi.h:74: spi_clk_high();
+      0004BD 43 90 04         [24] 1429 	orl	_P1,#0x04
+                                   1430 ;	spi.h:77: if(spi_read_miso()) rx |=1;
       0004C0 E5 90            [12] 1431 	mov	a,_P1
-      0004C2 30 E2 03         [24] 1432 	jnb	acc.2,00123$
+      0004C2 30 E0 03         [24] 1432 	jnb	acc.0,00123$
       0004C5 43 06 01         [24] 1433 	orl	ar6,#0x01
-                                   1434 ;	spi.h:81: spi_clk_low();
+                                   1434 ;	spi.h:82: spi_clk_low();
       0004C8                       1435 00123$:
-      0004C8 53 90 FE         [24] 1436 	anl	_P1,#0xfe
-                                   1437 ;	spi.h:59: for(i=0;i<8;i++)
+      0004C8 53 90 FB         [24] 1436 	anl	_P1,#0xfb
+                                   1437 ;	spi.h:60: for(i=0;i<8;i++)
       0004CB 0D               [12] 1438 	inc	r5
       0004CC BD 08 00         [24] 1439 	cjne	r5,#0x08,00164$
       0004CF                       1440 00164$:
       0004CF 40 D6            [24] 1441 	jc	00132$
-                                   1442 ;	spi.h:86: if(handle_cs)
+                                   1442 ;	spi.h:87: if(handle_cs)
       0004D1 E5 3D            [12] 1443 	mov	a,_spi_transfer_PARM_2
       0004D3 60 03            [24] 1444 	jz	00131$
-                                   1445 ;	spi.h:87: spi_cs_high();
+                                   1445 ;	spi.h:88: spi_cs_high();
       0004D5 43 90 08         [24] 1446 	orl	_P1,#0x08
       0004D8                       1447 00131$:
-                                   1448 ;	spi.h:89: return rx;
+                                   1448 ;	spi.h:90: return rx;
       0004D8 8E 82            [24] 1449 	mov	dpl,r6
-                                   1450 ;	spi.h:90: }
+                                   1450 ;	spi.h:91: }
       0004DA 22               [24] 1451 	ret
                                    1452 ;------------------------------------------------------------
                                    1453 ;Allocation info for local variables in function 'spi_transfer_all'
@@ -1457,7 +1457,7 @@
                                    1457 ;buff                      Allocated to registers r5 r6 r7 
                                    1458 ;i                         Allocated to registers r4 
                                    1459 ;------------------------------------------------------------
-                                   1460 ;	spi.h:94: void spi_transfer_all(uint8_t *buff, uint8_t len,uint8_t handle_cs)
+                                   1460 ;	spi.h:95: void spi_transfer_all(uint8_t *buff, uint8_t len,uint8_t handle_cs)
                                    1461 ;	-----------------------------------------
                                    1462 ;	 function spi_transfer_all
                                    1463 ;	-----------------------------------------
@@ -1465,11 +1465,11 @@
       0004DB AD 82            [24] 1465 	mov	r5,dpl
       0004DD AE 83            [24] 1466 	mov	r6,dph
       0004DF AF F0            [24] 1467 	mov	r7,b
-                                   1468 ;	spi.h:99: if(handle_cs)spi_cs_low();
+                                   1468 ;	spi.h:100: if(handle_cs)spi_cs_low();
       0004E1 E5 0C            [12] 1469 	mov	a,_spi_transfer_all_PARM_3
       0004E3 60 03            [24] 1470 	jz	00119$
       0004E5 53 90 F7         [24] 1471 	anl	_P1,#0xf7
-                                   1472 ;	spi.h:101: for(i=0;i<len;i++)
+                                   1472 ;	spi.h:102: for(i=0;i<len;i++)
       0004E8                       1473 00119$:
       0004E8 7C 00            [12] 1474 	mov	r4,#0x00
       0004EA                       1475 00113$:
@@ -1477,7 +1477,7 @@
       0004EB EC               [12] 1477 	mov	a,r4
       0004EC 95 0B            [12] 1478 	subb	a,_spi_transfer_all_PARM_2
       0004EE 50 2D            [24] 1479 	jnc	00106$
-                                   1480 ;	spi.h:103: spi_transfer(buff[i],0);
+                                   1480 ;	spi.h:104: spi_transfer(buff[i],0);
       0004F0 EC               [12] 1481 	mov	a,r4
       0004F1 2D               [12] 1482 	add	a,r5
       0004F2 F9               [12] 1483 	mov	r1,a
@@ -1501,16 +1501,16 @@
       000514 D0 05            [24] 1501 	pop	ar5
       000516 D0 06            [24] 1502 	pop	ar6
       000518 D0 07            [24] 1503 	pop	ar7
-                                   1504 ;	spi.h:101: for(i=0;i<len;i++)
+                                   1504 ;	spi.h:102: for(i=0;i<len;i++)
       00051A 0C               [12] 1505 	inc	r4
       00051B 80 CD            [24] 1506 	sjmp	00113$
       00051D                       1507 00106$:
-                                   1508 ;	spi.h:107: if(handle_cs)spi_cs_high();
+                                   1508 ;	spi.h:108: if(handle_cs)spi_cs_high();
       00051D E5 0C            [12] 1509 	mov	a,_spi_transfer_all_PARM_3
       00051F 60 03            [24] 1510 	jz	00115$
       000521 43 90 08         [24] 1511 	orl	_P1,#0x08
       000524                       1512 00115$:
-                                   1513 ;	spi.h:109: }
+                                   1513 ;	spi.h:110: }
       000524 22               [24] 1514 	ret
                                    1515 ;------------------------------------------------------------
                                    1516 ;Allocation info for local variables in function 'sd_isbusy'

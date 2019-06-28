@@ -1,5 +1,6 @@
 #include <8052.h>
 #include "exitapp.h"
+#include "delay.h"
 
 
 //UART HELPERS
@@ -72,7 +73,13 @@ void UartPrint(unsigned char *p)
 int main()
 {
 	UartBegin(); //init uart
-	UartPrint("Hello World from Syamputer :)\n");
+	UartPrint("Hello World from Syamputer :)\nExiting in...");
+	for(unsigned char i=0;i<5;i++)
+	{
+		UartWrite('0'+i);
+		UartWrite('\t');
+		delayms(1000);		
+	}
 	exitApp();
 	while(1);
 }

@@ -16,6 +16,7 @@
 	.globl _UartRead
 	.globl _UartReadReady
 	.globl _UartBegin
+	.globl _delayms
 	.globl _exitApp
 	.globl _TF2
 	.globl _EXF2
@@ -286,6 +287,7 @@ _UartReadBuff_PARM_2:
 	.area	OSEG    (OVR,DATA)
 	.area	OSEG    (OVR,DATA)
 	.area	OSEG    (OVR,DATA)
+	.area	OSEG    (OVR,DATA)
 ;--------------------------------------------------------
 ; Stack segment in internal ram 
 ;--------------------------------------------------------
@@ -463,84 +465,129 @@ _exitApp:
 ;	exitapp.h:35: }
 	ret
 ;------------------------------------------------------------
+;Allocation info for local variables in function 'delayms'
+;------------------------------------------------------------
+;ms                        Allocated to registers r6 r7 
+;x                         Allocated to registers r4 r5 
+;y                         Allocated to registers r2 r3 
+;------------------------------------------------------------
+;	delay.h:3: void delayms(unsigned int ms)
+;	-----------------------------------------
+;	 function delayms
+;	-----------------------------------------
+_delayms:
+	mov	r6,dpl
+	mov	r7,dph
+;	delay.h:7: for(x=0;x<ms;x++) for(y=0;y<120;y++);
+	mov	r4,#0x00
+	mov	r5,#0x00
+00107$:
+	clr	c
+	mov	a,r4
+	subb	a,r6
+	mov	a,r5
+	subb	a,r7
+	jnc	00109$
+	mov	r2,#0x78
+	mov	r3,#0x00
+00105$:
+	mov	a,r2
+	add	a,#0xff
+	mov	r0,a
+	mov	a,r3
+	addc	a,#0xff
+	mov	r1,a
+	mov	ar2,r0
+	mov	ar3,r1
+	mov	a,r0
+	orl	a,r1
+	jnz	00105$
+	inc	r4
+	cjne	r4,#0x00,00107$
+	inc	r5
+	sjmp	00107$
+00109$:
+;	delay.h:8: }
+	ret
+;------------------------------------------------------------
 ;Allocation info for local variables in function 'UartBegin'
 ;------------------------------------------------------------
-;	main.c:7: void UartBegin()
+;	main.c:8: void UartBegin()
 ;	-----------------------------------------
 ;	 function UartBegin
 ;	-----------------------------------------
 _UartBegin:
-;	main.c:11: TMOD = 0X20; //TIMER1 8 BIT AUTO-RELOAD
+;	main.c:12: TMOD = 0X20; //TIMER1 8 BIT AUTO-RELOAD
 	mov	_TMOD,#0x20
-;	main.c:13: TH1 = 0XF3; //2400
+;	main.c:14: TH1 = 0XF3; //2400
 	mov	_TH1,#0xf3
-;	main.c:14: SCON = 0X50;
+;	main.c:15: SCON = 0X50;
 	mov	_SCON,#0x50
-;	main.c:16: PCON |= 1<<7; //double the baudrate - 4800
+;	main.c:17: PCON |= 1<<7; //double the baudrate - 4800
 	orl	_PCON,#0x80
-;	main.c:18: TR1 = 1; //START TIMER
+;	main.c:19: TR1 = 1; //START TIMER
 ;	assignBit
 	setb	_TR1
-;	main.c:19: }
+;	main.c:20: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UartReadReady'
 ;------------------------------------------------------------
-;	main.c:21: unsigned char UartReadReady()
+;	main.c:22: unsigned char UartReadReady()
 ;	-----------------------------------------
 ;	 function UartReadReady
 ;	-----------------------------------------
 _UartReadReady:
-;	main.c:23: if(RI==0)return 0; //not received any char
+;	main.c:24: if(RI==0)return 0; //not received any char
 	jb	_RI,00102$
 	mov	dpl,#0x00
 	ret
 00102$:
-;	main.c:24: else return 1; //received and ready
+;	main.c:25: else return 1; //received and ready
 	mov	dpl,#0x01
-;	main.c:25: }
+;	main.c:26: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UartRead'
 ;------------------------------------------------------------
 ;value                     Allocated to registers 
 ;------------------------------------------------------------
-;	main.c:27: unsigned char UartRead()
+;	main.c:28: unsigned char UartRead()
 ;	-----------------------------------------
 ;	 function UartRead
 ;	-----------------------------------------
 _UartRead:
-;	main.c:30: while(RI==0); //wait till RX
+;	main.c:31: while(RI==0); //wait till RX
 00101$:
-;	main.c:31: RI=0;
+;	main.c:32: RI=0;
 ;	assignBit
 	jbc	_RI,00114$
 	sjmp	00101$
 00114$:
-;	main.c:32: value = SBUF;
+;	main.c:33: value = SBUF;
 	mov	dpl,_SBUF
-;	main.c:33: return value;
-;	main.c:34: }
+;	main.c:34: return value;
+;	main.c:35: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UartWrite'
 ;------------------------------------------------------------
 ;value                     Allocated to registers 
 ;------------------------------------------------------------
-;	main.c:37: void UartWrite(unsigned char value)
+;	main.c:38: void UartWrite(unsigned char value)
 ;	-----------------------------------------
 ;	 function UartWrite
 ;	-----------------------------------------
 _UartWrite:
 	mov	_SBUF,dpl
-;	main.c:40: while(TI==0); // wait till TX
+;	main.c:41: while(TI==0); // wait till TX
 00101$:
-;	main.c:41: TI=0;
+;	main.c:42: TI=0;
 ;	assignBit
 	jbc	_TI,00114$
 	sjmp	00101$
 00114$:
-;	main.c:42: }
+;	main.c:43: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UartWriteBuff'
@@ -549,7 +596,7 @@ _UartWrite:
 ;p                         Allocated to registers r5 r6 r7 
 ;i                         Allocated to registers r4 
 ;------------------------------------------------------------
-;	main.c:44: void UartWriteBuff(unsigned char *p, unsigned char length)
+;	main.c:45: void UartWriteBuff(unsigned char *p, unsigned char length)
 ;	-----------------------------------------
 ;	 function UartWriteBuff
 ;	-----------------------------------------
@@ -557,14 +604,14 @@ _UartWriteBuff:
 	mov	r5,dpl
 	mov	r6,dph
 	mov	r7,b
-;	main.c:47: for (i=0;i<length;i++)
+;	main.c:48: for (i=0;i<length;i++)
 	mov	r4,#0x00
 00103$:
 	clr	c
 	mov	a,r4
 	subb	a,_UartWriteBuff_PARM_2
 	jnc	00105$
-;	main.c:49: UartWrite(p[i]);
+;	main.c:50: UartWrite(p[i]);
 	mov	a,r4
 	add	a,r5
 	mov	r1,a
@@ -586,11 +633,11 @@ _UartWriteBuff:
 	pop	ar5
 	pop	ar6
 	pop	ar7
-;	main.c:47: for (i=0;i<length;i++)
+;	main.c:48: for (i=0;i<length;i++)
 	inc	r4
 	sjmp	00103$
 00105$:
-;	main.c:51: }
+;	main.c:52: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UartReadBuff'
@@ -599,7 +646,7 @@ _UartWriteBuff:
 ;p                         Allocated to registers r5 r6 r7 
 ;i                         Allocated to registers r4 
 ;------------------------------------------------------------
-;	main.c:53: void UartReadBuff(unsigned char *p, unsigned char length)
+;	main.c:54: void UartReadBuff(unsigned char *p, unsigned char length)
 ;	-----------------------------------------
 ;	 function UartReadBuff
 ;	-----------------------------------------
@@ -607,14 +654,14 @@ _UartReadBuff:
 	mov	r5,dpl
 	mov	r6,dph
 	mov	r7,b
-;	main.c:56: for (i=0;i<length;i++)
+;	main.c:57: for (i=0;i<length;i++)
 	mov	r4,#0x00
 00103$:
 	clr	c
 	mov	a,r4
 	subb	a,_UartReadBuff_PARM_2
 	jnc	00105$
-;	main.c:58: p[i] = UartRead();
+;	main.c:59: p[i] = UartRead();
 	mov	a,r4
 	add	a,r5
 	mov	r1,a
@@ -643,18 +690,18 @@ _UartReadBuff:
 	mov	b,r3
 	mov	a,r0
 	lcall	__gptrput
-;	main.c:56: for (i=0;i<length;i++)
+;	main.c:57: for (i=0;i<length;i++)
 	inc	r4
 	sjmp	00103$
 00105$:
-;	main.c:60: }
+;	main.c:61: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UartPrint'
 ;------------------------------------------------------------
 ;p                         Allocated to registers 
 ;------------------------------------------------------------
-;	main.c:62: void UartPrint(unsigned char *p)
+;	main.c:63: void UartPrint(unsigned char *p)
 ;	-----------------------------------------
 ;	 function UartPrint
 ;	-----------------------------------------
@@ -662,9 +709,9 @@ _UartPrint:
 	mov	r5,dpl
 	mov	r6,dph
 	mov	r7,b
-;	main.c:64: do
+;	main.c:65: do
 00101$:
-;	main.c:66: UartWrite(*p);
+;	main.c:67: UartWrite(*p);
 	mov	dpl,r5
 	mov	dph,r6
 	mov	b,r7
@@ -681,40 +728,67 @@ _UartPrint:
 	pop	ar5
 	pop	ar6
 	pop	ar7
-;	main.c:67: }while(*(++p)!=0);
+;	main.c:68: }while(*(++p)!=0);
 	mov	dpl,r5
 	mov	dph,r6
 	mov	b,r7
 	lcall	__gptrget
 	jnz	00101$
-;	main.c:68: }
+;	main.c:69: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'main'
 ;------------------------------------------------------------
-;	main.c:72: int main()
+;i                         Allocated to registers r7 
+;------------------------------------------------------------
+;	main.c:73: int main()
 ;	-----------------------------------------
 ;	 function main
 ;	-----------------------------------------
 _main:
-;	main.c:74: UartBegin(); //init uart
+;	main.c:75: UartBegin(); //init uart
 	lcall	_UartBegin
-;	main.c:75: UartPrint("Hello World from Syamputer :)\n");
+;	main.c:76: UartPrint("Hello World from Syamputer :)\nExiting in...");
 	mov	dptr,#___str_0
 	mov	b,#0x80
 	lcall	_UartPrint
-;	main.c:76: exitApp();
+;	main.c:77: for(unsigned char i=0;i<5;i++)
+	mov	r7,#0x00
+00106$:
+	cjne	r7,#0x05,00123$
+00123$:
+	jnc	00101$
+;	main.c:79: UartWrite('0'+i);
+	mov	ar6,r7
+	mov	a,#0x30
+	add	a,r6
+	mov	dpl,a
+	push	ar7
+	lcall	_UartWrite
+;	main.c:80: UartWrite('\t');
+	mov	dpl,#0x09
+	lcall	_UartWrite
+;	main.c:81: delayms(1000);		
+	mov	dptr,#0x03e8
+	lcall	_delayms
+	pop	ar7
+;	main.c:77: for(unsigned char i=0;i<5;i++)
+	inc	r7
+	sjmp	00106$
+00101$:
+;	main.c:83: exitApp();
 	lcall	_exitApp
-;	main.c:77: while(1);
-00102$:
-;	main.c:78: }
-	sjmp	00102$
+;	main.c:84: while(1);
+00103$:
+;	main.c:85: }
+	sjmp	00103$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 	.area CONST   (CODE)
 ___str_0:
 	.ascii "Hello World from Syamputer :)"
 	.db 0x0a
+	.ascii "Exiting in..."
 	.db 0x00
 	.area CSEG    (CODE)
 	.area XINIT   (CODE)

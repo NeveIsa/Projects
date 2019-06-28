@@ -67,11 +67,11 @@ CABS                                00000000    00000000 =           0. bytes (A
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
 C:   00000018  s_REG_BANK_3                    
-C:   0000001F  l_CONST                         
 C:   00000020  s_BSEG_BYTES                    
 C:   00000020  s__CODE                         
 C:   00000022  l_GSINIT3                       
 C:   0000002A  l_GSINIT4                       
+C:   0000002C  l_CONST                         
 C:   00000035  s_GSINIT4                       
 C:   0000005F  s_GSFINAL                       
 C:   0000005F  s_GSINIT                        
@@ -80,9 +80,9 @@ C:   00000062  s_CSEG
 C:   00000080  l_DSEG                          
 C:   000000F5  l_SSEG                          
 C:   00000100  l_IRAM                          
-C:   0000018B  l_CSEG                          
-C:   000001ED  s_CONST                         
-C:   0000020C  s_XINIT                         
+C:   000001DA  l_CSEG                          
+C:   0000023C  s_CONST                         
+C:   00000268  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -347,28 +347,30 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000062    0000018B =         395. bytes (REL,CON,CODE)
+CSEG                                00000062    000001DA =         474. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
 C:   00000062  _exitApp                           main
-C:   000000C6  _UartBegin                         main
-C:   000000D5  _UartReadReady                     main
-C:   000000E0  _UartRead                          main
-C:   000000E9  _UartWrite                         main
-C:   000000F2  _UartWriteBuff                     main
-C:   0000012A  _UartReadBuff                      main
-C:   0000016F  _UartPrint                         main
-C:   000001A1  _main                              main
-C:   000001B2  __gptrput                          _gptrput
-C:   000001CD  __gptrget                          _gptrget
-C:   000001E9  __sdcc_external_startup            _startup
+C:   000000C6  _delayms                           main
+C:   000000F1  _UartBegin                         main
+C:   00000100  _UartReadReady                     main
+C:   0000010B  _UartRead                          main
+C:   00000114  _UartWrite                         main
+C:   0000011D  _UartWriteBuff                     main
+C:   00000155  _UartReadBuff                      main
+C:   0000019A  _UartPrint                         main
+C:   000001CC  _main                              main
+C:   00000201  __gptrput                          _gptrput
+C:   0000021C  __gptrget                          _gptrget
+C:   00000238  __sdcc_external_startup            _startup
+
 ASxxxx Linker V03.00 + NoICE + sdld,  page 17.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CONST                               000001ED    0000001F =          31. bytes (REL,CON,CODE)
+CONST                               0000023C    0000002C =          44. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------

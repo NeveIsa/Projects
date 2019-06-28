@@ -326,14 +326,14 @@ Symbol Table
     _TR1                                                        =  00008E G
     _TR2                                                        =  0000CA G
     _TXD                                                        =  0000B1 G
- 18 _UartBegin                                                     000064 GR
- 18 _UartPrint                                                     00010D GR
- 18 _UartRead                                                      00007E GR
- 18 _UartReadBuff                                                  0000C8 GR
+ 18 _UartBegin                                                     00008F GR
+ 18 _UartPrint                                                     000138 GR
+ 18 _UartRead                                                      0000A9 GR
+ 18 _UartReadBuff                                                  0000F3 GR
   5 _UartReadBuff_PARM_2                                           000001 GR
- 18 _UartReadReady                                                 000073 GR
- 18 _UartWrite                                                     000087 GR
- 18 _UartWriteBuff                                                 000090 GR
+ 18 _UartReadReady                                                 00009E GR
+ 18 _UartWrite                                                     0000B2 GR
+ 18 _UartWriteBuff                                                 0000BB GR
   5 _UartWriteBuff_PARM_2                                          000000 GR
     _WR                                                         =  0000B6 G
  19 ___str_0                                                       000000 R
@@ -346,7 +346,7 @@ Symbol Table
     __sdcc_gsinit_startup                                          ****** GX
   F __sdcc_program_startup                                         000003 GR
   7 __start__stack                                                 000000 GR
- 18 _delayms                                                       00013F GR
+ 18 _delayms                                                       000064 GR
  18 _exitApp                                                       000000 GR
  18 _main                                                          00016A GR
     a                                                           =  0000E0 L

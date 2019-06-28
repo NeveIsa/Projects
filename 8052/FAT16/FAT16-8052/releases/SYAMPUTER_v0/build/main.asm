@@ -1364,20 +1364,20 @@ _UartScanLine:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'spi_init'
 ;------------------------------------------------------------
-;	spi.h:37: void spi_init()
+;	spi.h:38: void spi_init()
 ;	-----------------------------------------
 ;	 function spi_init
 ;	-----------------------------------------
 _spi_init:
-;	spi.h:40: spi_miso_high(); //make MISO input
-	orl	_P1,#0x04
-;	spi.h:41: spi_mosi_high(); //recommended in sd card tutorial
+;	spi.h:41: spi_miso_high(); //make MISO input
+	orl	_P1,#0x01
+;	spi.h:42: spi_mosi_high(); //recommended in sd card tutorial
 	orl	_P1,#0x02
-;	spi.h:42: spi_cs_high(); //deselect
+;	spi.h:43: spi_cs_high(); //deselect
 	orl	_P1,#0x08
-;	spi.h:43: spi_clk_low(); //mode 0, idle clk is low
-	anl	_P1,#0xfe
-;	spi.h:44: }
+;	spi.h:44: spi_clk_low(); //mode 0, idle clk is low
+	anl	_P1,#0xfb
+;	spi.h:45: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'spi_transfer'
@@ -1387,67 +1387,67 @@ _spi_init:
 ;rx                        Allocated to registers r6 
 ;i                         Allocated to registers r5 
 ;------------------------------------------------------------
-;	spi.h:46: uint8_t spi_transfer(uint8_t tx,uint8_t handle_cs)
+;	spi.h:47: uint8_t spi_transfer(uint8_t tx,uint8_t handle_cs)
 ;	-----------------------------------------
 ;	 function spi_transfer
 ;	-----------------------------------------
 _spi_transfer:
 	mov	r7,dpl
-;	spi.h:49: rx=0; //clear the rx - sdcc compiler throws warning otherwise
+;	spi.h:50: rx=0; //clear the rx - sdcc compiler throws warning otherwise
 	mov	r6,#0x00
-;	spi.h:52: spi_clk_low();
-	anl	_P1,#0xfe
-;	spi.h:55: if(handle_cs)
+;	spi.h:53: spi_clk_low();
+	anl	_P1,#0xfb
+;	spi.h:56: if(handle_cs)
 	mov	a,_spi_transfer_PARM_2
 	jz	00139$
-;	spi.h:56: spi_cs_low();
+;	spi.h:57: spi_cs_low();
 	anl	_P1,#0xf7
-;	spi.h:59: for(i=0;i<8;i++)
+;	spi.h:60: for(i=0;i<8;i++)
 00139$:
 	mov	r5,#0x00
 00132$:
-;	spi.h:62: if(tx & 0x80) spi_mosi_high();
+;	spi.h:63: if(tx & 0x80) spi_mosi_high();
 	mov	a,r7
 	jnb	acc.7,00112$
 	orl	_P1,#0x02
-;	spi.h:63: else spi_mosi_low();
+;	spi.h:64: else spi_mosi_low();
 	sjmp	00117$
 00112$:
 	anl	_P1,#0xfd
 00117$:
-;	spi.h:65: tx <<=1;
+;	spi.h:66: tx <<=1;
 	mov	ar4,r7
 	mov	a,r4
 	add	a,r4
 	mov	r7,a
-;	spi.h:70: rx <<=1;
+;	spi.h:71: rx <<=1;
 	mov	ar4,r6
 	mov	a,r4
 	add	a,r4
 	mov	r6,a
-;	spi.h:73: spi_clk_high();
-	orl	_P1,#0x01
-;	spi.h:76: if(spi_read_miso()) rx |=1;
+;	spi.h:74: spi_clk_high();
+	orl	_P1,#0x04
+;	spi.h:77: if(spi_read_miso()) rx |=1;
 	mov	a,_P1
-	jnb	acc.2,00123$
+	jnb	acc.0,00123$
 	orl	ar6,#0x01
-;	spi.h:81: spi_clk_low();
+;	spi.h:82: spi_clk_low();
 00123$:
-	anl	_P1,#0xfe
-;	spi.h:59: for(i=0;i<8;i++)
+	anl	_P1,#0xfb
+;	spi.h:60: for(i=0;i<8;i++)
 	inc	r5
 	cjne	r5,#0x08,00164$
 00164$:
 	jc	00132$
-;	spi.h:86: if(handle_cs)
+;	spi.h:87: if(handle_cs)
 	mov	a,_spi_transfer_PARM_2
 	jz	00131$
-;	spi.h:87: spi_cs_high();
+;	spi.h:88: spi_cs_high();
 	orl	_P1,#0x08
 00131$:
-;	spi.h:89: return rx;
+;	spi.h:90: return rx;
 	mov	dpl,r6
-;	spi.h:90: }
+;	spi.h:91: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'spi_transfer_all'
@@ -1457,7 +1457,7 @@ _spi_transfer:
 ;buff                      Allocated to registers r5 r6 r7 
 ;i                         Allocated to registers r4 
 ;------------------------------------------------------------
-;	spi.h:94: void spi_transfer_all(uint8_t *buff, uint8_t len,uint8_t handle_cs)
+;	spi.h:95: void spi_transfer_all(uint8_t *buff, uint8_t len,uint8_t handle_cs)
 ;	-----------------------------------------
 ;	 function spi_transfer_all
 ;	-----------------------------------------
@@ -1465,11 +1465,11 @@ _spi_transfer_all:
 	mov	r5,dpl
 	mov	r6,dph
 	mov	r7,b
-;	spi.h:99: if(handle_cs)spi_cs_low();
+;	spi.h:100: if(handle_cs)spi_cs_low();
 	mov	a,_spi_transfer_all_PARM_3
 	jz	00119$
 	anl	_P1,#0xf7
-;	spi.h:101: for(i=0;i<len;i++)
+;	spi.h:102: for(i=0;i<len;i++)
 00119$:
 	mov	r4,#0x00
 00113$:
@@ -1477,7 +1477,7 @@ _spi_transfer_all:
 	mov	a,r4
 	subb	a,_spi_transfer_all_PARM_2
 	jnc	00106$
-;	spi.h:103: spi_transfer(buff[i],0);
+;	spi.h:104: spi_transfer(buff[i],0);
 	mov	a,r4
 	add	a,r5
 	mov	r1,a
@@ -1501,16 +1501,16 @@ _spi_transfer_all:
 	pop	ar5
 	pop	ar6
 	pop	ar7
-;	spi.h:101: for(i=0;i<len;i++)
+;	spi.h:102: for(i=0;i<len;i++)
 	inc	r4
 	sjmp	00113$
 00106$:
-;	spi.h:107: if(handle_cs)spi_cs_high();
+;	spi.h:108: if(handle_cs)spi_cs_high();
 	mov	a,_spi_transfer_all_PARM_3
 	jz	00115$
 	orl	_P1,#0x08
 00115$:
-;	spi.h:109: }
+;	spi.h:110: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'sd_isbusy'
