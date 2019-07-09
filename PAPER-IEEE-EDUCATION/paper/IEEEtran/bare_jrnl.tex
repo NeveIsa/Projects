@@ -370,12 +370,14 @@
 % was not built to handle multiple paragraphs
 %
 
-\author{Sampad B Mohanty,~\IEEEmembership{Member,~IEEE,}
-        Raghunath D,~\IEEEmembership{Fellow,~OSA,}
-         Ashish Joglekar,~\IEEEmembership{Fellow,~OSA,}
-         Venkatesh Prabhu,
-         Ashish Joglekar,~\IEEEmembership{Fellow,~OSA,}
-        Rajesh Sundaresan,~\IEEEmembership{Life~Fellow,~IEEE}% <-this % stops a space
+\author{Sampad B Mohanty,%~\IEEEmembership{Member,~IEEE,}%
+        Raghunath D, %~\IEEEmembership{Fellow,~OSA,}%
+        Ashish Joglekar, %~\IEEEmembership{Fellow,~OSA,}%
+        Prakash Hiremath M, 
+        Venkatesh Prabhu, 
+        Rajesh Sundaresan%~\IEEEmembership{Life~Fellow,~IEEE}% <-this % stops a space
+        \linebreak
+         Robert Bosch Centre for Cyber-Physical Systems (RBCCPS), Indian Institute of Science Bangalore
 \thanks{M. Shell was with the Department
 of Electrical and Computer Engineering, Georgia Institute of Technology, Atlanta,
 GA, 30332 USA e-mail: (see http://www.michaelshell.org/contact.html).}% <-this % stops a space
@@ -436,12 +438,14 @@ GA, 30332 USA e-mail: (see http://www.michaelshell.org/contact.html).}% <-this %
 % As a general rule, do not put math, special symbols or citations
 % in the abstract or keywords.
 \begin{abstract}
-The abstract goes here.
+The paper presents a hands-on tutorial to develop a robust near real-time high volume sensor data acquisition and analysis framework.
+The hardware used in this tutorial are based on open-source platforms like Arduino and Raspberry-Pi Single Board Computer. The framework has been developed at RBCCPS, IISc Bangalore and uses open-source software tools to accomplish the necessary functionalities.  The framework consists of  1) a model network architecture, 2) micro-services used to provide the minimum quality of service and services like data storage, aggregation, and stream processing, 3) hardware systems on which the software components run. The framework is currently being used at RBCCPS to acquire data remotely from an Surface Mount Technology (SMT) Printed Circuit Board (PCB) assembly line which is situated about 150Km from our research facility. The volume of data collected daily varies from 5GB to 15GB.
+
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
 \begin{IEEEkeywords}
-IEEE, IEEEtran, journal, \LaTeX, paper, template.
+Internet of Things, Industry 4.0, Wireless Sensor Networks, Micro-services, Middleware, Signal Processing, Data Analysis
 \end{IEEEkeywords}
 
 
