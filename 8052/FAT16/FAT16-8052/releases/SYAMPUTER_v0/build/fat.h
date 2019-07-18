@@ -593,7 +593,7 @@ uint8_t FAT16_ROOTENTRY_SCAN() __reentrant
         {
 			#if FILE_DEBUG
 				UartPrint("ROOTENTRY_SCAN_INDEX:");
-            	UartPrintNumber(__global_rootEntry.entry_index+1);
+            			UartPrintNumber(__global_rootEntry.entry_index+1);
 				UartWrite('\n');
 			#endif
 

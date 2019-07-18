@@ -5257,7 +5257,7 @@ _SelectFAT16PartitionPrompt:
 ;i                         Allocated to registers r7 
 ;j                         Allocated to registers r6 
 ;------------------------------------------------------------
-;	main.c:100: void SelectFileAndFileOpen() __reentrant
+;	main.c:100: uint8_t SelectFileAndFileOpen() __reentrant
 ;	-----------------------------------------
 ;	 function SelectFileAndFileOpen
 ;	-----------------------------------------
@@ -5270,9 +5270,9 @@ _SelectFileAndFileOpen:
 	lcall	_UartPrint
 ;	main.c:107: for(uint8_t i=0;i<255;i++) 
 	mov	r7,#0x00
-00112$:
-	cjne	r7,#0xff,00148$
-00148$:
+00114$:
+	cjne	r7,#0xff,00155$
+00155$:
 	jnc	00107$
 ;	main.c:109: _result = FAT16_ROOTENTRY_SCAN();
 	push	ar7
@@ -5280,12 +5280,12 @@ _SelectFileAndFileOpen:
 	mov	r6,dpl
 	pop	ar7
 ;	main.c:110: if(_result==0xff) break; //end of scan
-	cjne	r6,#0xff,00150$
+	cjne	r6,#0xff,00157$
 	sjmp	00107$
-00150$:
+00157$:
 ;	main.c:111: else if (_result==0) //valid file
 	mov	a,r6
-	jnz	00113$
+	jnz	00115$
 ;	main.c:113: UartWriteNumber(__global_rootEntry.entry_index,DEC); //print root entry index
 	mov	r0,#(___global_rootEntry + 0x0012)
 	mov	ar6,@r0
@@ -5304,9 +5304,9 @@ _SelectFileAndFileOpen:
 	pop	ar7
 ;	main.c:116: for(uint8_t j=0;j<11;j++)UartWrite(__global_rootEntry.name[j]); //print name
 	mov	r6,#0x00
-00109$:
-	cjne	r6,#0x0b,00152$
-00152$:
+00111$:
+	cjne	r6,#0x0b,00159$
+00159$:
 	jnc	00101$
 	mov	a,r6
 	add	a,#___global_rootEntry
@@ -5318,17 +5318,17 @@ _SelectFileAndFileOpen:
 	pop	ar6
 	pop	ar7
 	inc	r6
-	sjmp	00109$
+	sjmp	00111$
 00101$:
 ;	main.c:117: UartWrite('\n');
 	mov	dpl,#0x0a
 	push	ar7
 	lcall	_UartWrite
 	pop	ar7
-00113$:
+00115$:
 ;	main.c:107: for(uint8_t i=0;i<255;i++) 
 	inc	r7
-	sjmp	00112$
+	sjmp	00114$
 00107$:
 ;	main.c:121: UartPrint("\nSlct index >\n");
 	mov	dptr,#___str_18
@@ -5336,11 +5336,24 @@ _SelectFileAndFileOpen:
 	lcall	_UartPrint
 ;	main.c:122: _result=UartScanByte();
 	lcall	_UartScanByte
-;	main.c:123: FAT16_ROOTENTRY_READ(_result); //load the selected
+;	main.c:125: _result=FAT16_ROOTENTRY_READ(_result); //load the selected
 	mov	r6,#0x00
 	mov	dph,r6
-;	main.c:124: }
-	ljmp	_FAT16_ROOTENTRY_READ
+	lcall	_FAT16_ROOTENTRY_READ
+;	main.c:126: if(_result!=0) UartPrint("\nInvalid Entry !\n");
+	mov	a,dpl
+	mov	r7,a
+	jz	00109$
+	mov	dptr,#___str_19
+	mov	b,#0x80
+	push	ar7
+	lcall	_UartPrint
+	pop	ar7
+00109$:
+;	main.c:127: return _result;
+	mov	dpl,r7
+;	main.c:129: }
+	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'main'
 ;------------------------------------------------------------
@@ -5352,48 +5365,48 @@ _SelectFileAndFileOpen:
 ;i                         Allocated to registers r5 
 ;i                         Allocated to registers r5 
 ;------------------------------------------------------------
-;	main.c:135: void main(void)
+;	main.c:140: void main(void)
 ;	-----------------------------------------
 ;	 function main
 ;	-----------------------------------------
 _main:
-;	main.c:144: uint8_t _resp=0;
+;	main.c:149: uint8_t _resp=0;
 	mov	r7,#0x00
-;	main.c:151: UartBegin();
+;	main.c:156: UartBegin();
 	push	ar7
 	lcall	_UartBegin
-;	main.c:152: spi_init(); 
+;	main.c:157: spi_init(); 
 	lcall	_spi_init
-;	main.c:153: SDinit();
+;	main.c:158: SDinit();
 	lcall	_SDinit
-;	main.c:157: UartPrint("\nSYAMPUTER:V0\n");
-	mov	dptr,#___str_19
+;	main.c:162: UartPrint("\nSYAMPUTER:V0\n");
+	mov	dptr,#___str_20
 	mov	b,#0x80
 	lcall	_UartPrint
 	pop	ar7
-;	main.c:159: while(UartReadReady())UartRead(); //flush
+;	main.c:164: while(UartReadReady())UartRead(); //flush
 00101$:
 	push	ar7
 	lcall	_UartReadReady
 	mov	a,dpl
 	pop	ar7
-	jz	00154$
+	jz	00156$
 	push	ar7
 	lcall	_UartRead
 	pop	ar7
-;	main.c:164: for(unsigned int _t=0;_t<65000;_t++)
+;	main.c:169: for(unsigned int _t=0;_t<65000;_t++)
 	sjmp	00101$
-00154$:
+00156$:
 	mov	r5,#0x00
 	mov	r6,#0x00
-00138$:
+00140$:
 	clr	c
 	mov	a,r5
 	subb	a,#0xe8
 	mov	a,r6
 	subb	a,#0xfd
 	jnc	00107$
-;	main.c:166: if(UartReadReady())
+;	main.c:171: if(UartReadReady())
 	push	ar7
 	push	ar6
 	push	ar5
@@ -5402,69 +5415,72 @@ _main:
 	pop	ar5
 	pop	ar6
 	pop	ar7
-	jz	00153$
-;	main.c:168: _resp=UartRead();
+	jz	00155$
+;	main.c:173: _resp=UartRead();
 	lcall	_UartRead
 	mov	r7,dpl
-;	main.c:169: break;
-;	main.c:171: for(uint8_t wastetime=0;wastetime<3;wastetime++);
+;	main.c:174: break;
+;	main.c:176: for(uint8_t wastetime=0;wastetime<3;wastetime++);
 	sjmp	00107$
-00153$:
+00155$:
 	mov	r4,#0x00
-00135$:
-	cjne	r4,#0x03,00233$
-00233$:
-	jnc	00139$
+00137$:
+	cjne	r4,#0x03,00239$
+00239$:
+	jnc	00141$
 	inc	r4
-	sjmp	00135$
-00139$:
-;	main.c:164: for(unsigned int _t=0;_t<65000;_t++)
+	sjmp	00137$
+00141$:
+;	main.c:169: for(unsigned int _t=0;_t<65000;_t++)
 	inc	r5
-	cjne	r5,#0x00,00138$
+	cjne	r5,#0x00,00140$
 	inc	r6
-	sjmp	00138$
+	sjmp	00140$
 00107$:
-;	main.c:176: switch (_resp)
+;	main.c:181: switch (_resp)
 	cjne	r7,#0x56,00113$
-;	main.c:179: UartPrint("ISA:FS0:8052\n");
-	mov	dptr,#___str_20
+;	main.c:184: UartPrint("ISA:FS0:8052\n");
+	mov	dptr,#___str_21
 	mov	b,#0x80
 	lcall	_UartPrint
-;	main.c:180: while(SL_getcmd()); //break when command is 0
+;	main.c:185: while(SL_getcmd()); //break when command is 0
 00109$:
 	lcall	_SL_getcmd
 	mov	a,dpl
 	jnz	00109$
-;	main.c:184: }
+;	main.c:189: }
 00113$:
-;	main.c:189: SelectFAT16PartitionPrompt();
+;	main.c:194: SelectFAT16PartitionPrompt();
 	lcall	_SelectFAT16PartitionPrompt
-;	main.c:196: if(FAT16_FILE_OPEN(DEFAULT_LOAD_FILENAME)==0)
-	mov	dptr,#___str_21
+;	main.c:201: if(FAT16_FILE_OPEN(DEFAULT_LOAD_FILENAME)==0)
+	mov	dptr,#___str_22
 	mov	b,#0x80
 	lcall	_FAT16_FILE_OPEN
 	mov	a,dpl
-	jnz	00115$
-;	main.c:198: UartPrint(DEFAULT_LOAD_FILENAME);
-	mov	dptr,#___str_21
+	jnz	00114$
+;	main.c:203: UartPrint(DEFAULT_LOAD_FILENAME);
+	mov	dptr,#___str_22
 	mov	b,#0x80
 	lcall	_UartPrint
-;	main.c:199: UartWrite('\n');
+;	main.c:204: UartWrite('\n');
 	mov	dpl,#0x0a
 	lcall	_UartWrite
-	sjmp	00165$
-00115$:
-;	main.c:201: else SelectFileAndFileOpen();
+;	main.c:209: do{}
+	sjmp	00168$
+00114$:
+;	main.c:210: while(SelectFileAndFileOpen());
 	lcall	_SelectFileAndFileOpen
-;	main.c:203: while(1)
-00165$:
-00129$:
-;	main.c:205: xram_addr=(__xdata unsigned char*)(uint16_t)__global_rootEntry.bytes_read;        
+	mov	a,dpl
+	jnz	00114$
+;	main.c:213: while(1)
+00168$:
+00131$:
+;	main.c:215: xram_addr=(__xdata unsigned char*)(uint16_t)__global_rootEntry.bytes_read;        
 	mov	r0,#(___global_rootEntry + 0x0014)
 	mov	ar6,@r0
 	inc	r0
 	mov	ar7,@r0
-;	main.c:206: _resp=FAT16_FILE_READ(FILE_BUFF_SIZE,buff);
+;	main.c:216: _resp=FAT16_FILE_READ(FILE_BUFF_SIZE,buff);
 	push	ar7
 	push	ar6
 	mov	a,#_main_buff_65536_214
@@ -5481,23 +5497,23 @@ _main:
 	dec	sp
 	pop	ar6
 	pop	ar7
-;	main.c:207: if(_resp==0) 
+;	main.c:217: if(_resp==0) 
 	mov	a,r5
-	jnz	00160$
-;	main.c:209: UartPrint("\n<RUN>\n");
-	mov	dptr,#___str_22
+	jnz	00163$
+;	main.c:219: UartPrint("\n<RUN>\n");
+	mov	dptr,#___str_23
 	mov	b,#0x80
 	lcall	_UartPrint
-;	main.c:210: break;
-	ljmp	00130$
-;	main.c:212: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
-00160$:
+;	main.c:220: break;
+	ljmp	00132$
+;	main.c:222: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
+00163$:
 	mov	r5,#0x00
-00141$:
-	cjne	r5,#0x10,00241$
-00241$:
-	jnc	00119$
-;	main.c:218: *(xram_addr+i) = buff[i];
+00143$:
+	cjne	r5,#0x10,00248$
+00248$:
+	jnc	00121$
+;	main.c:228: *(xram_addr+i) = buff[i];
 	mov	a,r5
 	add	a,r6
 	mov	dpl,a
@@ -5510,17 +5526,17 @@ _main:
 	mov	a,@r1
 	mov	r4,a
 	movx	@dptr,a
-;	main.c:212: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
-	inc	r5
-	sjmp	00141$
-00119$:
 ;	main.c:222: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
+	inc	r5
+	sjmp	00143$
+00121$:
+;	main.c:232: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
 	mov	r5,#0x00
-00144$:
-	cjne	r5,#0x10,00243$
-00243$:
-	jnc	00125$
-;	main.c:224: if(buff[i]!=*(xram_addr+i)) 
+00146$:
+	cjne	r5,#0x10,00250$
+00250$:
+	jnc	00127$
+;	main.c:234: if(buff[i]!=*(xram_addr+i)) 
 	mov	a,r5
 	add	a,#_main_buff_65536_214
 	mov	r1,a
@@ -5534,22 +5550,22 @@ _main:
 	movx	a,@dptr
 	mov	r3,a
 	mov	a,r4
-	cjne	a,ar3,00245$
-	sjmp	00145$
-00245$:
-;	main.c:226: UartPrint("\nVerif. fail");
-	mov	dptr,#___str_23
+	cjne	a,ar3,00252$
+	sjmp	00147$
+00252$:
+;	main.c:236: UartPrint("\nVerif. fail");
+	mov	dptr,#___str_24
 	mov	b,#0x80
 	lcall	_UartPrint
-;	main.c:228: while(1);
-00121$:
-	sjmp	00121$
-00145$:
-;	main.c:222: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
+;	main.c:238: while(1);
+00123$:
+	sjmp	00123$
+00147$:
+;	main.c:232: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
 	inc	r5
-	sjmp	00144$
-00125$:
-;	main.c:234: if(__global_rootEntry.bytes_read % 64 == 0)
+	sjmp	00146$
+00127$:
+;	main.c:244: if(__global_rootEntry.bytes_read % 64 == 0)
 	mov	r0,#(___global_rootEntry + 0x0014)
 	mov	ar4,@r0
 	inc	r0
@@ -5560,19 +5576,19 @@ _main:
 	mov	ar7,@r0
 	mov	a,r4
 	anl	a,#0x3f
-	jz	00247$
-	ljmp	00129$
-00247$:
-;	main.c:237: UartPrintNumber(__global_rootEntry.bytes_read);
+	jz	00254$
+	ljmp	00131$
+00254$:
+;	main.c:247: UartPrintNumber(__global_rootEntry.bytes_read);
 	mov	dpl,r4
 	mov	dph,r5
 	mov	b,r6
 	mov	a,r7
 	lcall	_UartPrintNumber
-;	main.c:238: UartWrite('/');
+;	main.c:248: UartWrite('/');
 	mov	dpl,#0x2f
 	lcall	_UartWrite
-;	main.c:239: UartPrintNumber(__global_rootEntry.size);
+;	main.c:249: UartPrintNumber(__global_rootEntry.size);
 	mov	r0,#(___global_rootEntry + 0x000e)
 	mov	ar4,@r0
 	inc	r0
@@ -5586,17 +5602,17 @@ _main:
 	mov	b,r6
 	mov	a,r7
 	lcall	_UartPrintNumber
-;	main.c:240: UartWrite('\r');
+;	main.c:250: UartWrite('\r');
 	mov	dpl,#0x0d
 	lcall	_UartWrite
-	ljmp	00129$
-00130$:
-;	main.c:245: SELF_RESET_PORT &= ~(1<<SELF_RESET_PIN);
-	anl	_P1,#0xef
-;	main.c:248: while(1);    
+	ljmp	00131$
 00132$:
-;	main.c:250: }
-	sjmp	00132$
+;	main.c:255: SELF_RESET_PORT &= ~(1<<SELF_RESET_PIN);
+	anl	_P1,#0xef
+;	main.c:258: while(1);    
+00134$:
+;	main.c:260: }
+	sjmp	00134$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 	.area CONST   (CODE)
@@ -5720,30 +5736,37 @@ ___str_18:
 	.area CONST   (CODE)
 ___str_19:
 	.db 0x0a
-	.ascii "SYAMPUTER:V0"
+	.ascii "Invalid Entry !"
 	.db 0x0a
 	.db 0x00
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 ___str_20:
-	.ascii "ISA:FS0:8052"
+	.db 0x0a
+	.ascii "SYAMPUTER:V0"
 	.db 0x0a
 	.db 0x00
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 ___str_21:
-	.ascii "FW.BIN"
+	.ascii "ISA:FS0:8052"
+	.db 0x0a
 	.db 0x00
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 ___str_22:
+	.ascii "FW.BIN"
+	.db 0x00
+	.area CSEG    (CODE)
+	.area CONST   (CODE)
+___str_23:
 	.db 0x0a
 	.ascii "<RUN>"
 	.db 0x0a
 	.db 0x00
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
-___str_23:
+___str_24:
 	.db 0x0a
 	.ascii "Verif. fail"
 	.db 0x00
