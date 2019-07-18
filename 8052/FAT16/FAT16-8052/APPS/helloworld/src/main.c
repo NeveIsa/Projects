@@ -76,8 +76,8 @@ int main()
 	UartPrint("Hello World from Syamputer :)\nExiting in...");
 	for(unsigned char i=0;i<5;i++)
 	{
-		UartWrite('0'+i);
 		UartWrite('\t');
+		UartWrite('0'+i);
 		delayms(1000);		
 	}
 	exitApp();

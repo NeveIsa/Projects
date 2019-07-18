@@ -758,15 +758,17 @@ _main:
 	cjne	r7,#0x05,00123$
 00123$:
 	jnc	00101$
-;	main.c:79: UartWrite('0'+i);
+;	main.c:79: UartWrite('\t');
+	mov	dpl,#0x09
+	push	ar7
+	lcall	_UartWrite
+	pop	ar7
+;	main.c:80: UartWrite('0'+i);
 	mov	ar6,r7
 	mov	a,#0x30
 	add	a,r6
 	mov	dpl,a
 	push	ar7
-	lcall	_UartWrite
-;	main.c:80: UartWrite('\t');
-	mov	dpl,#0x09
 	lcall	_UartWrite
 ;	main.c:81: delayms(1000);		
 	mov	dptr,#0x03e8

@@ -751,7 +751,7 @@ _main:
 ;	main.c:80: delayms(100);
 	mov	dptr,#0x0064
 	lcall	_delayms
-;	main.c:81: UartPrint("Hello World from Syamputer :)\n");
+;	main.c:81: UartPrint("Hello World from Syamputer :)\t Press 'X' to exit.\n");
 	mov	dptr,#___str_0
 	mov	b,#0x80
 	lcall	_UartPrint
@@ -778,6 +778,8 @@ _main:
 	.area CONST   (CODE)
 ___str_0:
 	.ascii "Hello World from Syamputer :)"
+	.db 0x09
+	.ascii " Press 'X' to exit."
 	.db 0x0a
 	.db 0x00
 	.area CSEG    (CODE)

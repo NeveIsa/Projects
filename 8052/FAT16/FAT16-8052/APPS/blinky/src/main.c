@@ -78,7 +78,7 @@ int main()
 	while(1)
 	{
 		delayms(100);
-		UartPrint("Hello World from Syamputer :)\n");
+		UartPrint("Hello World from Syamputer :)\t Press 'X' to exit.\n");
 		P1 |= 1<<7;
 		delayms(100);
 		P1 &= ~(1<<7);

@@ -751,7 +751,7 @@
                                     751 ;	main.c:80: delayms(100);
       0001CF 90 00 64         [24]  752 	mov	dptr,#0x0064
       0001D2 12 00 C6         [24]  753 	lcall	_delayms
-                                    754 ;	main.c:81: UartPrint("Hello World from Syamputer :)\n");
+                                    754 ;	main.c:81: UartPrint("Hello World from Syamputer :)\t Press 'X' to exit.\n");
       0001D5 90 02 39         [24]  755 	mov	dptr,#___str_0
       0001D8 75 F0 80         [24]  756 	mov	b,#0x80
       0001DB 12 01 9A         [24]  757 	lcall	_UartPrint
@@ -782,8 +782,12 @@
              6F 6D 20 53 79 61 6D
              70 75 74 65 72 20 3A
              29
-      000256 0A                     781 	.db 0x0a
-      000257 00                     782 	.db 0x00
-                                    783 	.area CSEG    (CODE)
-                                    784 	.area XINIT   (CODE)
-                                    785 	.area CABS    (ABS,CODE)
+      000256 09                     781 	.db 0x09
+      000257 20 50 72 65 73 73 20   782 	.ascii " Press 'X' to exit."
+             27 58 27 20 74 6F 20
+             65 78 69 74 2E
+      00026A 0A                     783 	.db 0x0a
+      00026B 00                     784 	.db 0x00
+                                    785 	.area CSEG    (CODE)
+                                    786 	.area XINIT   (CODE)
+                                    787 	.area CABS    (ABS,CODE)

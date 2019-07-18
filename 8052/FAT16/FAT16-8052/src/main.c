@@ -97,7 +97,7 @@ void SelectFAT16PartitionPrompt() __reentrant
     }
 }
 
-void SelectFileAndFileOpen() __reentrant
+uint8_t SelectFileAndFileOpen() __reentrant
 {
     unsigned char _result;
     FAT16_ROOTENTRY_SCAN_RESET();
@@ -120,7 +120,12 @@ void SelectFileAndFileOpen() __reentrant
 
     UartPrint("\nSlct index >\n");
     _result=UartScanByte();
-    FAT16_ROOTENTRY_READ(_result); //load the selected
+
+    //check if _result is 0 i.e file is valid after loading.
+    _result=FAT16_ROOTENTRY_READ(_result); //load the selected
+    if(_result!=0) UartPrint("\nInvalid Entry !\n");
+    return _result;
+
 }
 //////////////////////// HELPERS /////////////////////////
 
@@ -134,7 +139,7 @@ void SelectFileAndFileOpen() __reentrant
  
 void main(void)
 {
-    //"FW.BIN" -> all caps, fw.bin should work but didnt , mostlikely stack overflow
+    //"FW.BIN" -> all caps, fw.bin should work but didnt , most likely stack overflow
     #define DEFAULT_LOAD_FILENAME "FW.BIN"
     #define FILE_BUFF_SIZE 16 //has to be power of 2 
 
@@ -198,7 +203,12 @@ void main(void)
         UartPrint(DEFAULT_LOAD_FILENAME);
         UartWrite('\n');
     } 
-    else SelectFileAndFileOpen();
+    else 
+    {
+	    //while SelectFileAndFileOpen not return a valid file i.e 0, keep calling the same 
+	    do{}
+	    while(SelectFileAndFileOpen());
+    }
     
      while(1)
     {

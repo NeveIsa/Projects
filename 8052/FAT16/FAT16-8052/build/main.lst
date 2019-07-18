@@ -483,7 +483,7 @@
                                     483 	.area HOME    (CODE)
                                     484 	.area HOME    (CODE)
       000003                        485 __sdcc_program_startup:
-      000003 02r18rF6         [24]  486 	ljmp	_main
+      000003 02r19r0B         [24]  486 	ljmp	_main
                                     487 ;	return from main will return to caller
                                     488 ;--------------------------------------------------------
                                     489 ; code
@@ -4947,7 +4947,7 @@
       0016BD 80 33            [24] 4947 	sjmp	00112$
       0016BF                       4948 00107$:
                                    4949 ;	serialloader.h:124: UartPrint(SERIAL_LOADER_VERSION_INFO);
-      0016BF 90r1Ar72         [24] 4950 	mov	dptr,#_SERIAL_LOADER_VERSION_INFO
+      0016BF 90r1Ar8B         [24] 4950 	mov	dptr,#_SERIAL_LOADER_VERSION_INFO
       0016C2 75 F0 80         [24] 4951 	mov	b,#0x80
       0016C5 C0 07            [24] 4952 	push	ar7
       0016C7 12r01r1B         [24] 4953 	lcall	_UartPrint
@@ -5233,7 +5233,7 @@
       001853 75 F0 80         [24] 5233 	mov	b,#0x80
       001856 12r01r1B         [24] 5234 	lcall	_UartPrint
                                    5235 ;	main.c:88: UartPrint(HALTING_MSG); while(1);
-      001859 90r1Ar7F         [24] 5236 	mov	dptr,#_SelectFAT16PartitionPrompt_HALTING_MSG_65536_195
+      001859 90r1Ar98         [24] 5236 	mov	dptr,#_SelectFAT16PartitionPrompt_HALTING_MSG_65536_195
       00185C 75 F0 80         [24] 5237 	mov	b,#0x80
       00185F 12r01r1B         [24] 5238 	lcall	_UartPrint
       001862                       5239 00114$:
@@ -5244,7 +5244,7 @@
       001867 75 F0 80         [24] 5244 	mov	b,#0x80
       00186A 12r01r1B         [24] 5245 	lcall	_UartPrint
                                    5246 ;	main.c:95: UartPrint(HALTING_MSG); while(1);
-      00186D 90r1Ar7F         [24] 5247 	mov	dptr,#_SelectFAT16PartitionPrompt_HALTING_MSG_65536_195
+      00186D 90r1Ar98         [24] 5247 	mov	dptr,#_SelectFAT16PartitionPrompt_HALTING_MSG_65536_195
       001870 75 F0 80         [24] 5248 	mov	b,#0x80
       001873 12r01r1B         [24] 5249 	lcall	_UartPrint
       001876                       5250 00121$:
@@ -5257,7 +5257,7 @@
                                    5257 ;i                         Allocated to registers r7 
                                    5258 ;j                         Allocated to registers r6 
                                    5259 ;------------------------------------------------------------
-                                   5260 ;	main.c:100: void SelectFileAndFileOpen() __reentrant
+                                   5260 ;	main.c:100: uint8_t SelectFileAndFileOpen() __reentrant
                                    5261 ;	-----------------------------------------
                                    5262 ;	 function SelectFileAndFileOpen
                                    5263 ;	-----------------------------------------
@@ -5270,9 +5270,9 @@
       001881 12r01r1B         [24] 5270 	lcall	_UartPrint
                                    5271 ;	main.c:107: for(uint8_t i=0;i<255;i++) 
       001884 7F 00            [12] 5272 	mov	r7,#0x00
-      001886                       5273 00112$:
-      001886 BF FF 00         [24] 5274 	cjne	r7,#0xff,00148$
-      001889                       5275 00148$:
+      001886                       5273 00114$:
+      001886 BF FF 00         [24] 5274 	cjne	r7,#0xff,00155$
+      001889                       5275 00155$:
       001889 50 58            [24] 5276 	jnc	00107$
                                    5277 ;	main.c:109: _result = FAT16_ROOTENTRY_SCAN();
       00188B C0 07            [24] 5278 	push	ar7
@@ -5280,12 +5280,12 @@
       001890 AE 82            [24] 5280 	mov	r6,dpl
       001892 D0 07            [24] 5281 	pop	ar7
                                    5282 ;	main.c:110: if(_result==0xff) break; //end of scan
-      001894 BE FF 02         [24] 5283 	cjne	r6,#0xff,00150$
+      001894 BE FF 02         [24] 5283 	cjne	r6,#0xff,00157$
       001897 80 4A            [24] 5284 	sjmp	00107$
-      001899                       5285 00150$:
+      001899                       5285 00157$:
                                    5286 ;	main.c:111: else if (_result==0) //valid file
       001899 EE               [12] 5287 	mov	a,r6
-      00189A 70 44            [24] 5288 	jnz	00113$
+      00189A 70 44            [24] 5288 	jnz	00115$
                                    5289 ;	main.c:113: UartWriteNumber(__global_rootEntry.entry_index,DEC); //print root entry index
       00189C 78r3B            [12] 5290 	mov	r0,#(___global_rootEntry + 0x0012)
       00189E 86 06            [24] 5291 	mov	ar6,@r0
@@ -5304,9 +5304,9 @@
       0018B9 D0 07            [24] 5304 	pop	ar7
                                    5305 ;	main.c:116: for(uint8_t j=0;j<11;j++)UartWrite(__global_rootEntry.name[j]); //print name
       0018BB 7E 00            [12] 5306 	mov	r6,#0x00
-      0018BD                       5307 00109$:
-      0018BD BE 0B 00         [24] 5308 	cjne	r6,#0x0b,00152$
-      0018C0                       5309 00152$:
+      0018BD                       5307 00111$:
+      0018BD BE 0B 00         [24] 5308 	cjne	r6,#0x0b,00159$
+      0018C0                       5309 00159$:
       0018C0 50 14            [24] 5310 	jnc	00101$
       0018C2 EE               [12] 5311 	mov	a,r6
       0018C3 24r29            [12] 5312 	add	a,#___global_rootEntry
@@ -5318,17 +5318,17 @@
       0018CF D0 06            [24] 5318 	pop	ar6
       0018D1 D0 07            [24] 5319 	pop	ar7
       0018D3 0E               [12] 5320 	inc	r6
-      0018D4 80 E7            [24] 5321 	sjmp	00109$
+      0018D4 80 E7            [24] 5321 	sjmp	00111$
       0018D6                       5322 00101$:
                                    5323 ;	main.c:117: UartWrite('\n');
       0018D6 75 82 0A         [24] 5324 	mov	dpl,#0x0a
       0018D9 C0 07            [24] 5325 	push	ar7
       0018DB 12r00r95         [24] 5326 	lcall	_UartWrite
       0018DE D0 07            [24] 5327 	pop	ar7
-      0018E0                       5328 00113$:
+      0018E0                       5328 00115$:
                                    5329 ;	main.c:107: for(uint8_t i=0;i<255;i++) 
       0018E0 0F               [12] 5330 	inc	r7
-      0018E1 80 A3            [24] 5331 	sjmp	00112$
+      0018E1 80 A3            [24] 5331 	sjmp	00114$
       0018E3                       5332 00107$:
                                    5333 ;	main.c:121: UartPrint("\nSlct index >\n");
       0018E3 90r00rBA         [24] 5334 	mov	dptr,#___str_18
@@ -5336,435 +5336,460 @@
       0018E9 12r01r1B         [24] 5336 	lcall	_UartPrint
                                    5337 ;	main.c:122: _result=UartScanByte();
       0018EC 12r03r5B         [24] 5338 	lcall	_UartScanByte
-                                   5339 ;	main.c:123: FAT16_ROOTENTRY_READ(_result); //load the selected
+                                   5339 ;	main.c:125: _result=FAT16_ROOTENTRY_READ(_result); //load the selected
       0018EF 7E 00            [12] 5340 	mov	r6,#0x00
       0018F1 8E 83            [24] 5341 	mov	dph,r6
-                                   5342 ;	main.c:124: }
-      0018F3 02r11r39         [24] 5343 	ljmp	_FAT16_ROOTENTRY_READ
-                                   5344 ;------------------------------------------------------------
-                                   5345 ;Allocation info for local variables in function 'main'
-                                   5346 ;------------------------------------------------------------
-                                   5347 ;buff                      Allocated with name '_main_buff_65536_214'
-                                   5348 ;_resp                     Allocated to registers r7 
-                                   5349 ;xram_addr                 Allocated to registers r6 r7 
-                                   5350 ;_t                        Allocated to registers r5 r6 
-                                   5351 ;wastetime                 Allocated to registers r4 
-                                   5352 ;i                         Allocated to registers r5 
-                                   5353 ;i                         Allocated to registers r5 
-                                   5354 ;------------------------------------------------------------
-                                   5355 ;	main.c:135: void main(void)
-                                   5356 ;	-----------------------------------------
-                                   5357 ;	 function main
-                                   5358 ;	-----------------------------------------
-      0018F6                       5359 _main:
-                                   5360 ;	main.c:144: uint8_t _resp=0;
-      0018F6 7F 00            [12] 5361 	mov	r7,#0x00
-                                   5362 ;	main.c:151: UartBegin();
-      0018F8 C0 07            [24] 5363 	push	ar7
-      0018FA 12r00r72         [24] 5364 	lcall	_UartBegin
-                                   5365 ;	main.c:152: spi_init(); 
-      0018FD 12r04r21         [24] 5366 	lcall	_spi_init
-                                   5367 ;	main.c:153: SDinit();
-      001900 12r06r5A         [24] 5368 	lcall	_SDinit
-                                   5369 ;	main.c:157: UartPrint("\nSYAMPUTER:V0\n");
-      001903 90r00rC9         [24] 5370 	mov	dptr,#___str_19
-      001906 75 F0 80         [24] 5371 	mov	b,#0x80
-      001909 12r01r1B         [24] 5372 	lcall	_UartPrint
-      00190C D0 07            [24] 5373 	pop	ar7
-                                   5374 ;	main.c:159: while(UartReadReady())UartRead(); //flush
-      00190E                       5375 00101$:
-      00190E C0 07            [24] 5376 	push	ar7
-      001910 12r00r81         [24] 5377 	lcall	_UartReadReady
-      001913 E5 82            [12] 5378 	mov	a,dpl
-      001915 D0 07            [24] 5379 	pop	ar7
-      001917 60 09            [24] 5380 	jz	00154$
-      001919 C0 07            [24] 5381 	push	ar7
-      00191B 12r00r8C         [24] 5382 	lcall	_UartRead
-      00191E D0 07            [24] 5383 	pop	ar7
-                                   5384 ;	main.c:164: for(unsigned int _t=0;_t<65000;_t++)
-      001920 80 EC            [24] 5385 	sjmp	00101$
-      001922                       5386 00154$:
-      001922 7D 00            [12] 5387 	mov	r5,#0x00
-      001924 7E 00            [12] 5388 	mov	r6,#0x00
-      001926                       5389 00138$:
-      001926 C3               [12] 5390 	clr	c
-      001927 ED               [12] 5391 	mov	a,r5
-      001928 94 E8            [12] 5392 	subb	a,#0xe8
-      00192A EE               [12] 5393 	mov	a,r6
-      00192B 94 FD            [12] 5394 	subb	a,#0xfd
-      00192D 50 2B            [24] 5395 	jnc	00107$
-                                   5396 ;	main.c:166: if(UartReadReady())
-      00192F C0 07            [24] 5397 	push	ar7
-      001931 C0 06            [24] 5398 	push	ar6
-      001933 C0 05            [24] 5399 	push	ar5
-      001935 12r00r81         [24] 5400 	lcall	_UartReadReady
-      001938 E5 82            [12] 5401 	mov	a,dpl
-      00193A D0 05            [24] 5402 	pop	ar5
-      00193C D0 06            [24] 5403 	pop	ar6
-      00193E D0 07            [24] 5404 	pop	ar7
-      001940 60 07            [24] 5405 	jz	00153$
-                                   5406 ;	main.c:168: _resp=UartRead();
-      001942 12r00r8C         [24] 5407 	lcall	_UartRead
-      001945 AF 82            [24] 5408 	mov	r7,dpl
-                                   5409 ;	main.c:169: break;
-                                   5410 ;	main.c:171: for(uint8_t wastetime=0;wastetime<3;wastetime++);
-      001947 80 11            [24] 5411 	sjmp	00107$
-      001949                       5412 00153$:
-      001949 7C 00            [12] 5413 	mov	r4,#0x00
-      00194B                       5414 00135$:
-      00194B BC 03 00         [24] 5415 	cjne	r4,#0x03,00233$
-      00194E                       5416 00233$:
-      00194E 50 03            [24] 5417 	jnc	00139$
-      001950 0C               [12] 5418 	inc	r4
-      001951 80 F8            [24] 5419 	sjmp	00135$
-      001953                       5420 00139$:
-                                   5421 ;	main.c:164: for(unsigned int _t=0;_t<65000;_t++)
-      001953 0D               [12] 5422 	inc	r5
-      001954 BD 00 CF         [24] 5423 	cjne	r5,#0x00,00138$
-      001957 0E               [12] 5424 	inc	r6
-      001958 80 CC            [24] 5425 	sjmp	00138$
-      00195A                       5426 00107$:
-                                   5427 ;	main.c:176: switch (_resp)
-      00195A BF 56 10         [24] 5428 	cjne	r7,#0x56,00113$
-                                   5429 ;	main.c:179: UartPrint("ISA:FS0:8052\n");
-      00195D 90r00rD8         [24] 5430 	mov	dptr,#___str_20
-      001960 75 F0 80         [24] 5431 	mov	b,#0x80
-      001963 12r01r1B         [24] 5432 	lcall	_UartPrint
-                                   5433 ;	main.c:180: while(SL_getcmd()); //break when command is 0
-      001966                       5434 00109$:
-      001966 12r16r89         [24] 5435 	lcall	_SL_getcmd
-      001969 E5 82            [12] 5436 	mov	a,dpl
-      00196B 70 F9            [24] 5437 	jnz	00109$
-                                   5438 ;	main.c:184: }
-      00196D                       5439 00113$:
-                                   5440 ;	main.c:189: SelectFAT16PartitionPrompt();
-      00196D 12r16rF8         [24] 5441 	lcall	_SelectFAT16PartitionPrompt
-                                   5442 ;	main.c:196: if(FAT16_FILE_OPEN(DEFAULT_LOAD_FILENAME)==0)
-      001970 90r00rE6         [24] 5443 	mov	dptr,#___str_21
-      001973 75 F0 80         [24] 5444 	mov	b,#0x80
-      001976 12r11r8F         [24] 5445 	lcall	_FAT16_FILE_OPEN
-      001979 E5 82            [12] 5446 	mov	a,dpl
-      00197B 70 11            [24] 5447 	jnz	00115$
-                                   5448 ;	main.c:198: UartPrint(DEFAULT_LOAD_FILENAME);
-      00197D 90r00rE6         [24] 5449 	mov	dptr,#___str_21
-      001980 75 F0 80         [24] 5450 	mov	b,#0x80
-      001983 12r01r1B         [24] 5451 	lcall	_UartPrint
-                                   5452 ;	main.c:199: UartWrite('\n');
-      001986 75 82 0A         [24] 5453 	mov	dpl,#0x0a
-      001989 12r00r95         [24] 5454 	lcall	_UartWrite
-      00198C 80 03            [24] 5455 	sjmp	00165$
-      00198E                       5456 00115$:
-                                   5457 ;	main.c:201: else SelectFileAndFileOpen();
-      00198E 12r18r78         [24] 5458 	lcall	_SelectFileAndFileOpen
-                                   5459 ;	main.c:203: while(1)
-      001991                       5460 00165$:
-      001991                       5461 00129$:
-                                   5462 ;	main.c:205: xram_addr=(__xdata unsigned char*)(uint16_t)__global_rootEntry.bytes_read;        
-      001991 78r3D            [12] 5463 	mov	r0,#(___global_rootEntry + 0x0014)
-      001993 86 06            [24] 5464 	mov	ar6,@r0
-      001995 08               [12] 5465 	inc	r0
-      001996 86 07            [24] 5466 	mov	ar7,@r0
-                                   5467 ;	main.c:206: _resp=FAT16_FILE_READ(FILE_BUFF_SIZE,buff);
-      001998 C0 07            [24] 5468 	push	ar7
-      00199A C0 06            [24] 5469 	push	ar6
-      00199C 74r24            [12] 5470 	mov	a,#_main_buff_65536_214
-      00199E C0 E0            [24] 5471 	push	acc
-      0019A0 74s00            [12] 5472 	mov	a,#(_main_buff_65536_214 >> 8)
-      0019A2 C0 E0            [24] 5473 	push	acc
-      0019A4 74 40            [12] 5474 	mov	a,#0x40
-      0019A6 C0 E0            [24] 5475 	push	acc
-      0019A8 75 82 10         [24] 5476 	mov	dpl,#0x10
-      0019AB 12r13r0C         [24] 5477 	lcall	_FAT16_FILE_READ
-      0019AE AD 82            [24] 5478 	mov	r5,dpl
-      0019B0 15 81            [12] 5479 	dec	sp
-      0019B2 15 81            [12] 5480 	dec	sp
-      0019B4 15 81            [12] 5481 	dec	sp
-      0019B6 D0 06            [24] 5482 	pop	ar6
-      0019B8 D0 07            [24] 5483 	pop	ar7
-                                   5484 ;	main.c:207: if(_resp==0) 
-      0019BA ED               [12] 5485 	mov	a,r5
-      0019BB 70 0C            [24] 5486 	jnz	00160$
-                                   5487 ;	main.c:209: UartPrint("\n<RUN>\n");
-      0019BD 90r00rED         [24] 5488 	mov	dptr,#___str_22
-      0019C0 75 F0 80         [24] 5489 	mov	b,#0x80
-      0019C3 12r01r1B         [24] 5490 	lcall	_UartPrint
-                                   5491 ;	main.c:210: break;
-      0019C6 02r1Ar52         [24] 5492 	ljmp	00130$
-                                   5493 ;	main.c:212: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
-      0019C9                       5494 00160$:
-      0019C9 7D 00            [12] 5495 	mov	r5,#0x00
-      0019CB                       5496 00141$:
-      0019CB BD 10 00         [24] 5497 	cjne	r5,#0x10,00241$
-      0019CE                       5498 00241$:
-      0019CE 50 12            [24] 5499 	jnc	00119$
-                                   5500 ;	main.c:218: *(xram_addr+i) = buff[i];
-      0019D0 ED               [12] 5501 	mov	a,r5
-      0019D1 2E               [12] 5502 	add	a,r6
-      0019D2 F5 82            [12] 5503 	mov	dpl,a
-      0019D4 E4               [12] 5504 	clr	a
-      0019D5 3F               [12] 5505 	addc	a,r7
-      0019D6 F5 83            [12] 5506 	mov	dph,a
-      0019D8 ED               [12] 5507 	mov	a,r5
-      0019D9 24r24            [12] 5508 	add	a,#_main_buff_65536_214
-      0019DB F9               [12] 5509 	mov	r1,a
-      0019DC E7               [12] 5510 	mov	a,@r1
-      0019DD FC               [12] 5511 	mov	r4,a
-      0019DE F0               [24] 5512 	movx	@dptr,a
-                                   5513 ;	main.c:212: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
-      0019DF 0D               [12] 5514 	inc	r5
-      0019E0 80 E9            [24] 5515 	sjmp	00141$
-      0019E2                       5516 00119$:
-                                   5517 ;	main.c:222: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
-      0019E2 7D 00            [12] 5518 	mov	r5,#0x00
-      0019E4                       5519 00144$:
-      0019E4 BD 10 00         [24] 5520 	cjne	r5,#0x10,00243$
-      0019E7                       5521 00243$:
-      0019E7 50 24            [24] 5522 	jnc	00125$
-                                   5523 ;	main.c:224: if(buff[i]!=*(xram_addr+i)) 
-      0019E9 ED               [12] 5524 	mov	a,r5
-      0019EA 24r24            [12] 5525 	add	a,#_main_buff_65536_214
-      0019EC F9               [12] 5526 	mov	r1,a
-      0019ED 87 04            [24] 5527 	mov	ar4,@r1
-      0019EF ED               [12] 5528 	mov	a,r5
-      0019F0 2E               [12] 5529 	add	a,r6
-      0019F1 F5 82            [12] 5530 	mov	dpl,a
-      0019F3 E4               [12] 5531 	clr	a
-      0019F4 3F               [12] 5532 	addc	a,r7
-      0019F5 F5 83            [12] 5533 	mov	dph,a
-      0019F7 E0               [24] 5534 	movx	a,@dptr
-      0019F8 FB               [12] 5535 	mov	r3,a
-      0019F9 EC               [12] 5536 	mov	a,r4
-      0019FA B5 03 02         [24] 5537 	cjne	a,ar3,00245$
-      0019FD 80 0B            [24] 5538 	sjmp	00145$
-      0019FF                       5539 00245$:
-                                   5540 ;	main.c:226: UartPrint("\nVerif. fail");
-      0019FF 90r00rF5         [24] 5541 	mov	dptr,#___str_23
-      001A02 75 F0 80         [24] 5542 	mov	b,#0x80
-      001A05 12r01r1B         [24] 5543 	lcall	_UartPrint
-                                   5544 ;	main.c:228: while(1);
-      001A08                       5545 00121$:
-      001A08 80 FE            [24] 5546 	sjmp	00121$
-      001A0A                       5547 00145$:
-                                   5548 ;	main.c:222: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
-      001A0A 0D               [12] 5549 	inc	r5
-      001A0B 80 D7            [24] 5550 	sjmp	00144$
-      001A0D                       5551 00125$:
-                                   5552 ;	main.c:234: if(__global_rootEntry.bytes_read % 64 == 0)
-      001A0D 78r3D            [12] 5553 	mov	r0,#(___global_rootEntry + 0x0014)
-      001A0F 86 04            [24] 5554 	mov	ar4,@r0
-      001A11 08               [12] 5555 	inc	r0
-      001A12 86 05            [24] 5556 	mov	ar5,@r0
-      001A14 08               [12] 5557 	inc	r0
-      001A15 86 06            [24] 5558 	mov	ar6,@r0
-      001A17 08               [12] 5559 	inc	r0
-      001A18 86 07            [24] 5560 	mov	ar7,@r0
-      001A1A EC               [12] 5561 	mov	a,r4
-      001A1B 54 3F            [12] 5562 	anl	a,#0x3f
-      001A1D 60 03            [24] 5563 	jz	00247$
-      001A1F 02r19r91         [24] 5564 	ljmp	00129$
-      001A22                       5565 00247$:
-                                   5566 ;	main.c:237: UartPrintNumber(__global_rootEntry.bytes_read);
-      001A22 8C 82            [24] 5567 	mov	dpl,r4
-      001A24 8D 83            [24] 5568 	mov	dph,r5
-      001A26 8E F0            [24] 5569 	mov	b,r6
-      001A28 EF               [12] 5570 	mov	a,r7
-      001A29 12r02r61         [24] 5571 	lcall	_UartPrintNumber
-                                   5572 ;	main.c:238: UartWrite('/');
-      001A2C 75 82 2F         [24] 5573 	mov	dpl,#0x2f
-      001A2F 12r00r95         [24] 5574 	lcall	_UartWrite
-                                   5575 ;	main.c:239: UartPrintNumber(__global_rootEntry.size);
-      001A32 78r37            [12] 5576 	mov	r0,#(___global_rootEntry + 0x000e)
-      001A34 86 04            [24] 5577 	mov	ar4,@r0
-      001A36 08               [12] 5578 	inc	r0
-      001A37 86 05            [24] 5579 	mov	ar5,@r0
-      001A39 08               [12] 5580 	inc	r0
-      001A3A 86 06            [24] 5581 	mov	ar6,@r0
-      001A3C 08               [12] 5582 	inc	r0
-      001A3D 86 07            [24] 5583 	mov	ar7,@r0
-      001A3F 8C 82            [24] 5584 	mov	dpl,r4
-      001A41 8D 83            [24] 5585 	mov	dph,r5
-      001A43 8E F0            [24] 5586 	mov	b,r6
-      001A45 EF               [12] 5587 	mov	a,r7
-      001A46 12r02r61         [24] 5588 	lcall	_UartPrintNumber
-                                   5589 ;	main.c:240: UartWrite('\r');
-      001A49 75 82 0D         [24] 5590 	mov	dpl,#0x0d
-      001A4C 12r00r95         [24] 5591 	lcall	_UartWrite
-      001A4F 02r19r91         [24] 5592 	ljmp	00129$
-      001A52                       5593 00130$:
-                                   5594 ;	main.c:245: SELF_RESET_PORT &= ~(1<<SELF_RESET_PIN);
-      001A52 53 90 EF         [24] 5595 	anl	_P1,#0xef
-                                   5596 ;	main.c:248: while(1);    
-      001A55                       5597 00132$:
-                                   5598 ;	main.c:250: }
-      001A55 80 FE            [24] 5599 	sjmp	00132$
-                                   5600 	.area CSEG    (CODE)
-                                   5601 	.area CONST   (CODE)
-                                   5602 	.area CONST   (CODE)
-      000000                       5603 ___str_0:
-      000000 4E 75 6D 62 65 72 28  5604 	.ascii "Number(hex) < "
+      0018F3 12r11r39         [24] 5342 	lcall	_FAT16_ROOTENTRY_READ
+                                   5343 ;	main.c:126: if(_result!=0) UartPrint("\nInvalid Entry !\n");
+      0018F6 E5 82            [12] 5344 	mov	a,dpl
+      0018F8 FF               [12] 5345 	mov	r7,a
+      0018F9 60 0D            [24] 5346 	jz	00109$
+      0018FB 90r00rC9         [24] 5347 	mov	dptr,#___str_19
+      0018FE 75 F0 80         [24] 5348 	mov	b,#0x80
+      001901 C0 07            [24] 5349 	push	ar7
+      001903 12r01r1B         [24] 5350 	lcall	_UartPrint
+      001906 D0 07            [24] 5351 	pop	ar7
+      001908                       5352 00109$:
+                                   5353 ;	main.c:127: return _result;
+      001908 8F 82            [24] 5354 	mov	dpl,r7
+                                   5355 ;	main.c:129: }
+      00190A 22               [24] 5356 	ret
+                                   5357 ;------------------------------------------------------------
+                                   5358 ;Allocation info for local variables in function 'main'
+                                   5359 ;------------------------------------------------------------
+                                   5360 ;buff                      Allocated with name '_main_buff_65536_214'
+                                   5361 ;_resp                     Allocated to registers r7 
+                                   5362 ;xram_addr                 Allocated to registers r6 r7 
+                                   5363 ;_t                        Allocated to registers r5 r6 
+                                   5364 ;wastetime                 Allocated to registers r4 
+                                   5365 ;i                         Allocated to registers r5 
+                                   5366 ;i                         Allocated to registers r5 
+                                   5367 ;------------------------------------------------------------
+                                   5368 ;	main.c:140: void main(void)
+                                   5369 ;	-----------------------------------------
+                                   5370 ;	 function main
+                                   5371 ;	-----------------------------------------
+      00190B                       5372 _main:
+                                   5373 ;	main.c:149: uint8_t _resp=0;
+      00190B 7F 00            [12] 5374 	mov	r7,#0x00
+                                   5375 ;	main.c:156: UartBegin();
+      00190D C0 07            [24] 5376 	push	ar7
+      00190F 12r00r72         [24] 5377 	lcall	_UartBegin
+                                   5378 ;	main.c:157: spi_init(); 
+      001912 12r04r21         [24] 5379 	lcall	_spi_init
+                                   5380 ;	main.c:158: SDinit();
+      001915 12r06r5A         [24] 5381 	lcall	_SDinit
+                                   5382 ;	main.c:162: UartPrint("\nSYAMPUTER:V0\n");
+      001918 90r00rDB         [24] 5383 	mov	dptr,#___str_20
+      00191B 75 F0 80         [24] 5384 	mov	b,#0x80
+      00191E 12r01r1B         [24] 5385 	lcall	_UartPrint
+      001921 D0 07            [24] 5386 	pop	ar7
+                                   5387 ;	main.c:164: while(UartReadReady())UartRead(); //flush
+      001923                       5388 00101$:
+      001923 C0 07            [24] 5389 	push	ar7
+      001925 12r00r81         [24] 5390 	lcall	_UartReadReady
+      001928 E5 82            [12] 5391 	mov	a,dpl
+      00192A D0 07            [24] 5392 	pop	ar7
+      00192C 60 09            [24] 5393 	jz	00156$
+      00192E C0 07            [24] 5394 	push	ar7
+      001930 12r00r8C         [24] 5395 	lcall	_UartRead
+      001933 D0 07            [24] 5396 	pop	ar7
+                                   5397 ;	main.c:169: for(unsigned int _t=0;_t<65000;_t++)
+      001935 80 EC            [24] 5398 	sjmp	00101$
+      001937                       5399 00156$:
+      001937 7D 00            [12] 5400 	mov	r5,#0x00
+      001939 7E 00            [12] 5401 	mov	r6,#0x00
+      00193B                       5402 00140$:
+      00193B C3               [12] 5403 	clr	c
+      00193C ED               [12] 5404 	mov	a,r5
+      00193D 94 E8            [12] 5405 	subb	a,#0xe8
+      00193F EE               [12] 5406 	mov	a,r6
+      001940 94 FD            [12] 5407 	subb	a,#0xfd
+      001942 50 2B            [24] 5408 	jnc	00107$
+                                   5409 ;	main.c:171: if(UartReadReady())
+      001944 C0 07            [24] 5410 	push	ar7
+      001946 C0 06            [24] 5411 	push	ar6
+      001948 C0 05            [24] 5412 	push	ar5
+      00194A 12r00r81         [24] 5413 	lcall	_UartReadReady
+      00194D E5 82            [12] 5414 	mov	a,dpl
+      00194F D0 05            [24] 5415 	pop	ar5
+      001951 D0 06            [24] 5416 	pop	ar6
+      001953 D0 07            [24] 5417 	pop	ar7
+      001955 60 07            [24] 5418 	jz	00155$
+                                   5419 ;	main.c:173: _resp=UartRead();
+      001957 12r00r8C         [24] 5420 	lcall	_UartRead
+      00195A AF 82            [24] 5421 	mov	r7,dpl
+                                   5422 ;	main.c:174: break;
+                                   5423 ;	main.c:176: for(uint8_t wastetime=0;wastetime<3;wastetime++);
+      00195C 80 11            [24] 5424 	sjmp	00107$
+      00195E                       5425 00155$:
+      00195E 7C 00            [12] 5426 	mov	r4,#0x00
+      001960                       5427 00137$:
+      001960 BC 03 00         [24] 5428 	cjne	r4,#0x03,00239$
+      001963                       5429 00239$:
+      001963 50 03            [24] 5430 	jnc	00141$
+      001965 0C               [12] 5431 	inc	r4
+      001966 80 F8            [24] 5432 	sjmp	00137$
+      001968                       5433 00141$:
+                                   5434 ;	main.c:169: for(unsigned int _t=0;_t<65000;_t++)
+      001968 0D               [12] 5435 	inc	r5
+      001969 BD 00 CF         [24] 5436 	cjne	r5,#0x00,00140$
+      00196C 0E               [12] 5437 	inc	r6
+      00196D 80 CC            [24] 5438 	sjmp	00140$
+      00196F                       5439 00107$:
+                                   5440 ;	main.c:181: switch (_resp)
+      00196F BF 56 10         [24] 5441 	cjne	r7,#0x56,00113$
+                                   5442 ;	main.c:184: UartPrint("ISA:FS0:8052\n");
+      001972 90r00rEA         [24] 5443 	mov	dptr,#___str_21
+      001975 75 F0 80         [24] 5444 	mov	b,#0x80
+      001978 12r01r1B         [24] 5445 	lcall	_UartPrint
+                                   5446 ;	main.c:185: while(SL_getcmd()); //break when command is 0
+      00197B                       5447 00109$:
+      00197B 12r16r89         [24] 5448 	lcall	_SL_getcmd
+      00197E E5 82            [12] 5449 	mov	a,dpl
+      001980 70 F9            [24] 5450 	jnz	00109$
+                                   5451 ;	main.c:189: }
+      001982                       5452 00113$:
+                                   5453 ;	main.c:194: SelectFAT16PartitionPrompt();
+      001982 12r16rF8         [24] 5454 	lcall	_SelectFAT16PartitionPrompt
+                                   5455 ;	main.c:201: if(FAT16_FILE_OPEN(DEFAULT_LOAD_FILENAME)==0)
+      001985 90r00rF8         [24] 5456 	mov	dptr,#___str_22
+      001988 75 F0 80         [24] 5457 	mov	b,#0x80
+      00198B 12r11r8F         [24] 5458 	lcall	_FAT16_FILE_OPEN
+      00198E E5 82            [12] 5459 	mov	a,dpl
+      001990 70 11            [24] 5460 	jnz	00114$
+                                   5461 ;	main.c:203: UartPrint(DEFAULT_LOAD_FILENAME);
+      001992 90r00rF8         [24] 5462 	mov	dptr,#___str_22
+      001995 75 F0 80         [24] 5463 	mov	b,#0x80
+      001998 12r01r1B         [24] 5464 	lcall	_UartPrint
+                                   5465 ;	main.c:204: UartWrite('\n');
+      00199B 75 82 0A         [24] 5466 	mov	dpl,#0x0a
+      00199E 12r00r95         [24] 5467 	lcall	_UartWrite
+                                   5468 ;	main.c:209: do{}
+      0019A1 80 07            [24] 5469 	sjmp	00168$
+      0019A3                       5470 00114$:
+                                   5471 ;	main.c:210: while(SelectFileAndFileOpen());
+      0019A3 12r18r78         [24] 5472 	lcall	_SelectFileAndFileOpen
+      0019A6 E5 82            [12] 5473 	mov	a,dpl
+      0019A8 70 F9            [24] 5474 	jnz	00114$
+                                   5475 ;	main.c:213: while(1)
+      0019AA                       5476 00168$:
+      0019AA                       5477 00131$:
+                                   5478 ;	main.c:215: xram_addr=(__xdata unsigned char*)(uint16_t)__global_rootEntry.bytes_read;        
+      0019AA 78r3D            [12] 5479 	mov	r0,#(___global_rootEntry + 0x0014)
+      0019AC 86 06            [24] 5480 	mov	ar6,@r0
+      0019AE 08               [12] 5481 	inc	r0
+      0019AF 86 07            [24] 5482 	mov	ar7,@r0
+                                   5483 ;	main.c:216: _resp=FAT16_FILE_READ(FILE_BUFF_SIZE,buff);
+      0019B1 C0 07            [24] 5484 	push	ar7
+      0019B3 C0 06            [24] 5485 	push	ar6
+      0019B5 74r24            [12] 5486 	mov	a,#_main_buff_65536_214
+      0019B7 C0 E0            [24] 5487 	push	acc
+      0019B9 74s00            [12] 5488 	mov	a,#(_main_buff_65536_214 >> 8)
+      0019BB C0 E0            [24] 5489 	push	acc
+      0019BD 74 40            [12] 5490 	mov	a,#0x40
+      0019BF C0 E0            [24] 5491 	push	acc
+      0019C1 75 82 10         [24] 5492 	mov	dpl,#0x10
+      0019C4 12r13r0C         [24] 5493 	lcall	_FAT16_FILE_READ
+      0019C7 AD 82            [24] 5494 	mov	r5,dpl
+      0019C9 15 81            [12] 5495 	dec	sp
+      0019CB 15 81            [12] 5496 	dec	sp
+      0019CD 15 81            [12] 5497 	dec	sp
+      0019CF D0 06            [24] 5498 	pop	ar6
+      0019D1 D0 07            [24] 5499 	pop	ar7
+                                   5500 ;	main.c:217: if(_resp==0) 
+      0019D3 ED               [12] 5501 	mov	a,r5
+      0019D4 70 0C            [24] 5502 	jnz	00163$
+                                   5503 ;	main.c:219: UartPrint("\n<RUN>\n");
+      0019D6 90r00rFF         [24] 5504 	mov	dptr,#___str_23
+      0019D9 75 F0 80         [24] 5505 	mov	b,#0x80
+      0019DC 12r01r1B         [24] 5506 	lcall	_UartPrint
+                                   5507 ;	main.c:220: break;
+      0019DF 02r1Ar6B         [24] 5508 	ljmp	00132$
+                                   5509 ;	main.c:222: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
+      0019E2                       5510 00163$:
+      0019E2 7D 00            [12] 5511 	mov	r5,#0x00
+      0019E4                       5512 00143$:
+      0019E4 BD 10 00         [24] 5513 	cjne	r5,#0x10,00248$
+      0019E7                       5514 00248$:
+      0019E7 50 12            [24] 5515 	jnc	00121$
+                                   5516 ;	main.c:228: *(xram_addr+i) = buff[i];
+      0019E9 ED               [12] 5517 	mov	a,r5
+      0019EA 2E               [12] 5518 	add	a,r6
+      0019EB F5 82            [12] 5519 	mov	dpl,a
+      0019ED E4               [12] 5520 	clr	a
+      0019EE 3F               [12] 5521 	addc	a,r7
+      0019EF F5 83            [12] 5522 	mov	dph,a
+      0019F1 ED               [12] 5523 	mov	a,r5
+      0019F2 24r24            [12] 5524 	add	a,#_main_buff_65536_214
+      0019F4 F9               [12] 5525 	mov	r1,a
+      0019F5 E7               [12] 5526 	mov	a,@r1
+      0019F6 FC               [12] 5527 	mov	r4,a
+      0019F7 F0               [24] 5528 	movx	@dptr,a
+                                   5529 ;	main.c:222: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
+      0019F8 0D               [12] 5530 	inc	r5
+      0019F9 80 E9            [24] 5531 	sjmp	00143$
+      0019FB                       5532 00121$:
+                                   5533 ;	main.c:232: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
+      0019FB 7D 00            [12] 5534 	mov	r5,#0x00
+      0019FD                       5535 00146$:
+      0019FD BD 10 00         [24] 5536 	cjne	r5,#0x10,00250$
+      001A00                       5537 00250$:
+      001A00 50 24            [24] 5538 	jnc	00127$
+                                   5539 ;	main.c:234: if(buff[i]!=*(xram_addr+i)) 
+      001A02 ED               [12] 5540 	mov	a,r5
+      001A03 24r24            [12] 5541 	add	a,#_main_buff_65536_214
+      001A05 F9               [12] 5542 	mov	r1,a
+      001A06 87 04            [24] 5543 	mov	ar4,@r1
+      001A08 ED               [12] 5544 	mov	a,r5
+      001A09 2E               [12] 5545 	add	a,r6
+      001A0A F5 82            [12] 5546 	mov	dpl,a
+      001A0C E4               [12] 5547 	clr	a
+      001A0D 3F               [12] 5548 	addc	a,r7
+      001A0E F5 83            [12] 5549 	mov	dph,a
+      001A10 E0               [24] 5550 	movx	a,@dptr
+      001A11 FB               [12] 5551 	mov	r3,a
+      001A12 EC               [12] 5552 	mov	a,r4
+      001A13 B5 03 02         [24] 5553 	cjne	a,ar3,00252$
+      001A16 80 0B            [24] 5554 	sjmp	00147$
+      001A18                       5555 00252$:
+                                   5556 ;	main.c:236: UartPrint("\nVerif. fail");
+      001A18 90r01r07         [24] 5557 	mov	dptr,#___str_24
+      001A1B 75 F0 80         [24] 5558 	mov	b,#0x80
+      001A1E 12r01r1B         [24] 5559 	lcall	_UartPrint
+                                   5560 ;	main.c:238: while(1);
+      001A21                       5561 00123$:
+      001A21 80 FE            [24] 5562 	sjmp	00123$
+      001A23                       5563 00147$:
+                                   5564 ;	main.c:232: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
+      001A23 0D               [12] 5565 	inc	r5
+      001A24 80 D7            [24] 5566 	sjmp	00146$
+      001A26                       5567 00127$:
+                                   5568 ;	main.c:244: if(__global_rootEntry.bytes_read % 64 == 0)
+      001A26 78r3D            [12] 5569 	mov	r0,#(___global_rootEntry + 0x0014)
+      001A28 86 04            [24] 5570 	mov	ar4,@r0
+      001A2A 08               [12] 5571 	inc	r0
+      001A2B 86 05            [24] 5572 	mov	ar5,@r0
+      001A2D 08               [12] 5573 	inc	r0
+      001A2E 86 06            [24] 5574 	mov	ar6,@r0
+      001A30 08               [12] 5575 	inc	r0
+      001A31 86 07            [24] 5576 	mov	ar7,@r0
+      001A33 EC               [12] 5577 	mov	a,r4
+      001A34 54 3F            [12] 5578 	anl	a,#0x3f
+      001A36 60 03            [24] 5579 	jz	00254$
+      001A38 02r19rAA         [24] 5580 	ljmp	00131$
+      001A3B                       5581 00254$:
+                                   5582 ;	main.c:247: UartPrintNumber(__global_rootEntry.bytes_read);
+      001A3B 8C 82            [24] 5583 	mov	dpl,r4
+      001A3D 8D 83            [24] 5584 	mov	dph,r5
+      001A3F 8E F0            [24] 5585 	mov	b,r6
+      001A41 EF               [12] 5586 	mov	a,r7
+      001A42 12r02r61         [24] 5587 	lcall	_UartPrintNumber
+                                   5588 ;	main.c:248: UartWrite('/');
+      001A45 75 82 2F         [24] 5589 	mov	dpl,#0x2f
+      001A48 12r00r95         [24] 5590 	lcall	_UartWrite
+                                   5591 ;	main.c:249: UartPrintNumber(__global_rootEntry.size);
+      001A4B 78r37            [12] 5592 	mov	r0,#(___global_rootEntry + 0x000e)
+      001A4D 86 04            [24] 5593 	mov	ar4,@r0
+      001A4F 08               [12] 5594 	inc	r0
+      001A50 86 05            [24] 5595 	mov	ar5,@r0
+      001A52 08               [12] 5596 	inc	r0
+      001A53 86 06            [24] 5597 	mov	ar6,@r0
+      001A55 08               [12] 5598 	inc	r0
+      001A56 86 07            [24] 5599 	mov	ar7,@r0
+      001A58 8C 82            [24] 5600 	mov	dpl,r4
+      001A5A 8D 83            [24] 5601 	mov	dph,r5
+      001A5C 8E F0            [24] 5602 	mov	b,r6
+      001A5E EF               [12] 5603 	mov	a,r7
+      001A5F 12r02r61         [24] 5604 	lcall	_UartPrintNumber
+                                   5605 ;	main.c:250: UartWrite('\r');
+      001A62 75 82 0D         [24] 5606 	mov	dpl,#0x0d
+      001A65 12r00r95         [24] 5607 	lcall	_UartWrite
+      001A68 02r19rAA         [24] 5608 	ljmp	00131$
+      001A6B                       5609 00132$:
+                                   5610 ;	main.c:255: SELF_RESET_PORT &= ~(1<<SELF_RESET_PIN);
+      001A6B 53 90 EF         [24] 5611 	anl	_P1,#0xef
+                                   5612 ;	main.c:258: while(1);    
+      001A6E                       5613 00134$:
+                                   5614 ;	main.c:260: }
+      001A6E 80 FE            [24] 5615 	sjmp	00134$
+                                   5616 	.area CSEG    (CODE)
+                                   5617 	.area CONST   (CODE)
+                                   5618 	.area CONST   (CODE)
+      000000                       5619 ___str_0:
+      000000 4E 75 6D 62 65 72 28  5620 	.ascii "Number(hex) < "
              68 65 78 29 20 3C 20
-      00000E 00                    5605 	.db 0x00
-                                   5606 	.area CSEG    (CODE)
-                                   5607 	.area CONST   (CODE)
-      00000F                       5608 ___str_1:
-      00000F 0A                    5609 	.db 0x0a
-      000010 52 4F 4F 54 5F 45 4E  5610 	.ascii "ROOT_ENTRY_INDEX:"
+      00000E 00                    5621 	.db 0x00
+                                   5622 	.area CSEG    (CODE)
+                                   5623 	.area CONST   (CODE)
+      00000F                       5624 ___str_1:
+      00000F 0A                    5625 	.db 0x0a
+      000010 52 4F 4F 54 5F 45 4E  5626 	.ascii "ROOT_ENTRY_INDEX:"
              54 52 59 5F 49 4E 44
              45 58 3A
-      000021 00                    5611 	.db 0x00
-                                   5612 	.area CSEG    (CODE)
-                                   5613 	.area CONST   (CODE)
-      000022                       5614 ___str_2:
-      000022 0A                    5615 	.db 0x0a
-      000023 46 49 4C 45 3A 20     5616 	.ascii "FILE: "
-      000029 00                    5617 	.db 0x00
-                                   5618 	.area CSEG    (CODE)
-                                   5619 	.area CONST   (CODE)
-      00002A                       5620 ___str_3:
-      00002A 0A                    5621 	.db 0x0a
-      00002B 53 54 41 52 54 3A 20  5622 	.ascii "START: "
-      000032 00                    5623 	.db 0x00
-                                   5624 	.area CSEG    (CODE)
-                                   5625 	.area CONST   (CODE)
-      000033                       5626 ___str_4:
-      000033 0A                    5627 	.db 0x0a
-      000034 53 49 5A 45 3A 20     5628 	.ascii "SIZE: "
-      00003A 00                    5629 	.db 0x00
-                                   5630 	.area CSEG    (CODE)
-                                   5631 	.area CONST   (CODE)
-      00003B                       5632 ___str_5:
-      00003B 0A                    5633 	.db 0x0a
-      00003C 41 54 54 52 3A 20 30  5634 	.ascii "ATTR: 0x"
+      000021 00                    5627 	.db 0x00
+                                   5628 	.area CSEG    (CODE)
+                                   5629 	.area CONST   (CODE)
+      000022                       5630 ___str_2:
+      000022 0A                    5631 	.db 0x0a
+      000023 46 49 4C 45 3A 20     5632 	.ascii "FILE: "
+      000029 00                    5633 	.db 0x00
+                                   5634 	.area CSEG    (CODE)
+                                   5635 	.area CONST   (CODE)
+      00002A                       5636 ___str_3:
+      00002A 0A                    5637 	.db 0x0a
+      00002B 53 54 41 52 54 3A 20  5638 	.ascii "START: "
+      000032 00                    5639 	.db 0x00
+                                   5640 	.area CSEG    (CODE)
+                                   5641 	.area CONST   (CODE)
+      000033                       5642 ___str_4:
+      000033 0A                    5643 	.db 0x0a
+      000034 53 49 5A 45 3A 20     5644 	.ascii "SIZE: "
+      00003A 00                    5645 	.db 0x00
+                                   5646 	.area CSEG    (CODE)
+                                   5647 	.area CONST   (CODE)
+      00003B                       5648 ___str_5:
+      00003B 0A                    5649 	.db 0x0a
+      00003C 41 54 54 52 3A 20 30  5650 	.ascii "ATTR: 0x"
              78
-      000044 00                    5635 	.db 0x00
-                                   5636 	.area CSEG    (CODE)
-      001A57                       5637 _FAT16_FILE_READ_power2error_65536_176:
-      001A57 6E 62 79 74 65 73 20  5638 	.ascii "nbytes must be power of 2"
+      000044 00                    5651 	.db 0x00
+                                   5652 	.area CSEG    (CODE)
+      001A70                       5653 _FAT16_FILE_READ_power2error_65536_176:
+      001A70 6E 62 79 74 65 73 20  5654 	.ascii "nbytes must be power of 2"
              6D 75 73 74 20 62 65
              20 70 6F 77 65 72 20
              6F 66 20 32
-      001A70 0A                    5639 	.db 0x0a
-      001A71 00                    5640 	.db 0x00
-                                   5641 	.area CONST   (CODE)
-      000045                       5642 ___str_7:
-      000045 46 49 4C 45 20 4E 4F  5643 	.ascii "FILE NOT FOUND"
+      001A89 0A                    5655 	.db 0x0a
+      001A8A 00                    5656 	.db 0x00
+                                   5657 	.area CONST   (CODE)
+      000045                       5658 ___str_7:
+      000045 46 49 4C 45 20 4E 4F  5659 	.ascii "FILE NOT FOUND"
              54 20 46 4F 55 4E 44
-      000053 0A                    5644 	.db 0x0a
-      000054 2E                    5645 	.ascii "."
-      000055 00                    5646 	.db 0x00
-                                   5647 	.area CSEG    (CODE)
-      001A72                       5648 _SERIAL_LOADER_VERSION_INFO:
-      001A72 49 53 41 3A 53 30 3A  5649 	.ascii "ISA:S0:8052"
+      000053 0A                    5660 	.db 0x0a
+      000054 2E                    5661 	.ascii "."
+      000055 00                    5662 	.db 0x00
+                                   5663 	.area CSEG    (CODE)
+      001A8B                       5664 _SERIAL_LOADER_VERSION_INFO:
+      001A8B 49 53 41 3A 53 30 3A  5665 	.ascii "ISA:S0:8052"
              38 30 35 32
-      001A7D 0A                    5650 	.db 0x0a
-      001A7E 00                    5651 	.db 0x00
-      001A7F                       5652 _SelectFAT16PartitionPrompt_HALTING_MSG_65536_195:
-      001A7F 48 41 4C 54 21        5653 	.ascii "HALT!"
-      001A84 00                    5654 	.db 0x00
-                                   5655 	.area CONST   (CODE)
-      000056                       5656 ___str_9:
-      000056 42 41 44 20 4D 42 52  5657 	.ascii "BAD MBR!"
+      001A96 0A                    5666 	.db 0x0a
+      001A97 00                    5667 	.db 0x00
+      001A98                       5668 _SelectFAT16PartitionPrompt_HALTING_MSG_65536_195:
+      001A98 48 41 4C 54 21        5669 	.ascii "HALT!"
+      001A9D 00                    5670 	.db 0x00
+                                   5671 	.area CONST   (CODE)
+      000056                       5672 ___str_9:
+      000056 42 41 44 20 4D 42 52  5673 	.ascii "BAD MBR!"
              21
-      00005E 0A                    5658 	.db 0x0a
-      00005F 00                    5659 	.db 0x00
-                                   5660 	.area CSEG    (CODE)
-                                   5661 	.area CONST   (CODE)
-      000060                       5662 ___str_10:
-      000060 0A                    5663 	.db 0x0a
-      000061 50 74 6E 2E 20        5664 	.ascii "Ptn. "
-      000066 00                    5665 	.db 0x00
-                                   5666 	.area CSEG    (CODE)
-                                   5667 	.area CONST   (CODE)
-      000067                       5668 ___str_11:
-      000067 46 41 54 31 36        5669 	.ascii "FAT16"
-      00006C 00                    5670 	.db 0x00
-                                   5671 	.area CSEG    (CODE)
-                                   5672 	.area CONST   (CODE)
-      00006D                       5673 ___str_12:
-      00006D 55 6E 6B 6E 6F 77 6E  5674 	.ascii "Unknown"
-      000074 00                    5675 	.db 0x00
+      00005E 0A                    5674 	.db 0x0a
+      00005F 00                    5675 	.db 0x00
                                    5676 	.area CSEG    (CODE)
                                    5677 	.area CONST   (CODE)
-      000075                       5678 ___str_13:
-      000075 53 6C 63 74 20 50 74  5679 	.ascii "Slct Ptn. >"
-             6E 2E 20 3E
-      000080 0A                    5680 	.db 0x0a
-      000081 00                    5681 	.db 0x00
+      000060                       5678 ___str_10:
+      000060 0A                    5679 	.db 0x0a
+      000061 50 74 6E 2E 20        5680 	.ascii "Ptn. "
+      000066 00                    5681 	.db 0x00
                                    5682 	.area CSEG    (CODE)
                                    5683 	.area CONST   (CODE)
-      000082                       5684 ___str_14:
-      000082 0A                    5685 	.db 0x0a
-      000083 0A                    5686 	.db 0x0a
-      000084 50 74 6E 2E 20 4D 6F  5687 	.ascii "Ptn. Mounted:"
+      000067                       5684 ___str_11:
+      000067 46 41 54 31 36        5685 	.ascii "FAT16"
+      00006C 00                    5686 	.db 0x00
+                                   5687 	.area CSEG    (CODE)
+                                   5688 	.area CONST   (CODE)
+      00006D                       5689 ___str_12:
+      00006D 55 6E 6B 6E 6F 77 6E  5690 	.ascii "Unknown"
+      000074 00                    5691 	.db 0x00
+                                   5692 	.area CSEG    (CODE)
+                                   5693 	.area CONST   (CODE)
+      000075                       5694 ___str_13:
+      000075 53 6C 63 74 20 50 74  5695 	.ascii "Slct Ptn. >"
+             6E 2E 20 3E
+      000080 0A                    5696 	.db 0x0a
+      000081 00                    5697 	.db 0x00
+                                   5698 	.area CSEG    (CODE)
+                                   5699 	.area CONST   (CODE)
+      000082                       5700 ___str_14:
+      000082 0A                    5701 	.db 0x0a
+      000083 0A                    5702 	.db 0x0a
+      000084 50 74 6E 2E 20 4D 6F  5703 	.ascii "Ptn. Mounted:"
              75 6E 74 65 64 3A
-      000091 00                    5688 	.db 0x00
-                                   5689 	.area CSEG    (CODE)
-                                   5690 	.area CONST   (CODE)
-      000092                       5691 ___str_15:
-      000092 0A                    5692 	.db 0x0a
-      000093 42 61 64 20 50 74 6E  5693 	.ascii "Bad Ptn."
+      000091 00                    5704 	.db 0x00
+                                   5705 	.area CSEG    (CODE)
+                                   5706 	.area CONST   (CODE)
+      000092                       5707 ___str_15:
+      000092 0A                    5708 	.db 0x0a
+      000093 42 61 64 20 50 74 6E  5709 	.ascii "Bad Ptn."
              2E
-      00009B 0A                    5694 	.db 0x0a
-      00009C 00                    5695 	.db 0x00
-                                   5696 	.area CSEG    (CODE)
-                                   5697 	.area CONST   (CODE)
-      00009D                       5698 ___str_16:
-      00009D 4E 6F 20 46 41 54 31  5699 	.ascii "No FAT16 Ptn."
-             36 20 50 74 6E 2E
-      0000AA 0A                    5700 	.db 0x0a
-      0000AB 00                    5701 	.db 0x00
-                                   5702 	.area CSEG    (CODE)
-                                   5703 	.area CONST   (CODE)
-      0000AC                       5704 ___str_17:
-      0000AC 0A                    5705 	.db 0x0a
-      0000AD 49 4E 44 45 58        5706 	.ascii "INDEX"
-      0000B2 09                    5707 	.db 0x09
-      0000B3 09                    5708 	.db 0x09
-      0000B4 46 49 4C 45           5709 	.ascii "FILE"
-      0000B8 0A                    5710 	.db 0x0a
-      0000B9 00                    5711 	.db 0x00
+      00009B 0A                    5710 	.db 0x0a
+      00009C 00                    5711 	.db 0x00
                                    5712 	.area CSEG    (CODE)
                                    5713 	.area CONST   (CODE)
-      0000BA                       5714 ___str_18:
-      0000BA 0A                    5715 	.db 0x0a
-      0000BB 53 6C 63 74 20 69 6E  5716 	.ascii "Slct index >"
+      00009D                       5714 ___str_16:
+      00009D 4E 6F 20 46 41 54 31  5715 	.ascii "No FAT16 Ptn."
+             36 20 50 74 6E 2E
+      0000AA 0A                    5716 	.db 0x0a
+      0000AB 00                    5717 	.db 0x00
+                                   5718 	.area CSEG    (CODE)
+                                   5719 	.area CONST   (CODE)
+      0000AC                       5720 ___str_17:
+      0000AC 0A                    5721 	.db 0x0a
+      0000AD 49 4E 44 45 58        5722 	.ascii "INDEX"
+      0000B2 09                    5723 	.db 0x09
+      0000B3 09                    5724 	.db 0x09
+      0000B4 46 49 4C 45           5725 	.ascii "FILE"
+      0000B8 0A                    5726 	.db 0x0a
+      0000B9 00                    5727 	.db 0x00
+                                   5728 	.area CSEG    (CODE)
+                                   5729 	.area CONST   (CODE)
+      0000BA                       5730 ___str_18:
+      0000BA 0A                    5731 	.db 0x0a
+      0000BB 53 6C 63 74 20 69 6E  5732 	.ascii "Slct index >"
              64 65 78 20 3E
-      0000C7 0A                    5717 	.db 0x0a
-      0000C8 00                    5718 	.db 0x00
-                                   5719 	.area CSEG    (CODE)
-                                   5720 	.area CONST   (CODE)
-      0000C9                       5721 ___str_19:
-      0000C9 0A                    5722 	.db 0x0a
-      0000CA 53 59 41 4D 50 55 54  5723 	.ascii "SYAMPUTER:V0"
+      0000C7 0A                    5733 	.db 0x0a
+      0000C8 00                    5734 	.db 0x00
+                                   5735 	.area CSEG    (CODE)
+                                   5736 	.area CONST   (CODE)
+      0000C9                       5737 ___str_19:
+      0000C9 0A                    5738 	.db 0x0a
+      0000CA 49 6E 76 61 6C 69 64  5739 	.ascii "Invalid Entry !"
+             20 45 6E 74 72 79 20
+             21
+      0000D9 0A                    5740 	.db 0x0a
+      0000DA 00                    5741 	.db 0x00
+                                   5742 	.area CSEG    (CODE)
+                                   5743 	.area CONST   (CODE)
+      0000DB                       5744 ___str_20:
+      0000DB 0A                    5745 	.db 0x0a
+      0000DC 53 59 41 4D 50 55 54  5746 	.ascii "SYAMPUTER:V0"
              45 52 3A 56 30
-      0000D6 0A                    5724 	.db 0x0a
-      0000D7 00                    5725 	.db 0x00
-                                   5726 	.area CSEG    (CODE)
-                                   5727 	.area CONST   (CODE)
-      0000D8                       5728 ___str_20:
-      0000D8 49 53 41 3A 46 53 30  5729 	.ascii "ISA:FS0:8052"
+      0000E8 0A                    5747 	.db 0x0a
+      0000E9 00                    5748 	.db 0x00
+                                   5749 	.area CSEG    (CODE)
+                                   5750 	.area CONST   (CODE)
+      0000EA                       5751 ___str_21:
+      0000EA 49 53 41 3A 46 53 30  5752 	.ascii "ISA:FS0:8052"
              3A 38 30 35 32
-      0000E4 0A                    5730 	.db 0x0a
-      0000E5 00                    5731 	.db 0x00
-                                   5732 	.area CSEG    (CODE)
-                                   5733 	.area CONST   (CODE)
-      0000E6                       5734 ___str_21:
-      0000E6 46 57 2E 42 49 4E     5735 	.ascii "FW.BIN"
-      0000EC 00                    5736 	.db 0x00
-                                   5737 	.area CSEG    (CODE)
-                                   5738 	.area CONST   (CODE)
-      0000ED                       5739 ___str_22:
-      0000ED 0A                    5740 	.db 0x0a
-      0000EE 3C 52 55 4E 3E        5741 	.ascii "<RUN>"
-      0000F3 0A                    5742 	.db 0x0a
-      0000F4 00                    5743 	.db 0x00
-                                   5744 	.area CSEG    (CODE)
-                                   5745 	.area CONST   (CODE)
-      0000F5                       5746 ___str_23:
-      0000F5 0A                    5747 	.db 0x0a
-      0000F6 56 65 72 69 66 2E 20  5748 	.ascii "Verif. fail"
+      0000F6 0A                    5753 	.db 0x0a
+      0000F7 00                    5754 	.db 0x00
+                                   5755 	.area CSEG    (CODE)
+                                   5756 	.area CONST   (CODE)
+      0000F8                       5757 ___str_22:
+      0000F8 46 57 2E 42 49 4E     5758 	.ascii "FW.BIN"
+      0000FE 00                    5759 	.db 0x00
+                                   5760 	.area CSEG    (CODE)
+                                   5761 	.area CONST   (CODE)
+      0000FF                       5762 ___str_23:
+      0000FF 0A                    5763 	.db 0x0a
+      000100 3C 52 55 4E 3E        5764 	.ascii "<RUN>"
+      000105 0A                    5765 	.db 0x0a
+      000106 00                    5766 	.db 0x00
+                                   5767 	.area CSEG    (CODE)
+                                   5768 	.area CONST   (CODE)
+      000107                       5769 ___str_24:
+      000107 0A                    5770 	.db 0x0a
+      000108 56 65 72 69 66 2E 20  5771 	.ascii "Verif. fail"
              66 61 69 6C
-      000101 00                    5749 	.db 0x00
-                                   5750 	.area CSEG    (CODE)
-                                   5751 	.area XINIT   (CODE)
-                                   5752 	.area CABS    (ABS,CODE)
+      000113 00                    5772 	.db 0x00
+                                   5773 	.area CSEG    (CODE)
+                                   5774 	.area XINIT   (CODE)
+                                   5775 	.area CABS    (ABS,CODE)

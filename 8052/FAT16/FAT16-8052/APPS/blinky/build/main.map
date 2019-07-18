@@ -67,11 +67,11 @@ CABS                                00000000    00000000 =           0. bytes (A
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
 C:   00000018  s_REG_BANK_3                    
-C:   0000001F  l_CONST                         
 C:   00000020  s_BSEG_BYTES                    
 C:   00000020  s__CODE                         
 C:   00000022  l_GSINIT3                       
 C:   0000002A  l_GSINIT4                       
+C:   00000033  l_CONST                         
 C:   00000035  s_GSINIT4                       
 C:   0000005F  s_GSFINAL                       
 C:   0000005F  s_GSINIT                        
@@ -82,7 +82,7 @@ C:   000000F5  l_SSEG
 C:   00000100  l_IRAM                          
 C:   000001D7  l_CSEG                          
 C:   00000239  s_CONST                         
-C:   00000258  s_XINIT                         
+C:   0000026C  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -370,7 +370,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CONST                               00000239    0000001F =          31. bytes (REL,CON,CODE)
+CONST                               00000239    00000033 =          51. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------

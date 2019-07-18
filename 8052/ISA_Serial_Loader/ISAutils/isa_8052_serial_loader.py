@@ -152,6 +152,12 @@ def dumpImage(filename):
 
     verifyImage(filename)
 
+
+def executeImage():
+    print("Sending execute command - 'X'")
+    ser.write(b'X')
+    time.sleep(1)
+
 ########################### HIGH LEVEL METHODS #############################
 
 if __name__=="__main__":
@@ -159,7 +165,9 @@ if __name__=="__main__":
     print("\nFW-VERSION:",BLgetVersion())
     usage="\nUSAGE:\n\tpython3 "+sys.argv[0]+" burn/dump filename [ --deepwp (optional, disable EEPROM write protection) ]" 
     
-    if len(sys.argv)<3:
+    if len(sys.argv)==2 and sys.argv[-1]=="execute":
+        action=sys.argv[-1]
+    elif len(sys.argv)<3:
         print(usage)
         exit()
     else:
@@ -170,8 +178,11 @@ if __name__=="__main__":
             BLenableWriteProtection()
 
         action=sys.argv[1]
-        if action in ["burn","dump"]:
-            filename=sys.argv[2]
+        if action in ["burn","dump","execute"]:
+            if action=="execute":
+                pass
+            else:
+                filename=sys.argv[2]
         else:
             print(usage)
             exit()
@@ -182,5 +193,7 @@ if __name__=="__main__":
         verifyImage(filename)
     elif action=="dump":
         dumpImage(filename)
+    elif action=="execute":
+        executeImage()
     
     ser.close()
