@@ -35,5 +35,5 @@
 ---
 
 ### ASCIINEMA
-![ASCIINEMA](https://asciinema.org/a/mjE9zp2sO7yfRFMzK2HzkH6XJ)
+[ASCIINEMA](https://asciinema.org/a/mjE9zp2sO7yfRFMzK2HzkH6XJ)
 
