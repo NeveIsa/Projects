@@ -36,4 +36,4 @@
 
 ### ASCIINEMA
 [ASCIINEMA](https://asciinema.org/a/mjE9zp2sO7yfRFMzK2HzkH6XJ)
-
+<a href="https://asciinema.org/a/mjE9zp2sO7yfRFMzK2HzkH6XJ" target="_blank"><img src="https://asciinema.org/a/mjE9zp2sO7yfRFMzK2HzkH6XJ.svg" /></a>
