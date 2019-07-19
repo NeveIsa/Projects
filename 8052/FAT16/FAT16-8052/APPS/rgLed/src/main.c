@@ -79,15 +79,19 @@ int main()
 	
 	while(1)
 	{
-		delayms(100);
 		
 		P1 |= 1<<7;
-		P1 &= ~(1<<6);
-
 		delayms(100);
+
 		P1 &= ~(1<<7);
-		P1 |= 1<<6;
+		delayms(50);
 		
+		P1 |= 1<<6;
+		delayms(100);
+
+		P1 &= ~(1<<6);
+	        delayms(50);
+
 		if(UartReadReady())
 		{
 			if(UartRead()=='X') exitApp();

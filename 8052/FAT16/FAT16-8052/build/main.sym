@@ -404,26 +404,26 @@ Symbol Table
  19 ___str_0                                                       000000 R
  19 ___str_1                                                       00000F R
  19 ___str_10                                                      000060 R
- 19 ___str_11                                                      000067 R
+ 19 ___str_11                                                      000066 R
  19 ___str_12                                                      00006D R
- 19 ___str_13                                                      000075 R
- 19 ___str_14                                                      000082 R
- 19 ___str_15                                                      000092 R
- 19 ___str_16                                                      00009D R
- 19 ___str_17                                                      0000AC R
- 19 ___str_18                                                      0000BA R
- 19 ___str_19                                                      0000C9 R
+ 19 ___str_13                                                      000076 R
+ 19 ___str_14                                                      000083 R
+ 19 ___str_15                                                      000093 R
+ 19 ___str_16                                                      00009E R
+ 19 ___str_17                                                      0000AD R
+ 19 ___str_18                                                      0000BB R
+ 19 ___str_19                                                      0000CA R
  19 ___str_2                                                       000022 R
- 19 ___str_20                                                      0000DB R
- 19 ___str_21                                                      0000EA R
- 19 ___str_22                                                      0000F8 R
- 19 ___str_23                                                      0000FF R
+ 19 ___str_20                                                      0000DC R
+ 19 ___str_21                                                      0000EB R
+ 19 ___str_22                                                      0000F9 R
+ 19 ___str_23                                                      000100 R
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 8.
 Hexadecimal [24-Bits]
 
 Symbol Table
 
- 19 ___str_24                                                      000107 R
+ 19 ___str_24                                                      000108 R
  19 ___str_3                                                       00002A R
  19 ___str_4                                                       000033 R
  19 ___str_5                                                       00003B R
@@ -710,7 +710,7 @@ Area Table
   16 GSINIT                                     size      7   flags   20
   17 GSFINAL                                    size      3   flags   20
   18 CSEG                                       size   1B0A   flags   20
-  19 CONST                                      size    114   flags   20
+  19 CONST                                      size    115   flags   20
   1A XINIT                                      size      0   flags   20
   1B CABS                                       size      0   flags   28
 

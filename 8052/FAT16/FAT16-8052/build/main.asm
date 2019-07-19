@@ -5148,7 +5148,7 @@ _SelectFAT16PartitionPrompt:
 	jc	00190$
 	ljmp	00106$
 00190$:
-;	main.c:43: UartPrint("\nPtn. ");UartWriteNumber(i,HEX);UartWrite('> ');
+;	main.c:43: UartPrint("Ptn. ");UartWriteNumber(i,HEX);UartWrite('> ');
 	push	ar7
 	mov	dptr,#___str_10
 	mov	b,#0x80
@@ -5168,7 +5168,7 @@ _SelectFAT16PartitionPrompt:
 	pop	ar5
 	pop	ar6
 	pop	ar7
-;	main.c:44: if(_resp & 1<<i) UartPrint("FAT16");
+;	main.c:44: if(_resp & 1<<i) UartPrint("FAT16\n");
 	mov	b,r5
 	inc	b
 	mov	r3,#0x01
@@ -5204,7 +5204,7 @@ _SelectFAT16PartitionPrompt:
 	pop	ar7
 	sjmp	00128$
 00104$:
-;	main.c:45: else UartPrint("Unknown");
+;	main.c:45: else UartPrint("Unknown\n");
 	mov	dptr,#___str_12
 	mov	b,#0x80
 	push	ar7
@@ -5782,18 +5782,19 @@ ___str_9:
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 ___str_10:
-	.db 0x0a
 	.ascii "Ptn. "
 	.db 0x00
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 ___str_11:
 	.ascii "FAT16"
+	.db 0x0a
 	.db 0x00
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 ___str_12:
 	.ascii "Unknown"
+	.db 0x0a
 	.db 0x00
 	.area CSEG    (CODE)
 	.area CONST   (CODE)

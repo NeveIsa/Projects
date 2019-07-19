@@ -80,9 +80,9 @@ C:   00000062  s_CSEG
 C:   00000080  l_DSEG                          
 C:   000000F5  l_SSEG                          
 C:   00000100  l_IRAM                          
-C:   000001E1  l_CSEG                          
-C:   00000243  s_CONST                         
-C:   00000276  s_XINIT                         
+C:   000001ED  l_CSEG                          
+C:   0000024F  s_CONST                         
+C:   00000282  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -347,7 +347,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000062    000001E1 =         481. bytes (REL,CON,CODE)
+CSEG                                00000062    000001ED =         493. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -362,16 +362,16 @@ C:   00000121  _UartWriteBuff                     main
 C:   00000159  _UartReadBuff                      main
 C:   0000019E  _UartPrint                         main
 C:   000001D0  _main                              main
-C:   00000208  __gptrput                          _gptrput
-C:   00000223  __gptrget                          _gptrget
-C:   0000023F  __sdcc_external_startup            _startup
+C:   00000214  __gptrput                          _gptrput
+C:   0000022F  __gptrget                          _gptrget
+C:   0000024B  __sdcc_external_startup            _startup
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 17.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CONST                               00000243    00000033 =          51. bytes (REL,CON,CODE)
+CONST                               0000024F    00000033 =          51. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------

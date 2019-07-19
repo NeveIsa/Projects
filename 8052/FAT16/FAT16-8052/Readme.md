@@ -34,3 +34,6 @@
 ![Circuit Bus Diagram](docs/images/8052-FAT16-LOADER.png)
 ---
 
+### ASCIINEMA
+![ASCIINEMA](https://asciinema.org/a/mjE9zp2sO7yfRFMzK2HzkH6XJ)
+

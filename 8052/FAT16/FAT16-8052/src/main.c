@@ -40,9 +40,9 @@ void SelectFAT16PartitionPrompt() __reentrant
 	//print partitions
         for(uint8_t i=0;i<4;i++)
         {
-            UartPrint("\nPtn. ");UartWriteNumber(i,HEX);UartWrite('> ');
-            if(_resp & 1<<i) UartPrint("FAT16");
-            else UartPrint("Unknown");
+            UartPrint("Ptn. ");UartWriteNumber(i,HEX);UartWrite('> ');
+            if(_resp & 1<<i) UartPrint("FAT16\n");
+            else UartPrint("Unknown\n");
         }
 
         

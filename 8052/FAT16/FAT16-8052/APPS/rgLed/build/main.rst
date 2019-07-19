@@ -635,7 +635,7 @@
       000137 89 82            [24]  635 	mov	dpl,r1
       000139 8A 83            [24]  636 	mov	dph,r2
       00013B 8B F0            [24]  637 	mov	b,r3
-      00013D 12 02 23         [24]  638 	lcall	__gptrget
+      00013D 12 02 2F         [24]  638 	lcall	__gptrget
       000140 F5 82            [12]  639 	mov	dpl,a
       000142 C0 07            [24]  640 	push	ar7
       000144 C0 06            [24]  641 	push	ar6
@@ -702,7 +702,7 @@
       000192 8A 83            [24]  702 	mov	dph,r2
       000194 8B F0            [24]  703 	mov	b,r3
       000196 E8               [12]  704 	mov	a,r0
-      000197 12 02 08         [24]  705 	lcall	__gptrput
+      000197 12 02 14         [24]  705 	lcall	__gptrput
                                     706 ;	main.c:57: for (i=0;i<length;i++)
       00019A 0C               [12]  707 	inc	r4
       00019B 80 C4            [24]  708 	sjmp	00103$
@@ -728,7 +728,7 @@
       0001A4 8D 82            [24]  728 	mov	dpl,r5
       0001A6 8E 83            [24]  729 	mov	dph,r6
       0001A8 8F F0            [24]  730 	mov	b,r7
-      0001AA 12 02 23         [24]  731 	lcall	__gptrget
+      0001AA 12 02 2F         [24]  731 	lcall	__gptrget
       0001AD FC               [12]  732 	mov	r4,a
       0001AE A3               [24]  733 	inc	dptr
       0001AF AD 82            [24]  734 	mov	r5,dpl
@@ -745,7 +745,7 @@
       0001C4 8D 82            [24]  745 	mov	dpl,r5
       0001C6 8E 83            [24]  746 	mov	dph,r6
       0001C8 8F F0            [24]  747 	mov	b,r7
-      0001CA 12 02 23         [24]  748 	lcall	__gptrget
+      0001CA 12 02 2F         [24]  748 	lcall	__gptrget
       0001CD 70 D5            [24]  749 	jnz	00101$
                                     750 ;	main.c:69: }
       0001CF 22               [24]  751 	ret
@@ -760,51 +760,57 @@
                                     760 ;	main.c:77: UartBegin(); //init uart
       0001D0 12 00 F5         [24]  761 	lcall	_UartBegin
                                     762 ;	main.c:78: UartPrint("Hello World from Syamputer :)\t Press 'X' to exit.\n");
-      0001D3 90 02 43         [24]  763 	mov	dptr,#___str_0
+      0001D3 90 02 4F         [24]  763 	mov	dptr,#___str_0
       0001D6 75 F0 80         [24]  764 	mov	b,#0x80
       0001D9 12 01 9E         [24]  765 	lcall	_UartPrint
                                     766 ;	main.c:80: while(1)
       0001DC                        767 00106$:
-                                    768 ;	main.c:82: delayms(100);
-      0001DC 90 00 64         [24]  769 	mov	dptr,#0x0064
-      0001DF 12 00 CA         [24]  770 	lcall	_delayms
-                                    771 ;	main.c:84: P1 |= 1<<7;
-      0001E2 43 90 80         [24]  772 	orl	_P1,#0x80
-                                    773 ;	main.c:85: P1 &= ~(1<<6);
-      0001E5 53 90 BF         [24]  774 	anl	_P1,#0xbf
-                                    775 ;	main.c:87: delayms(100);
-      0001E8 90 00 64         [24]  776 	mov	dptr,#0x0064
+                                    768 ;	main.c:83: P1 |= 1<<7;
+      0001DC 43 90 80         [24]  769 	orl	_P1,#0x80
+                                    770 ;	main.c:84: delayms(100);
+      0001DF 90 00 64         [24]  771 	mov	dptr,#0x0064
+      0001E2 12 00 CA         [24]  772 	lcall	_delayms
+                                    773 ;	main.c:86: P1 &= ~(1<<7);
+      0001E5 53 90 7F         [24]  774 	anl	_P1,#0x7f
+                                    775 ;	main.c:87: delayms(50);
+      0001E8 90 00 32         [24]  776 	mov	dptr,#0x0032
       0001EB 12 00 CA         [24]  777 	lcall	_delayms
-                                    778 ;	main.c:88: P1 &= ~(1<<7);
-      0001EE 53 90 7F         [24]  779 	anl	_P1,#0x7f
-                                    780 ;	main.c:89: P1 |= 1<<6;
-      0001F1 43 90 40         [24]  781 	orl	_P1,#0x40
-                                    782 ;	main.c:91: if(UartReadReady())
-      0001F4 12 01 04         [24]  783 	lcall	_UartReadReady
-      0001F7 E5 82            [12]  784 	mov	a,dpl
-      0001F9 60 E1            [24]  785 	jz	00106$
-                                    786 ;	main.c:93: if(UartRead()=='X') exitApp();
-      0001FB 12 01 0F         [24]  787 	lcall	_UartRead
-      0001FE AF 82            [24]  788 	mov	r7,dpl
-      000200 BF 58 D9         [24]  789 	cjne	r7,#0x58,00106$
-      000203 12 00 C6         [24]  790 	lcall	_exitApp
-                                    791 ;	main.c:96: }
-      000206 80 D4            [24]  792 	sjmp	00106$
-                                    793 	.area CSEG    (CODE)
-                                    794 	.area CONST   (CODE)
-                                    795 	.area CONST   (CODE)
-      000243                        796 ___str_0:
-      000243 48 65 6C 6C 6F 20 57   797 	.ascii "Hello World from Syamputer :)"
+                                    778 ;	main.c:89: P1 |= 1<<6;
+      0001EE 43 90 40         [24]  779 	orl	_P1,#0x40
+                                    780 ;	main.c:90: delayms(100);
+      0001F1 90 00 64         [24]  781 	mov	dptr,#0x0064
+      0001F4 12 00 CA         [24]  782 	lcall	_delayms
+                                    783 ;	main.c:92: P1 &= ~(1<<6);
+      0001F7 53 90 BF         [24]  784 	anl	_P1,#0xbf
+                                    785 ;	main.c:93: delayms(50);
+      0001FA 90 00 32         [24]  786 	mov	dptr,#0x0032
+      0001FD 12 00 CA         [24]  787 	lcall	_delayms
+                                    788 ;	main.c:95: if(UartReadReady())
+      000200 12 01 04         [24]  789 	lcall	_UartReadReady
+      000203 E5 82            [12]  790 	mov	a,dpl
+      000205 60 D5            [24]  791 	jz	00106$
+                                    792 ;	main.c:97: if(UartRead()=='X') exitApp();
+      000207 12 01 0F         [24]  793 	lcall	_UartRead
+      00020A AF 82            [24]  794 	mov	r7,dpl
+      00020C BF 58 CD         [24]  795 	cjne	r7,#0x58,00106$
+      00020F 12 00 C6         [24]  796 	lcall	_exitApp
+                                    797 ;	main.c:100: }
+      000212 80 C8            [24]  798 	sjmp	00106$
+                                    799 	.area CSEG    (CODE)
+                                    800 	.area CONST   (CODE)
+                                    801 	.area CONST   (CODE)
+      00024F                        802 ___str_0:
+      00024F 48 65 6C 6C 6F 20 57   803 	.ascii "Hello World from Syamputer :)"
              6F 72 6C 64 20 66 72
              6F 6D 20 53 79 61 6D
              70 75 74 65 72 20 3A
              29
-      000260 09                     798 	.db 0x09
-      000261 20 50 72 65 73 73 20   799 	.ascii " Press 'X' to exit."
+      00026C 09                     804 	.db 0x09
+      00026D 20 50 72 65 73 73 20   805 	.ascii " Press 'X' to exit."
              27 58 27 20 74 6F 20
              65 78 69 74 2E
-      000274 0A                     800 	.db 0x0a
-      000275 00                     801 	.db 0x00
-                                    802 	.area CSEG    (CODE)
-                                    803 	.area XINIT   (CODE)
-                                    804 	.area CABS    (ABS,CODE)
+      000280 0A                     806 	.db 0x0a
+      000281 00                     807 	.db 0x00
+                                    808 	.area CSEG    (CODE)
+                                    809 	.area XINIT   (CODE)
+                                    810 	.area CABS    (ABS,CODE)

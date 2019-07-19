@@ -765,30 +765,36 @@ _main:
 	lcall	_UartPrint
 ;	main.c:80: while(1)
 00106$:
-;	main.c:82: delayms(100);
-	mov	dptr,#0x0064
-	lcall	_delayms
-;	main.c:84: P1 |= 1<<7;
+;	main.c:83: P1 |= 1<<7;
 	orl	_P1,#0x80
-;	main.c:85: P1 &= ~(1<<6);
-	anl	_P1,#0xbf
-;	main.c:87: delayms(100);
+;	main.c:84: delayms(100);
 	mov	dptr,#0x0064
 	lcall	_delayms
-;	main.c:88: P1 &= ~(1<<7);
+;	main.c:86: P1 &= ~(1<<7);
 	anl	_P1,#0x7f
+;	main.c:87: delayms(50);
+	mov	dptr,#0x0032
+	lcall	_delayms
 ;	main.c:89: P1 |= 1<<6;
 	orl	_P1,#0x40
-;	main.c:91: if(UartReadReady())
+;	main.c:90: delayms(100);
+	mov	dptr,#0x0064
+	lcall	_delayms
+;	main.c:92: P1 &= ~(1<<6);
+	anl	_P1,#0xbf
+;	main.c:93: delayms(50);
+	mov	dptr,#0x0032
+	lcall	_delayms
+;	main.c:95: if(UartReadReady())
 	lcall	_UartReadReady
 	mov	a,dpl
 	jz	00106$
-;	main.c:93: if(UartRead()=='X') exitApp();
+;	main.c:97: if(UartRead()=='X') exitApp();
 	lcall	_UartRead
 	mov	r7,dpl
 	cjne	r7,#0x58,00106$
 	lcall	_exitApp
-;	main.c:96: }
+;	main.c:100: }
 	sjmp	00106$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)

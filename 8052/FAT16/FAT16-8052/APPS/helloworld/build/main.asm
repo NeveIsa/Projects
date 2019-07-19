@@ -765,12 +765,11 @@ _main:
 	mov	dptr,#___str_0
 	mov	b,#0x80
 	lcall	_UartPrint
-;	main.c:77: for(unsigned char i=0;i<5;i++)
-	mov	r7,#0x00
+;	main.c:77: for(unsigned char i=5;i>0;i--)
+	mov	r7,#0x05
 00106$:
-	cjne	r7,#0x05,00123$
-00123$:
-	jnc	00101$
+	mov	a,r7
+	jz	00101$
 ;	main.c:79: UartWrite('\t');
 	mov	dpl,#0x09
 	push	ar7
@@ -787,8 +786,8 @@ _main:
 	mov	dptr,#0x03e8
 	lcall	_delayms
 	pop	ar7
-;	main.c:77: for(unsigned char i=0;i<5;i++)
-	inc	r7
+;	main.c:77: for(unsigned char i=5;i>0;i--)
+	dec	r7
 	sjmp	00106$
 00101$:
 ;	main.c:83: exitApp();

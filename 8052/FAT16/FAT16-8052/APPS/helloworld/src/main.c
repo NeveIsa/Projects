@@ -74,7 +74,7 @@ int main()
 {
 	UartBegin(); //init uart
 	UartPrint("Hello World from Syamputer :)\nExiting in...");
-	for(unsigned char i=0;i<5;i++)
+	for(unsigned char i=5;i>0;i--)
 	{
 		UartWrite('\t');
 		UartWrite('0'+i);

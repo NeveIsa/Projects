@@ -79,10 +79,10 @@ C:   00000080  l_DSEG
 C:   00000081  l_ISEG                          
 C:   000000C2  s_SSEG                          
 C:   00000100  l_IRAM                          
-C:   00000114  l_CONST                         
+C:   00000115  l_CONST                         
 C:   00001D9C  l_CSEG                          
 C:   00001E05  s_CONST                         
-C:   00001F19  s_XINIT                         
+C:   00001F1A  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -477,7 +477,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CONST                               00001E05    00000114 =         276. bytes (REL,CON,CODE)
+CONST                               00001E05    00000115 =         277. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
