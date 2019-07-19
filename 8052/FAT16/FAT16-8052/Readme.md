@@ -39,5 +39,5 @@
 
   <link rel="stylesheet" type="text/css" href="/asciinema-player.css" />
   <asciinema-player src="/258140.cast" cols="136" rows="35"></asciinema-player>
-  ...
+ 
   <script src="/asciinema-player.js"></script>
