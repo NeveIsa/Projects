@@ -7,7 +7,12 @@
 
 ; CONFIG
 ; __config 0xFFFE
- __CONFIG _OSC_IntRC & _WDT_OFF & _CP_OFF & _MCLRE_ON
+ __CONFIG _OSC_IntRC & _WDT_OFF & _CP_OFF & _MCLRE_OFF
+
+; NOTE -> do not enable MCLRE as it causes PIC12F508 to reset randomly, most likely as MCLR pin is not pulled up using a resitor 
+; and hence is floating. However, according to datasheet, leaving it unconnected is fine. But we faced problems leaving it unconnected
+; and also faced problems when it was pulled up by 15k resistor. Hence we decided to disable it and use the INPUT_SIGNAL_PIN_8052 even 
+; for the manual reset by the push button on the 8052 board.
  
  
 RESET_PIN_8052			EQU	4   ; pin to reset 8052
@@ -173,10 +178,12 @@ loop:
 		movwf VAR_Z		; move return value to VAR_Z
 		
 		btfsc VAR_Z,0		; if return is 1(short signal/pulse), then run the next line
-		call disable_8052_EA	; if short signal(return is 1) - disable EA, i.e. use Internal ROM 
+		call enable_8052_EA	; enable EA, i.e. use External ROM - i.e run App
+					
 		
 		btfss VAR_Z,0		; if return is 0(long), then run the next line
-		call enable_8052_EA	; if long signal (return is 0)- use External ROM
+		call disable_8052_EA	; use Internal ROM - i.e run bootloader
+ 
 
 		;delay 510ms
 		movlw d'255'

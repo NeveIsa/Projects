@@ -9,17 +9,8 @@ typedef unsigned long uint32_t;
 //#define FAT_DEBUG     1
 //#define FILE_DEBUG	1
 
-// SELF RESET PIN DEF
-#ifndef SELF_RESET_PORT
-#define SELF_RESET_PORT P1
-#endif
 
-#ifndef SELF_RESET_PIN
-#define SELF_RESET_PIN  4
-#endif
-// SELF RESET PIN DEF
-
-
+#include "enterexitapp.h"
 #include "uart.h"
 #include "spi.h"
 #include "sdcard.h"
@@ -251,8 +242,9 @@ void main(void)
 	}
     }
 
-    //SELF RESET
-    SELF_RESET_PORT &= ~(1<<SELF_RESET_PIN);
+    //CALL APP by SELF RESET
+    //RESET_PORT_8052 &= ~(1 << RESET_PIN_8052);
+    enterApp();
 
     //wait forever
     while(1);    

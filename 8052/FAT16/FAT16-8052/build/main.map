@@ -80,9 +80,9 @@ C:   00000081  l_ISEG
 C:   000000C2  s_SSEG                          
 C:   00000100  l_IRAM                          
 C:   00000114  l_CONST                         
-C:   00001D30  l_CSEG                          
-C:   00001D99  s_CONST                         
-C:   00001EAD  s_XINIT                         
+C:   00001D9C  l_CSEG                          
+C:   00001E05  s_CONST                         
+C:   00001F19  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -387,96 +387,97 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000069    00001D30 =        7472. bytes (REL,CON,CODE)
+CSEG                                00000069    00001D9C =        7580. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000069  _hexNibble2dec                     main
-C:   000000A3  _hex2dec                           main
-C:   000000BD  _dec2hexNibble                     main
-C:   000000DB  _UartBegin                         main
-C:   000000EA  _UartReadReady                     main
-C:   000000F5  _UartRead                          main
-C:   000000FE  _UartWrite                         main
-C:   00000107  _UartWriteBuff                     main
-C:   0000013F  _UartReadBuff                      main
-C:   00000184  _UartPrint                         main
-C:   000001B6  _UartWriteNumber                   main
-C:   00000275  _UartWriteNumbers                  main
-C:   000002CA  _UartPrintNumber                   main
-C:   000003C4  _UartScanByte                      main
-C:   000003FE  _UartScanLine                      main
-C:   0000048A  _spi_init                          main
-C:   00000497  _spi_transfer                      main
-C:   000004DB  _spi_transfer_all                  main
-C:   00000525  _sd_isbusy                         main
-C:   00000547  _sd_initial_clk                    main
-C:   00000562  _sd_cmd                            main
-C:   00000692  _sd_acmd                           main
-C:   000006C3  _SDinit                            main
-C:   00000747  _SDread                            main
-C:   00000863  _SDreadBlock                       main
-C:   0000088D  _HELPER_load_littleendian16        main
-C:   000008BB  _HELPER_load_littleendian32        main
-C:   0000095E  _HELPER_strcmp                     main
-C:   0000099F  _HELPER_strncmp                    main
-C:   000009E8  _HELPER_strlen                     main
-C:   00000A16  _HELPER_rootentry_type             main
-C:   00000A92  _HELPER_to_uppercase               main
-C:   00000ACF  _HELPER_filename_to_8dot3filenam   main
-C:   00000C17  _MBR_CHECK__SIGNATURE              main
-C:   00000C69  _MBR_LOAD_PARTITION_TABLE_ENTRY    main
-C:   00000CF5  _MBR_DETECT_FAT16                  main
-C:   00000D2C  _VBR_MOUNT_VBR                     main
-C:   00000F48  _VBR_FAT16_CHECK_COMPATIBILITY     main
-C:   00000F6A  _FAT16_ROOTENTRY_DUMP              main
-C:   00001018  _FAT16_LOAD_ROOTENTRY              main
-C:   00001154  _FAT16_IS_ROOTENTRY_VALID_FILE     main
-C:   000011A2  _FAT16_ROOTENTRY_READ              main
-C:   000011C3  _FAT16_ROOTENTRY_SCAN_RESET        main
-C:   000011D5  _FAT16_ROOTENTRY_SCAN              main
-C:   000011F8  _FAT16_FILE_OPEN                   main
-C:   00001290  _FAT16_GET_NEXT_CLUSTER            main
-C:   00001375  _FAT16_FILE_READ                   main
-C:   000015DE  _FAT16_FILE_CAT                    main
-C:   00001642  _SL_disable_write_protection       main
-C:   0000166B  _SL_enable_write_protection        main
+C:   00000069  _enterApp                          main
+C:   000000CD  _exitApp                           main
+C:   000000D1  _hexNibble2dec                     main
+C:   0000010B  _hex2dec                           main
+C:   00000125  _dec2hexNibble                     main
+C:   00000143  _UartBegin                         main
+C:   00000152  _UartReadReady                     main
+C:   0000015D  _UartRead                          main
+C:   00000166  _UartWrite                         main
+C:   0000016F  _UartWriteBuff                     main
+C:   000001A7  _UartReadBuff                      main
+C:   000001EC  _UartPrint                         main
+C:   0000021E  _UartWriteNumber                   main
+C:   000002DD  _UartWriteNumbers                  main
+C:   00000332  _UartPrintNumber                   main
+C:   0000042C  _UartScanByte                      main
+C:   00000466  _UartScanLine                      main
+C:   000004F2  _spi_init                          main
+C:   000004FF  _spi_transfer                      main
+C:   00000543  _spi_transfer_all                  main
+C:   0000058D  _sd_isbusy                         main
+C:   000005AF  _sd_initial_clk                    main
+C:   000005CA  _sd_cmd                            main
+C:   000006FA  _sd_acmd                           main
+C:   0000072B  _SDinit                            main
+C:   000007AF  _SDread                            main
+C:   000008CB  _SDreadBlock                       main
+C:   000008F5  _HELPER_load_littleendian16        main
+C:   00000923  _HELPER_load_littleendian32        main
+C:   000009C6  _HELPER_strcmp                     main
+C:   00000A07  _HELPER_strncmp                    main
+C:   00000A50  _HELPER_strlen                     main
+C:   00000A7E  _HELPER_rootentry_type             main
+C:   00000AFA  _HELPER_to_uppercase               main
+C:   00000B37  _HELPER_filename_to_8dot3filenam   main
+C:   00000C7F  _MBR_CHECK__SIGNATURE              main
+C:   00000CD1  _MBR_LOAD_PARTITION_TABLE_ENTRY    main
+C:   00000D5D  _MBR_DETECT_FAT16                  main
+C:   00000D94  _VBR_MOUNT_VBR                     main
+C:   00000FB0  _VBR_FAT16_CHECK_COMPATIBILITY     main
+C:   00000FD2  _FAT16_ROOTENTRY_DUMP              main
+C:   00001080  _FAT16_LOAD_ROOTENTRY              main
+C:   000011BC  _FAT16_IS_ROOTENTRY_VALID_FILE     main
+C:   0000120A  _FAT16_ROOTENTRY_READ              main
+C:   0000122B  _FAT16_ROOTENTRY_SCAN_RESET        main
+C:   0000123D  _FAT16_ROOTENTRY_SCAN              main
+C:   00001260  _FAT16_FILE_OPEN                   main
+C:   000012F8  _FAT16_GET_NEXT_CLUSTER            main
+C:   000013DD  _FAT16_FILE_READ                   main
+C:   00001646  _FAT16_FILE_CAT                    main
 ASxxxx Linker V03.00 + NoICE + sdld,  page 19.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000069    00001D30 =        7472. bytes (REL,CON,CODE)
+CSEG                                00000069    00001D9C =        7580. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00001674  _SL_write                          main
-C:   000016C5  _SL_read                           main
-C:   000016F2  _SL_getcmd                         main
-C:   00001761  _SelectFAT16PartitionPrompt        main
-C:   000018E1  _SelectFileAndFileOpen             main
-C:   00001974  _main                              main
-C:   00001AF4  _SERIAL_LOADER_VERSION_INFO        main
-C:   00001B07  __divuint                          _divuint
-C:   00001B30  __modulong                         _modulong
-C:   00001BB3  __divulong                         _divulong
-C:   00001C18  __gptrput                          _gptrput
-C:   00001C33  __mulint                           _mulint
-C:   00001C33  __mulint_dummy                     _mulint
-C:   00001C50  __moduint                          _moduint
-C:   00001C9D  __mullong                          _mullong
-C:   00001C9D  __mullong_dummy                    _mullong
-C:   00001D0B  __gptrget                          _gptrget
-C:   00001D27  __modsint                          _modsint
-C:   00001D5D  __divsint                          _divsint
-C:   00001D95  __sdcc_external_startup            _startup
-
+C:   000016AA  _SL_disable_write_protection       main
+C:   000016D3  _SL_enable_write_protection        main
+C:   000016DC  _SL_write                          main
+C:   0000172D  _SL_read                           main
+C:   0000175A  _SL_getcmd                         main
+C:   000017CD  _SelectFAT16PartitionPrompt        main
+C:   0000194D  _SelectFileAndFileOpen             main
+C:   000019E0  _main                              main
+C:   00001B60  _SERIAL_LOADER_VERSION_INFO        main
+C:   00001B73  __divuint                          _divuint
+C:   00001B9C  __modulong                         _modulong
+C:   00001C1F  __divulong                         _divulong
+C:   00001C84  __gptrput                          _gptrput
+C:   00001C9F  __mulint                           _mulint
+C:   00001C9F  __mulint_dummy                     _mulint
+C:   00001CBC  __moduint                          _moduint
+C:   00001D09  __mullong                          _mullong
+C:   00001D09  __mullong_dummy                    _mullong
+C:   00001D77  __gptrget                          _gptrget
+C:   00001D93  __modsint                          _modsint
+C:   00001DC9  __divsint                          _divsint
+C:   00001E01  __sdcc_external_startup            _startup
 ASxxxx Linker V03.00 + NoICE + sdld,  page 20.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CONST                               00001D99    00000114 =         276. bytes (REL,CON,CODE)
+CONST                               00001E05    00000114 =         276. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------

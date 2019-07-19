@@ -69,6 +69,8 @@
 	.globl _dec2hexNibble
 	.globl _hex2dec
 	.globl _hexNibble2dec
+	.globl _exitApp
+	.globl _enterApp
 	.globl _TF2
 	.globl _EXF2
 	.globl _RCLK
@@ -354,13 +356,13 @@ _SDreadBlock_PARM_2:
 	.ds 3
 _HELPER_filename_to_8dot3filename_PARM_2:
 	.ds 3
-_HELPER_filename_to_8dot3filename_fname_65536_120:
+_HELPER_filename_to_8dot3filename_fname_65536_128:
 	.ds 3
-_HELPER_filename_to_8dot3filename_i_131072_126:
+_HELPER_filename_to_8dot3filename_i_131072_134:
 	.ds 1
 _VBR_MOUNT_VBR_sloc0_1_0:
 	.ds 4
-_FAT16_LOAD_ROOTENTRY_roote_number_65536_149:
+_FAT16_LOAD_ROOTENTRY_roote_number_65536_157:
 	.ds 2
 _FAT16_LOAD_ROOTENTRY_sloc0_1_0:
 	.ds 4
@@ -368,11 +370,12 @@ _FAT16_LOAD_ROOTENTRY_sloc1_1_0:
 	.ds 2
 _EEPROM_WRITE_PROTECTION::
 	.ds 1
-_main_buff_65536_214:
+_main_buff_65536_222:
 	.ds 16
 ;--------------------------------------------------------
 ; overlayable items in internal ram 
 ;--------------------------------------------------------
+	.area	OSEG    (OVR,DATA)
 	.area	OSEG    (OVR,DATA)
 	.area	OSEG    (OVR,DATA)
 	.area	OSEG    (OVR,DATA)
@@ -410,11 +413,11 @@ ___global_nthPartitionVBRmounted:
 	.ds 1
 ___global_rootEntry:
 	.ds 24
-_MBR_LOAD_PARTITION_TABLE_ENTRY_temp_65536_132:
+_MBR_LOAD_PARTITION_TABLE_ENTRY_temp_65536_140:
 	.ds 16
-_VBR_MOUNT_VBR_temp_65536_138:
+_VBR_MOUNT_VBR_temp_65536_146:
 	.ds 16
-_FAT16_LOAD_ROOTENTRY_temp_65536_150:
+_FAT16_LOAD_ROOTENTRY_temp_65536_158:
 	.ds 32
 ;--------------------------------------------------------
 ; absolute internal ram data
@@ -470,7 +473,7 @@ __interrupt_vect:
 	.globl __mcs51_genXINIT
 	.globl __mcs51_genXRAMCLEAR
 	.globl __mcs51_genRAMCLEAR
-;	serialloader.h:20: volatile unsigned char EEPROM_WRITE_PROTECTION=1;
+;	serialloader.h:13: volatile unsigned char EEPROM_WRITE_PROTECTION=1;
 	mov	_EEPROM_WRITE_PROTECTION,#0x01
 ;	fat.h:238: __idata static uint8_t __global_nthPartitionVBRmounted=255; //mounted if value is 0-3 for the 4 partitions,else not mounted
 	mov	r0,#___global_nthPartitionVBRmounted
@@ -490,6 +493,115 @@ __sdcc_program_startup:
 ;--------------------------------------------------------
 	.area CSEG    (CODE)
 ;------------------------------------------------------------
+;Allocation info for local variables in function 'enterApp'
+;------------------------------------------------------------
+;x                         Allocated to registers r6 r7 
+;y                         Allocated to registers r4 r5 
+;------------------------------------------------------------
+;	enterexitapp.h:13: void enterApp()
+;	-----------------------------------------
+;	 function enterApp
+;	-----------------------------------------
+_enterApp:
+	ar7 = 0x07
+	ar6 = 0x06
+	ar5 = 0x05
+	ar4 = 0x04
+	ar3 = 0x03
+	ar2 = 0x02
+	ar1 = 0x01
+	ar0 = 0x00
+;	enterexitapp.h:21: for(x=0;x<250;x++)for(y=0;y<200;y++); // 250*200*3 = 150,000 ~ 150 ms
+	mov	r6,#0x00
+	mov	r7,#0x00
+00124$:
+	mov	r4,#0xc8
+	mov	r5,#0x00
+00109$:
+	dec	r4
+	cjne	r4,#0xff,00178$
+	dec	r5
+00178$:
+	mov	a,r4
+	orl	a,r5
+	jnz	00109$
+	inc	r6
+	cjne	r6,#0x00,00180$
+	inc	r7
+00180$:
+	clr	c
+	mov	a,r6
+	subb	a,#0xfa
+	mov	a,r7
+	subb	a,#0x00
+	jc	00124$
+;	enterexitapp.h:22: for(x=0;x<250;x++)for(y=0;y<200;y++); // 250*200*3 = 150,000 ~ 150 ms
+	mov	r6,#0x00
+	mov	r7,#0x00
+00128$:
+	mov	r4,#0xc8
+	mov	r5,#0x00
+00114$:
+	dec	r4
+	cjne	r4,#0xff,00182$
+	dec	r5
+00182$:
+	mov	a,r4
+	orl	a,r5
+	jnz	00114$
+	inc	r6
+	cjne	r6,#0x00,00184$
+	inc	r7
+00184$:
+	clr	c
+	mov	a,r6
+	subb	a,#0xfa
+	mov	a,r7
+	subb	a,#0x00
+	jc	00128$
+;	enterexitapp.h:25: RESET_PORT_8052 &= ~(1 << RESET_PIN_8052);
+	anl	_P1,#0xef
+;	enterexitapp.h:28: for(x=0;x<250;x++) for(y=0;y<100;y++); 	// inner for loop takes about 3 cycles,
+	mov	r6,#0x00
+	mov	r7,#0x00
+00132$:
+	mov	r4,#0x64
+	mov	r5,#0x00
+00119$:
+	dec	r4
+	cjne	r4,#0xff,00186$
+	dec	r5
+00186$:
+	mov	a,r4
+	orl	a,r5
+	jnz	00119$
+	inc	r6
+	cjne	r6,#0x00,00188$
+	inc	r7
+00188$:
+	clr	c
+	mov	a,r6
+	subb	a,#0xfa
+	mov	a,r7
+	subb	a,#0x00
+	jc	00132$
+;	enterexitapp.h:32: RESET_PORT_8052 |= (1 << RESET_PIN_8052);	
+	orl	_P1,#0x10
+;	enterexitapp.h:35: }
+	ret
+;------------------------------------------------------------
+;Allocation info for local variables in function 'exitApp'
+;------------------------------------------------------------
+;	enterexitapp.h:39: void exitApp()
+;	-----------------------------------------
+;	 function exitApp
+;	-----------------------------------------
+_exitApp:
+;	enterexitapp.h:42: RESET_PORT_8052 &= ~(1 << RESET_PIN_8052);
+	anl	_P1,#0xef
+;	enterexitapp.h:43: }
+	ret
+;------------------------------------------------------------
 ;Allocation info for local variables in function 'hexNibble2dec'
 ;------------------------------------------------------------
 ;nibble                    Allocated to registers r7 
@@ -499,14 +611,6 @@ __sdcc_program_startup:
 ;	 function hexNibble2dec
 ;	-----------------------------------------
 _hexNibble2dec:
-	ar7 = 0x07
-	ar6 = 0x06
-	ar5 = 0x05
-	ar4 = 0x04
-	ar3 = 0x03
-	ar2 = 0x02
-	ar1 = 0x01
-	ar0 = 0x00
 	mov	r7,dpl
 ;	uart.h:8: if('0' <= nibble && nibble <= '9') return nibble - 0x30;
 	cjne	r7,#0x30,00139$
@@ -1028,10 +1132,10 @@ _UartWriteNumbers:
 ;Allocation info for local variables in function 'UartPrintNumber'
 ;------------------------------------------------------------
 ;n                         Allocated to stack - _bp +1
-;digit                     Allocated to stack - _bp +7
-;i                         Allocated to stack - _bp +5
+;digit                     Allocated to stack - _bp +5
+;i                         Allocated to stack - _bp +9
 ;j                         Allocated to registers r3 
-;leading_zeroes_flag       Allocated to stack - _bp +6
+;leading_zeroes_flag       Allocated to stack - _bp +10
 ;sloc0                     Allocated to stack - _bp +12
 ;------------------------------------------------------------
 ;	uart.h:136: void UartPrintNumber(unsigned long n) __reentrant
@@ -1050,12 +1154,12 @@ _UartPrintNumber:
 	mov	sp,a
 ;	uart.h:152: char i,j,leading_zeroes_flag=1;
 	mov	a,_bp
-	add	a,#0x06
+	add	a,#0x0a
 	mov	r0,a
 	mov	@r0,#0x01
 ;	uart.h:153: for(i=8;i>0;i--)
 	mov	a,_bp
-	add	a,#0x05
+	add	a,#0x09
 	mov	r0,a
 	mov	@r0,#0x08
 00112$:
@@ -1063,7 +1167,7 @@ _UartPrintNumber:
 	mov	r0,_bp
 	inc	r0
 	mov	a,_bp
-	add	a,#0x07
+	add	a,#0x05
 	mov	r1,a
 	mov	a,@r0
 	mov	@r1,a
@@ -1083,7 +1187,7 @@ _UartPrintNumber:
 	mov	r3,#0x01
 00110$:
 	mov	a,_bp
-	add	a,#0x05
+	add	a,#0x09
 	mov	r0,a
 	clr	c
 	mov	a,r3
@@ -1095,7 +1199,7 @@ _UartPrintNumber:
 	mov	(__divulong_PARM_2 + 2),a
 	mov	(__divulong_PARM_2 + 3),a
 	mov	a,_bp
-	add	a,#0x07
+	add	a,#0x05
 	mov	r0,a
 	mov	dpl,@r0
 	inc	r0
@@ -1112,7 +1216,7 @@ _UartPrintNumber:
 	mov	r7,a
 	pop	ar3
 	mov	a,_bp
-	add	a,#0x07
+	add	a,#0x05
 	mov	r0,a
 	mov	@r0,ar4
 	inc	r0
@@ -1126,7 +1230,7 @@ _UartPrintNumber:
 00101$:
 ;	uart.h:158: if(leading_zeroes_flag && digit%10) leading_zeroes_flag=0; //flag to start printing
 	mov	a,_bp
-	add	a,#0x06
+	add	a,#0x0a
 	mov	r0,a
 	mov	a,@r0
 	jz	00103$
@@ -1136,7 +1240,7 @@ _UartPrintNumber:
 	mov	(__modulong_PARM_2 + 2),a
 	mov	(__modulong_PARM_2 + 3),a
 	mov	a,_bp
-	add	a,#0x07
+	add	a,#0x05
 	mov	r0,a
 	mov	dpl,@r0
 	inc	r0
@@ -1156,13 +1260,13 @@ _UartPrintNumber:
 	orl	a,r7
 	jz	00103$
 	mov	a,_bp
-	add	a,#0x06
+	add	a,#0x0a
 	mov	r0,a
 	mov	@r0,#0x00
 00103$:
 ;	uart.h:160: if(leading_zeroes_flag); //pass - do not print
 	mov	a,_bp
-	add	a,#0x06
+	add	a,#0x0a
 	mov	r0,a
 	mov	a,@r0
 	jnz	00113$
@@ -1173,7 +1277,7 @@ _UartPrintNumber:
 	mov	(__modulong_PARM_2 + 2),a
 	mov	(__modulong_PARM_2 + 3),a
 	mov	a,_bp
-	add	a,#0x07
+	add	a,#0x05
 	mov	r0,a
 	mov	dpl,@r0
 	inc	r0
@@ -1191,11 +1295,11 @@ _UartPrintNumber:
 00113$:
 ;	uart.h:153: for(i=8;i>0;i--)
 	mov	a,_bp
-	add	a,#0x05
+	add	a,#0x09
 	mov	r0,a
 	dec	@r0
 	mov	a,_bp
-	add	a,#0x05
+	add	a,#0x09
 	mov	r0,a
 	mov	a,@r0
 	jz	00149$
@@ -2652,10 +2756,10 @@ _HELPER_to_uppercase:
 ;Allocation info for local variables in function 'HELPER_filename_to_8dot3filename'
 ;------------------------------------------------------------
 ;fname83                   Allocated with name '_HELPER_filename_to_8dot3filename_PARM_2'
-;fname                     Allocated with name '_HELPER_filename_to_8dot3filename_fname_65536_120'
+;fname                     Allocated with name '_HELPER_filename_to_8dot3filename_fname_65536_128'
 ;index                     Allocated to registers r4 
 ;i                         Allocated to registers r4 
-;i                         Allocated with name '_HELPER_filename_to_8dot3filename_i_131072_126'
+;i                         Allocated with name '_HELPER_filename_to_8dot3filename_i_131072_134'
 ;------------------------------------------------------------
 ;	fat.h:172: uint8_t HELPER_filename_to_8dot3filename( char *fname,  char *fname83)
 ;	-----------------------------------------
@@ -2663,9 +2767,9 @@ _HELPER_to_uppercase:
 ;	-----------------------------------------
 _HELPER_filename_to_8dot3filename:
 ;	fat.h:177: HELPER_to_uppercase(fname);
-	mov	_HELPER_filename_to_8dot3filename_fname_65536_120,dpl
-	mov	(_HELPER_filename_to_8dot3filename_fname_65536_120 + 1),dph
-	mov	(_HELPER_filename_to_8dot3filename_fname_65536_120 + 2),b
+	mov	_HELPER_filename_to_8dot3filename_fname_65536_128,dpl
+	mov	(_HELPER_filename_to_8dot3filename_fname_65536_128 + 1),dph
+	mov	(_HELPER_filename_to_8dot3filename_fname_65536_128 + 2),b
 	lcall	_HELPER_to_uppercase
 ;	fat.h:185: for(uint8_t i=0;i<11;i++) fname83[i]=' '; //default fill by empty space
 	mov	r4,#0x00
@@ -2708,12 +2812,12 @@ _HELPER_filename_to_8dot3filename:
 ;	fat.h:192: if(index==8 && fname[index]!='.') 
 	cjne	r3,#0x08,00103$
 	mov	a,r3
-	add	a,_HELPER_filename_to_8dot3filename_fname_65536_120
+	add	a,_HELPER_filename_to_8dot3filename_fname_65536_128
 	mov	r0,a
 	clr	a
-	addc	a,(_HELPER_filename_to_8dot3filename_fname_65536_120 + 1)
+	addc	a,(_HELPER_filename_to_8dot3filename_fname_65536_128 + 1)
 	mov	r1,a
-	mov	r2,(_HELPER_filename_to_8dot3filename_fname_65536_120 + 2)
+	mov	r2,(_HELPER_filename_to_8dot3filename_fname_65536_128 + 2)
 	mov	dpl,r0
 	mov	dph,r1
 	mov	b,r2
@@ -2728,12 +2832,12 @@ _HELPER_filename_to_8dot3filename:
 00103$:
 ;	fat.h:200: if(fname[index]==0) return 0; // success - we reached the end of the filename string before the dot character - filename has no extension
 	mov	a,r3
-	add	a,_HELPER_filename_to_8dot3filename_fname_65536_120
+	add	a,_HELPER_filename_to_8dot3filename_fname_65536_128
 	mov	r0,a
 	clr	a
-	addc	a,(_HELPER_filename_to_8dot3filename_fname_65536_120 + 1)
+	addc	a,(_HELPER_filename_to_8dot3filename_fname_65536_128 + 1)
 	mov	r1,a
-	mov	r2,(_HELPER_filename_to_8dot3filename_fname_65536_120 + 2)
+	mov	r2,(_HELPER_filename_to_8dot3filename_fname_65536_128 + 2)
 	mov	dpl,r0
 	mov	dph,r1
 	mov	b,r2
@@ -2768,19 +2872,19 @@ _HELPER_filename_to_8dot3filename:
 	jc	00122$
 ;	fat.h:205: for(uint8_t i=0;i<4;i++)
 00140$:
-	mov	_HELPER_filename_to_8dot3filename_i_131072_126,#0x00
+	mov	_HELPER_filename_to_8dot3filename_i_131072_134,#0x00
 00125$:
 	mov	a,#0x100 - 0x04
-	add	a,_HELPER_filename_to_8dot3filename_i_131072_126
+	add	a,_HELPER_filename_to_8dot3filename_i_131072_134
 	jnc	00187$
 	ljmp	00118$
 00187$:
 ;	fat.h:207: if(i==3 && fname[index+i+1]!=0) 
 	mov	a,#0x03
-	cjne	a,_HELPER_filename_to_8dot3filename_i_131072_126,00113$
+	cjne	a,_HELPER_filename_to_8dot3filename_i_131072_134,00113$
 	mov	ar5,r4
 	mov	r6,#0x00
-	mov	r2,_HELPER_filename_to_8dot3filename_i_131072_126
+	mov	r2,_HELPER_filename_to_8dot3filename_i_131072_134
 	mov	r3,#0x00
 	mov	a,r2
 	add	a,r5
@@ -2793,12 +2897,12 @@ _HELPER_filename_to_8dot3filename:
 	inc	r6
 00190$:
 	mov	a,r5
-	add	a,_HELPER_filename_to_8dot3filename_fname_65536_120
+	add	a,_HELPER_filename_to_8dot3filename_fname_65536_128
 	mov	r5,a
 	mov	a,r6
-	addc	a,(_HELPER_filename_to_8dot3filename_fname_65536_120 + 1)
+	addc	a,(_HELPER_filename_to_8dot3filename_fname_65536_128 + 1)
 	mov	r6,a
-	mov	r3,(_HELPER_filename_to_8dot3filename_fname_65536_120 + 2)
+	mov	r3,(_HELPER_filename_to_8dot3filename_fname_65536_128 + 2)
 	mov	dpl,r5
 	mov	dph,r6
 	mov	b,r3
@@ -2811,7 +2915,7 @@ _HELPER_filename_to_8dot3filename:
 ;	fat.h:216: if(fname[index+i+1]==0) 
 	mov	ar5,r4
 	mov	r6,#0x00
-	mov	r2,_HELPER_filename_to_8dot3filename_i_131072_126
+	mov	r2,_HELPER_filename_to_8dot3filename_i_131072_134
 	mov	r3,#0x00
 	mov	a,r2
 	add	a,r5
@@ -2824,12 +2928,12 @@ _HELPER_filename_to_8dot3filename:
 	inc	r1
 00192$:
 	mov	a,r0
-	add	a,_HELPER_filename_to_8dot3filename_fname_65536_120
+	add	a,_HELPER_filename_to_8dot3filename_fname_65536_128
 	mov	r0,a
 	mov	a,r1
-	addc	a,(_HELPER_filename_to_8dot3filename_fname_65536_120 + 1)
+	addc	a,(_HELPER_filename_to_8dot3filename_fname_65536_128 + 1)
 	mov	r1,a
-	mov	r7,(_HELPER_filename_to_8dot3filename_fname_65536_120 + 2)
+	mov	r7,(_HELPER_filename_to_8dot3filename_fname_65536_128 + 2)
 	mov	dpl,r0
 	mov	dph,r1
 	mov	b,r7
@@ -2864,12 +2968,12 @@ _HELPER_filename_to_8dot3filename:
 	inc	r6
 00194$:
 	mov	a,r5
-	add	a,_HELPER_filename_to_8dot3filename_fname_65536_120
+	add	a,_HELPER_filename_to_8dot3filename_fname_65536_128
 	mov	r5,a
 	mov	a,r6
-	addc	a,(_HELPER_filename_to_8dot3filename_fname_65536_120 + 1)
+	addc	a,(_HELPER_filename_to_8dot3filename_fname_65536_128 + 1)
 	mov	r6,a
-	mov	r3,(_HELPER_filename_to_8dot3filename_fname_65536_120 + 2)
+	mov	r3,(_HELPER_filename_to_8dot3filename_fname_65536_128 + 2)
 	mov	dpl,r5
 	mov	dph,r6
 	mov	b,r3
@@ -2880,7 +2984,7 @@ _HELPER_filename_to_8dot3filename:
 	mov	b,r7
 	lcall	__gptrput
 ;	fat.h:205: for(uint8_t i=0;i<4;i++)
-	inc	_HELPER_filename_to_8dot3filename_i_131072_126
+	inc	_HELPER_filename_to_8dot3filename_i_131072_134
 	ljmp	00125$
 00118$:
 ;	fat.h:230: return 3;// if reached here, then it is an error
@@ -2947,7 +3051,7 @@ _MBR_CHECK__SIGNATURE:
 ;Allocation info for local variables in function 'MBR_LOAD_PARTITION_TABLE_ENTRY'
 ;------------------------------------------------------------
 ;partition_number          Allocated to registers r7 
-;temp                      Allocated with name '_MBR_LOAD_PARTITION_TABLE_ENTRY_temp_65536_132'
+;temp                      Allocated with name '_MBR_LOAD_PARTITION_TABLE_ENTRY_temp_65536_140'
 ;offset                    Allocated to registers r5 r6 
 ;------------------------------------------------------------
 ;	fat.h:261: uint8_t MBR_LOAD_PARTITION_TABLE_ENTRY(uint8_t partition_number)
@@ -2983,9 +3087,9 @@ _MBR_LOAD_PARTITION_TABLE_ENTRY:
 	ret
 00102$:
 ;	fat.h:276: SDread(0,offset,16,temp);
-	mov	a,#_MBR_LOAD_PARTITION_TABLE_ENTRY_temp_65536_132
+	mov	a,#_MBR_LOAD_PARTITION_TABLE_ENTRY_temp_65536_140
 	push	acc
-	mov	a,#(_MBR_LOAD_PARTITION_TABLE_ENTRY_temp_65536_132 >> 8)
+	mov	a,#(_MBR_LOAD_PARTITION_TABLE_ENTRY_temp_65536_140 >> 8)
 	push	acc
 	mov	a,#0x40
 	push	acc
@@ -3003,12 +3107,12 @@ _MBR_LOAD_PARTITION_TABLE_ENTRY:
 	add	a,#0xf9
 	mov	sp,a
 ;	fat.h:278: __global_partitionTableEntry.type = temp[4]; // type offset is 4
-	mov	r0,#(_MBR_LOAD_PARTITION_TABLE_ENTRY_temp_65536_132 + 0x0004)
+	mov	r0,#(_MBR_LOAD_PARTITION_TABLE_ENTRY_temp_65536_140 + 0x0004)
 	mov	ar7,@r0
 	mov	r0,#___global_partitionTableEntry
 	mov	@r0,ar7
 ;	fat.h:279: __global_partitionTableEntry.start=HELPER_load_littleendian32(&temp[8]); //partition start LBA offset is 8
-	mov	dptr,#(_MBR_LOAD_PARTITION_TABLE_ENTRY_temp_65536_132 + 0x0008)
+	mov	dptr,#(_MBR_LOAD_PARTITION_TABLE_ENTRY_temp_65536_140 + 0x0008)
 	mov	b,#0x40
 	lcall	_HELPER_load_littleendian32
 	mov	r4,dpl
@@ -3024,7 +3128,7 @@ _MBR_LOAD_PARTITION_TABLE_ENTRY:
 	inc	r0
 	mov	@r0,ar7
 ;	fat.h:280: __global_partitionTableEntry.size=HELPER_load_littleendian32(&temp[12]); //partiiton size offset is 12
-	mov	dptr,#(_MBR_LOAD_PARTITION_TABLE_ENTRY_temp_65536_132 + 0x000c)
+	mov	dptr,#(_MBR_LOAD_PARTITION_TABLE_ENTRY_temp_65536_140 + 0x000c)
 	mov	b,#0x40
 	lcall	_HELPER_load_littleendian32
 	mov	r4,dpl
@@ -3100,7 +3204,7 @@ _MBR_DETECT_FAT16:
 ;------------------------------------------------------------
 ;partition_number          Allocated to registers r7 
 ;sloc0                     Allocated with name '_VBR_MOUNT_VBR_sloc0_1_0'
-;temp                      Allocated with name '_VBR_MOUNT_VBR_temp_65536_138'
+;temp                      Allocated with name '_VBR_MOUNT_VBR_temp_65536_146'
 ;------------------------------------------------------------
 ;	fat.h:332: uint8_t VBR_MOUNT_VBR(uint8_t partition_number)
 ;	-----------------------------------------
@@ -3137,9 +3241,9 @@ _VBR_MOUNT_VBR:
 	mov	ar6,@r0
 	inc	r0
 	mov	ar7,@r0
-	mov	a,#_VBR_MOUNT_VBR_temp_65536_138
+	mov	a,#_VBR_MOUNT_VBR_temp_65536_146
 	push	acc
-	mov	a,#(_VBR_MOUNT_VBR_temp_65536_138 >> 8)
+	mov	a,#(_VBR_MOUNT_VBR_temp_65536_146 >> 8)
 	push	acc
 	mov	a,#0x40
 	push	acc
@@ -3175,7 +3279,7 @@ _VBR_MOUNT_VBR:
 	inc	r0
 	mov	@r0,ar7
 ;	fat.h:377: __global_vbr.bps = HELPER_load_littleendian16(&temp[0x0b]); // bps starts at offset 0x0b
-	mov	dptr,#(_VBR_MOUNT_VBR_temp_65536_138 + 0x000b)
+	mov	dptr,#(_VBR_MOUNT_VBR_temp_65536_146 + 0x000b)
 	mov	b,#0x40
 	lcall	_HELPER_load_littleendian16
 	mov	a,dpl
@@ -3185,12 +3289,12 @@ _VBR_MOUNT_VBR:
 	inc	r0
 	mov	@r0,b
 ;	fat.h:378: __global_vbr.spc = temp[0x0d]; //spc offset 0x0d
-	mov	r0,#(_VBR_MOUNT_VBR_temp_65536_138 + 0x000d)
+	mov	r0,#(_VBR_MOUNT_VBR_temp_65536_146 + 0x000d)
 	mov	ar7,@r0
 	mov	r0,#(___global_vbr + 0x0008)
 	mov	@r0,ar7
 ;	fat.h:379: __global_vbr.reservedSectors = HELPER_load_littleendian16(&temp[0x0e]);
-	mov	dptr,#(_VBR_MOUNT_VBR_temp_65536_138 + 0x000e)
+	mov	dptr,#(_VBR_MOUNT_VBR_temp_65536_146 + 0x000e)
 	mov	b,#0x40
 	lcall	_HELPER_load_littleendian16
 	mov	a,dpl
@@ -3208,9 +3312,9 @@ _VBR_MOUNT_VBR:
 	mov	ar6,@r0
 	inc	r0
 	mov	ar7,@r0
-	mov	a,#_VBR_MOUNT_VBR_temp_65536_138
+	mov	a,#_VBR_MOUNT_VBR_temp_65536_146
 	push	acc
-	mov	a,#(_VBR_MOUNT_VBR_temp_65536_138 >> 8)
+	mov	a,#(_VBR_MOUNT_VBR_temp_65536_146 >> 8)
 	push	acc
 	mov	a,#0x40
 	push	acc
@@ -3231,7 +3335,7 @@ _VBR_MOUNT_VBR:
 	add	a,#0xf9
 	mov	sp,a
 ;	fat.h:392: __global_vbr.nfat = HELPER_load_littleendian16(&temp[0x10-16]); //offset of nfat is 0x01, but we subtract 16 as we have read from 16 offset in SDread
-	mov	dptr,#_VBR_MOUNT_VBR_temp_65536_138
+	mov	dptr,#_VBR_MOUNT_VBR_temp_65536_146
 	mov	b,#0x40
 	lcall	_HELPER_load_littleendian16
 	mov	a,dpl
@@ -3241,7 +3345,7 @@ _VBR_MOUNT_VBR:
 	inc	r0
 	mov	@r0,b
 ;	fat.h:393: __global_vbr.nroote = HELPER_load_littleendian16(&temp[0x11-16]); //offset of number_root_entrie is 0x11
-	mov	dptr,#(_VBR_MOUNT_VBR_temp_65536_138 + 0x0001)
+	mov	dptr,#(_VBR_MOUNT_VBR_temp_65536_146 + 0x0001)
 	mov	b,#0x40
 	lcall	_HELPER_load_littleendian16
 	mov	a,dpl
@@ -3251,7 +3355,7 @@ _VBR_MOUNT_VBR:
 	inc	r0
 	mov	@r0,b
 ;	fat.h:394: __global_vbr.spf = HELPER_load_littleendian16(&temp[0x16-16]); //offset of sectors_per_fat is 0x16
-	mov	dptr,#(_VBR_MOUNT_VBR_temp_65536_138 + 0x0006)
+	mov	dptr,#(_VBR_MOUNT_VBR_temp_65536_146 + 0x0006)
 	mov	b,#0x40
 	lcall	_HELPER_load_littleendian16
 	mov	r6,dpl
@@ -3571,12 +3675,12 @@ _FAT16_ROOTENTRY_DUMP:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'FAT16_LOAD_ROOTENTRY'
 ;------------------------------------------------------------
-;roote_number              Allocated with name '_FAT16_LOAD_ROOTENTRY_roote_number_65536_149'
+;roote_number              Allocated with name '_FAT16_LOAD_ROOTENTRY_roote_number_65536_157'
 ;i                         Allocated to registers r7 
 ;i                         Allocated to registers r7 
 ;sloc0                     Allocated with name '_FAT16_LOAD_ROOTENTRY_sloc0_1_0'
 ;sloc1                     Allocated with name '_FAT16_LOAD_ROOTENTRY_sloc1_1_0'
-;temp                      Allocated with name '_FAT16_LOAD_ROOTENTRY_temp_65536_150'
+;temp                      Allocated with name '_FAT16_LOAD_ROOTENTRY_temp_65536_158'
 ;sector_of_given_roote     Allocated to registers r2 r3 r4 r5 
 ;offset_in_this_sector     Allocated to registers r6 r7 
 ;------------------------------------------------------------
@@ -3585,17 +3689,17 @@ _FAT16_ROOTENTRY_DUMP:
 ;	 function FAT16_LOAD_ROOTENTRY
 ;	-----------------------------------------
 _FAT16_LOAD_ROOTENTRY:
-	mov	_FAT16_LOAD_ROOTENTRY_roote_number_65536_149,dpl
-	mov	(_FAT16_LOAD_ROOTENTRY_roote_number_65536_149 + 1),dph
+	mov	_FAT16_LOAD_ROOTENTRY_roote_number_65536_157,dpl
+	mov	(_FAT16_LOAD_ROOTENTRY_roote_number_65536_157 + 1),dph
 ;	fat.h:476: if(roote_number < __global_vbr.nroote);//pass
 	mov	r0,#(___global_vbr + 0x000d)
 	mov	ar4,@r0
 	inc	r0
 	mov	ar5,@r0
 	clr	c
-	mov	a,_FAT16_LOAD_ROOTENTRY_roote_number_65536_149
+	mov	a,_FAT16_LOAD_ROOTENTRY_roote_number_65536_157
 	subb	a,r4
-	mov	a,(_FAT16_LOAD_ROOTENTRY_roote_number_65536_149 + 1)
+	mov	a,(_FAT16_LOAD_ROOTENTRY_roote_number_65536_157 + 1)
 	subb	a,r5
 	jc	00103$
 ;	fat.h:477: else return 1; // error as roote_number is more than number of root entries present in rootentry table 
@@ -3615,8 +3719,8 @@ _FAT16_LOAD_ROOTENTRY:
 	mov	(_FAT16_LOAD_ROOTENTRY_sloc0_1_0 + 2),@r0
 	inc	r0
 	mov	(_FAT16_LOAD_ROOTENTRY_sloc0_1_0 + 3),@r0
-	mov	r6,_FAT16_LOAD_ROOTENTRY_roote_number_65536_149
-	mov	a,(_FAT16_LOAD_ROOTENTRY_roote_number_65536_149 + 1)
+	mov	r6,_FAT16_LOAD_ROOTENTRY_roote_number_65536_157
+	mov	a,(_FAT16_LOAD_ROOTENTRY_roote_number_65536_157 + 1)
 	swap	a
 	rl	a
 	anl	a,#0xe0
@@ -3677,9 +3781,9 @@ _FAT16_LOAD_ROOTENTRY:
 	pop	ar4
 	pop	ar5
 ;	fat.h:485: SDread(sector_of_given_roote,offset_in_this_sector,32,temp);
-	mov	a,#_FAT16_LOAD_ROOTENTRY_temp_65536_150
+	mov	a,#_FAT16_LOAD_ROOTENTRY_temp_65536_158
 	push	acc
-	mov	a,#(_FAT16_LOAD_ROOTENTRY_temp_65536_150 >> 8)
+	mov	a,#(_FAT16_LOAD_ROOTENTRY_temp_65536_158 >> 8)
 	push	acc
 	mov	a,#0x40
 	push	acc
@@ -3699,9 +3803,9 @@ _FAT16_LOAD_ROOTENTRY:
 	mov	sp,a
 ;	fat.h:487: __global_rootEntry.entry_index = roote_number; //save the index of the root_entry
 	mov	r0,#(___global_rootEntry + 0x0012)
-	mov	@r0,_FAT16_LOAD_ROOTENTRY_roote_number_65536_149
+	mov	@r0,_FAT16_LOAD_ROOTENTRY_roote_number_65536_157
 	inc	r0
-	mov	@r0,(_FAT16_LOAD_ROOTENTRY_roote_number_65536_149 + 1)
+	mov	@r0,(_FAT16_LOAD_ROOTENTRY_roote_number_65536_157 + 1)
 ;	fat.h:488: __global_rootEntry.bytes_read = 0; //no bytes has been read so far by FAT16_FILE_READ as we have just loaded the rootentry
 	mov	r0,#(___global_rootEntry + 0x0014)
 	mov	@r0,#0x00
@@ -3721,7 +3825,7 @@ _FAT16_LOAD_ROOTENTRY:
 	add	a,#___global_rootEntry
 	mov	r1,a
 	mov	a,r7
-	add	a,#_FAT16_LOAD_ROOTENTRY_temp_65536_150
+	add	a,#_FAT16_LOAD_ROOTENTRY_temp_65536_158
 	mov	r0,a
 	mov	ar6,@r0
 	mov	@r1,ar6
@@ -3740,7 +3844,7 @@ _FAT16_LOAD_ROOTENTRY:
 	add	a,#(___global_rootEntry + 0x0008)
 	mov	r1,a
 	mov	a,r7
-	add	a,#_FAT16_LOAD_ROOTENTRY_temp_65536_150
+	add	a,#_FAT16_LOAD_ROOTENTRY_temp_65536_158
 	mov	r0,a
 	mov	ar6,@r0
 	mov	@r1,ar6
@@ -3748,12 +3852,12 @@ _FAT16_LOAD_ROOTENTRY:
 	sjmp	00110$
 00105$:
 ;	fat.h:493: __global_rootEntry.attributes = temp[0x0b];
-	mov	r0,#(_FAT16_LOAD_ROOTENTRY_temp_65536_150 + 0x000b)
+	mov	r0,#(_FAT16_LOAD_ROOTENTRY_temp_65536_158 + 0x000b)
 	mov	ar7,@r0
 	mov	r0,#(___global_rootEntry + 0x000b)
 	mov	@r0,ar7
 ;	fat.h:494: __global_rootEntry.startCluster = HELPER_load_littleendian16(&temp[0x1a]);
-	mov	dptr,#(_FAT16_LOAD_ROOTENTRY_temp_65536_150 + 0x001a)
+	mov	dptr,#(_FAT16_LOAD_ROOTENTRY_temp_65536_158 + 0x001a)
 	mov	b,#0x40
 	lcall	_HELPER_load_littleendian16
 	mov	a,dpl
@@ -3763,7 +3867,7 @@ _FAT16_LOAD_ROOTENTRY:
 	inc	r0
 	mov	@r0,b
 ;	fat.h:495: __global_rootEntry.size = HELPER_load_littleendian32(&temp[0x1c]);
-	mov	dptr,#(_FAT16_LOAD_ROOTENTRY_temp_65536_150 + 0x001c)
+	mov	dptr,#(_FAT16_LOAD_ROOTENTRY_temp_65536_158 + 0x001c)
 	mov	b,#0x40
 	lcall	_HELPER_load_littleendian32
 	mov	r4,dpl
@@ -4742,54 +4846,54 @@ _FAT16_FILE_CAT:
 ;------------------------------------------------------------
 ;xram_addr                 Allocated to registers 
 ;------------------------------------------------------------
-;	serialloader.h:24: void SL_disable_write_protection()
+;	serialloader.h:17: void SL_disable_write_protection()
 ;	-----------------------------------------
 ;	 function SL_disable_write_protection
 ;	-----------------------------------------
 _SL_disable_write_protection:
-;	serialloader.h:29: *(xram_addr) = 0xAA;
+;	serialloader.h:22: *(xram_addr) = 0xAA;
 	mov	dptr,#0x1555
 	mov	a,#0xaa
 	movx	@dptr,a
-;	serialloader.h:31: *(xram_addr) = 0x55;
+;	serialloader.h:24: *(xram_addr) = 0x55;
 	mov	dptr,#0x0aaa
 	cpl	a
 	movx	@dptr,a
-;	serialloader.h:33: *(xram_addr) = 0x80;
-;	serialloader.h:37: *(xram_addr) = 0xAA;
+;	serialloader.h:26: *(xram_addr) = 0x80;
+;	serialloader.h:30: *(xram_addr) = 0xAA;
 	mov	dptr,#0x1555
 	mov	a,#0x80
 	movx	@dptr,a
 	mov	a,#0xaa
 	movx	@dptr,a
-;	serialloader.h:39: *(xram_addr) = 0x55;
+;	serialloader.h:32: *(xram_addr) = 0x55;
 	mov	dptr,#0x0aaa
 	cpl	a
 	movx	@dptr,a
-;	serialloader.h:41: *(xram_addr) = 0x20;
+;	serialloader.h:34: *(xram_addr) = 0x20;
 	mov	dptr,#0x1555
 	mov	a,#0x20
 	movx	@dptr,a
-;	serialloader.h:43: UartWrite('D'); //ack
+;	serialloader.h:36: UartWrite('D'); //ack
 	mov	dpl,#0x44
 	lcall	_UartWrite
-;	serialloader.h:45: EEPROM_WRITE_PROTECTION=0; //change flag
+;	serialloader.h:38: EEPROM_WRITE_PROTECTION=0; //change flag
 	mov	_EEPROM_WRITE_PROTECTION,#0x00
-;	serialloader.h:46: }
+;	serialloader.h:39: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'SL_enable_write_protection'
 ;------------------------------------------------------------
-;	serialloader.h:48: void SL_enable_write_protection()
+;	serialloader.h:41: void SL_enable_write_protection()
 ;	-----------------------------------------
 ;	 function SL_enable_write_protection
 ;	-----------------------------------------
 _SL_enable_write_protection:
-;	serialloader.h:50: EEPROM_WRITE_PROTECTION=1; //change flag
+;	serialloader.h:43: EEPROM_WRITE_PROTECTION=1; //change flag
 	mov	_EEPROM_WRITE_PROTECTION,#0x01
-;	serialloader.h:51: UartWrite('E'); 
+;	serialloader.h:44: UartWrite('E'); 
 	mov	dpl,#0x45
-;	serialloader.h:52: }
+;	serialloader.h:45: }
 	ljmp	_UartWrite
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'SL_write'
@@ -4798,22 +4902,22 @@ _SL_enable_write_protection:
 ;addr                      Allocated to registers r7 r6 
 ;xram_addr                 Allocated to registers 
 ;------------------------------------------------------------
-;	serialloader.h:54: void SL_write()
+;	serialloader.h:47: void SL_write()
 ;	-----------------------------------------
 ;	 function SL_write
 ;	-----------------------------------------
 _SL_write:
-;	serialloader.h:60: while(UartReadReady()==0); //wait till we rcv data
+;	serialloader.h:53: while(UartReadReady()==0); //wait till we rcv data
 00101$:
 	lcall	_UartReadReady
 	mov	a,dpl
 	jz	00101$
-;	serialloader.h:63: addr = UartRead(); //msb
+;	serialloader.h:56: addr = UartRead(); //msb
 	lcall	_UartRead
-;	serialloader.h:64: addr = addr << 8;
+;	serialloader.h:57: addr = addr << 8;
 	mov	r6,dpl
 	mov	r7,#0x00
-;	serialloader.h:65: addr |= UartRead(); //lsb
+;	serialloader.h:58: addr |= UartRead(); //lsb
 	push	ar7
 	push	ar6
 	lcall	_UartRead
@@ -4825,38 +4929,38 @@ _SL_write:
 	orl	ar7,a
 	mov	a,r4
 	orl	ar6,a
-;	serialloader.h:67: data = UartRead(); //read data
+;	serialloader.h:60: data = UartRead(); //read data
 	push	ar7
 	push	ar6
 	lcall	_UartRead
 	mov	r5,dpl
 	pop	ar6
 	pop	ar7
-;	serialloader.h:69: if(EEPROM_WRITE_PROTECTION)
+;	serialloader.h:62: if(EEPROM_WRITE_PROTECTION)
 	mov	a,_EEPROM_WRITE_PROTECTION
 	jz	00105$
-;	serialloader.h:73: *(xram_addr) = 0xAA;
+;	serialloader.h:66: *(xram_addr) = 0xAA;
 	mov	dptr,#0x1555
 	mov	a,#0xaa
 	movx	@dptr,a
-;	serialloader.h:75: *(xram_addr) = 0x55;
+;	serialloader.h:68: *(xram_addr) = 0x55;
 	mov	dptr,#0x0aaa
 	cpl	a
 	movx	@dptr,a
-;	serialloader.h:77: *(xram_addr) = 0xA0;
+;	serialloader.h:70: *(xram_addr) = 0xA0;
 	mov	dptr,#0x1555
 	mov	a,#0xa0
 	movx	@dptr,a
 00105$:
-;	serialloader.h:80: xram_addr = (__xdata unsigned char*) addr;
+;	serialloader.h:73: xram_addr = (__xdata unsigned char*) addr;
 	mov	dpl,r7
 	mov	dph,r6
-;	serialloader.h:82: *(xram_addr) = data; //write to xram
+;	serialloader.h:75: *(xram_addr) = data; //write to xram
 	mov	a,r5
 	movx	@dptr,a
-;	serialloader.h:84: UartWrite('W'); //ack
+;	serialloader.h:77: UartWrite('W'); //ack
 	mov	dpl,#0x57
-;	serialloader.h:86: }
+;	serialloader.h:79: }
 	ljmp	_UartWrite
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'SL_read'
@@ -4865,22 +4969,22 @@ _SL_write:
 ;addr                      Allocated to registers r7 r6 
 ;xram_addr                 Allocated to registers 
 ;------------------------------------------------------------
-;	serialloader.h:88: void SL_read()
+;	serialloader.h:81: void SL_read()
 ;	-----------------------------------------
 ;	 function SL_read
 ;	-----------------------------------------
 _SL_read:
-;	serialloader.h:94: while(UartReadReady()==0); //wait till we rcv data
+;	serialloader.h:87: while(UartReadReady()==0); //wait till we rcv data
 00101$:
 	lcall	_UartReadReady
 	mov	a,dpl
 	jz	00101$
-;	serialloader.h:98: addr = UartRead(); //msb
+;	serialloader.h:91: addr = UartRead(); //msb
 	lcall	_UartRead
-;	serialloader.h:99: addr = addr << 8;
+;	serialloader.h:92: addr = addr << 8;
 	mov	r6,dpl
 	mov	r7,#0x00
-;	serialloader.h:100: addr |= UartRead(); //lsb
+;	serialloader.h:93: addr |= UartRead(); //lsb
 	push	ar7
 	push	ar6
 	lcall	_UartRead
@@ -4892,41 +4996,41 @@ _SL_read:
 	orl	ar7,a
 	mov	a,r4
 	orl	ar6,a
-;	serialloader.h:102: xram_addr = (__xdata unsigned char*) addr;
+;	serialloader.h:95: xram_addr = (__xdata unsigned char*) addr;
 	mov	dpl,r7
 	mov	dph,r6
-;	serialloader.h:104: data = *(xram_addr); //read from xram
+;	serialloader.h:97: data = *(xram_addr); //read from xram
 	movx	a,@dptr
-;	serialloader.h:106: UartWrite(data);
+;	serialloader.h:99: UartWrite(data);
 	mov	dpl,a
-;	serialloader.h:108: }
+;	serialloader.h:101: }
 	ljmp	_UartWrite
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'SL_getcmd'
 ;------------------------------------------------------------
 ;cmd                       Allocated to registers r7 
 ;------------------------------------------------------------
-;	serialloader.h:111: unsigned char SL_getcmd()
+;	serialloader.h:104: unsigned char SL_getcmd()
 ;	-----------------------------------------
 ;	 function SL_getcmd
 ;	-----------------------------------------
 _SL_getcmd:
-;	serialloader.h:114: while(UartReadReady()) UartRead(); //flush 
+;	serialloader.h:107: while(UartReadReady()) UartRead(); //flush 
 00101$:
 	lcall	_UartReadReady
 	mov	a,dpl
 	jz	00104$
 	lcall	_UartRead
-;	serialloader.h:116: while(UartReadReady()==0); //wait till we rcv data 
+;	serialloader.h:109: while(UartReadReady()==0); //wait till we rcv data 
 	sjmp	00101$
 00104$:
 	lcall	_UartReadReady
 	mov	a,dpl
 	jz	00104$
-;	serialloader.h:119: cmd = UartRead(); //read
+;	serialloader.h:112: cmd = UartRead(); //read
 	lcall	_UartRead
 	mov	r7,dpl
-;	serialloader.h:121: switch(cmd)
+;	serialloader.h:114: switch(cmd)
 	cjne	r7,#0x44,00159$
 	sjmp	00110$
 00159$:
@@ -4942,59 +5046,61 @@ _SL_getcmd:
 	cjne	r7,#0x57,00163$
 	sjmp	00109$
 00163$:
-;	serialloader.h:123: case 'V':
+;	serialloader.h:116: case 'V':
 	cjne	r7,#0x58,00114$
 	sjmp	00112$
 00107$:
-;	serialloader.h:124: UartPrint(SERIAL_LOADER_VERSION_INFO);
+;	serialloader.h:117: UartPrint(SERIAL_LOADER_VERSION_INFO);
 	mov	dptr,#_SERIAL_LOADER_VERSION_INFO
 	mov	b,#0x80
 	push	ar7
 	lcall	_UartPrint
 	pop	ar7
-;	serialloader.h:125: break;
-;	serialloader.h:126: case 'R':
+;	serialloader.h:118: break;
+;	serialloader.h:119: case 'R':
 	sjmp	00114$
 00108$:
-;	serialloader.h:127: SL_read();
+;	serialloader.h:120: SL_read();
 	push	ar7
 	lcall	_SL_read
 	pop	ar7
-;	serialloader.h:128: break;
-;	serialloader.h:129: case 'W':
+;	serialloader.h:121: break;
+;	serialloader.h:122: case 'W':
 	sjmp	00114$
 00109$:
-;	serialloader.h:130: SL_write();
+;	serialloader.h:123: SL_write();
 	push	ar7
 	lcall	_SL_write
 	pop	ar7
-;	serialloader.h:131: break;
-;	serialloader.h:132: case 'D':
+;	serialloader.h:124: break;
+;	serialloader.h:125: case 'D':
 	sjmp	00114$
 00110$:
-;	serialloader.h:133: SL_disable_write_protection();
+;	serialloader.h:126: SL_disable_write_protection();
 	push	ar7
 	lcall	_SL_disable_write_protection
 	pop	ar7
-;	serialloader.h:134: break;
-;	serialloader.h:135: case 'E':
+;	serialloader.h:127: break;
+;	serialloader.h:128: case 'E':
 	sjmp	00114$
 00111$:
-;	serialloader.h:136: SL_enable_write_protection();
+;	serialloader.h:129: SL_enable_write_protection();
 	push	ar7
 	lcall	_SL_enable_write_protection
 	pop	ar7
-;	serialloader.h:137: break;
-;	serialloader.h:138: case 'X': //execute
+;	serialloader.h:130: break;
+;	serialloader.h:131: case 'X': //execute
 	sjmp	00114$
 00112$:
-;	serialloader.h:139: SELF_RESET_PORT &= ~(1<<SELF_RESET_PIN);
-	anl	_P1,#0xef
-;	serialloader.h:143: }
+;	serialloader.h:132: enterApp();
+	push	ar7
+	lcall	_enterApp
+	pop	ar7
+;	serialloader.h:136: }
 00114$:
-;	serialloader.h:145: return cmd;
+;	serialloader.h:138: return cmd;
 	mov	dpl,r7
-;	serialloader.h:146: }
+;	serialloader.h:139: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'SelectFAT16PartitionPrompt'
@@ -5004,37 +5110,37 @@ _SL_getcmd:
 ;i                         Allocated to registers r5 
 ;i                         Allocated to registers r4 
 ;------------------------------------------------------------
-;	main.c:31: void SelectFAT16PartitionPrompt() __reentrant
+;	main.c:22: void SelectFAT16PartitionPrompt() __reentrant
 ;	-----------------------------------------
 ;	 function SelectFAT16PartitionPrompt
 ;	-----------------------------------------
 _SelectFAT16PartitionPrompt:
-;	main.c:33: uint8_t _resp=0,_temp=0;
+;	main.c:24: uint8_t _resp=0,_temp=0;
 	mov	r7,#0x00
-;	main.c:36: if(MBR_CHECK__SIGNATURE())
+;	main.c:27: if(MBR_CHECK__SIGNATURE())
 	push	ar7
 	lcall	_MBR_CHECK__SIGNATURE
 	mov	a,dpl
 	pop	ar7
 	jz	00102$
-;	main.c:39: UartPrint("BAD MBR!\n");
+;	main.c:30: UartPrint("BAD MBR!\n");
 	mov	dptr,#___str_9
 	mov	b,#0x80
 	push	ar7
 	lcall	_UartPrint
 	pop	ar7
 00102$:
-;	main.c:43: _resp=MBR_DETECT_FAT16(); 	// _resp now contains the bit set for the partitions which have valid FAT16 ID
+;	main.c:34: _resp=MBR_DETECT_FAT16(); 	// _resp now contains the bit set for the partitions which have valid FAT16 ID
 	push	ar7
 	lcall	_MBR_DETECT_FAT16
 	mov	r6,dpl
 	pop	ar7
-;	main.c:46: if(_resp)
+;	main.c:37: if(_resp)
 	mov	a,r6
 	jnz	00188$
 	ljmp	00124$
 00188$:
-;	main.c:50: for(uint8_t i=0;i<4;i++)
+;	main.c:41: for(uint8_t i=0;i<4;i++)
 	mov	r5,#0x00
 00127$:
 	cjne	r5,#0x04,00189$
@@ -5042,7 +5148,7 @@ _SelectFAT16PartitionPrompt:
 	jc	00190$
 	ljmp	00106$
 00190$:
-;	main.c:52: UartPrint("\nPtn. ");UartWriteNumber(i,HEX);UartWrite('> ');
+;	main.c:43: UartPrint("\nPtn. ");UartWriteNumber(i,HEX);UartWrite('> ');
 	push	ar7
 	mov	dptr,#___str_10
 	mov	b,#0x80
@@ -5062,7 +5168,7 @@ _SelectFAT16PartitionPrompt:
 	pop	ar5
 	pop	ar6
 	pop	ar7
-;	main.c:53: if(_resp & 1<<i) UartPrint("FAT16");
+;	main.c:44: if(_resp & 1<<i) UartPrint("FAT16");
 	mov	b,r5
 	inc	b
 	mov	r3,#0x01
@@ -5098,7 +5204,7 @@ _SelectFAT16PartitionPrompt:
 	pop	ar7
 	sjmp	00128$
 00104$:
-;	main.c:54: else UartPrint("Unknown");
+;	main.c:45: else UartPrint("Unknown");
 	mov	dptr,#___str_12
 	mov	b,#0x80
 	push	ar7
@@ -5109,11 +5215,11 @@ _SelectFAT16PartitionPrompt:
 	pop	ar6
 	pop	ar7
 00128$:
-;	main.c:50: for(uint8_t i=0;i<4;i++)
+;	main.c:41: for(uint8_t i=0;i<4;i++)
 	inc	r5
 	ljmp	00127$
 00106$:
-;	main.c:60: if( (_resp & (_resp-1)) == 0)
+;	main.c:51: if( (_resp & (_resp-1)) == 0)
 	mov	ar5,r6
 	mov	r6,#0x00
 	mov	a,r5
@@ -5128,7 +5234,7 @@ _SelectFAT16PartitionPrompt:
 	anl	ar4,a
 	mov	a,r3
 	orl	a,r4
-;	main.c:62: for(uint8_t i=0;i<4;i++)
+;	main.c:53: for(uint8_t i=0;i<4;i++)
 	jnz	00111$
 	mov	r4,a
 	mov	r3,a
@@ -5136,7 +5242,7 @@ _SelectFAT16PartitionPrompt:
 	cjne	r3,#0x04,00195$
 00195$:
 	jnc	00112$
-;	main.c:64: if(_resp & 1<<i) 
+;	main.c:55: if(_resp & 1<<i) 
 	push	ar4
 	mov	b,r3
 	inc	b
@@ -5160,30 +5266,30 @@ _SelectFAT16PartitionPrompt:
 	orl	a,r4
 	pop	ar4
 	jz	00131$
-;	main.c:66: _temp=i; // select the i-th partition
+;	main.c:57: _temp=i; // select the i-th partition
 	mov	ar7,r4
-;	main.c:67: break; //break from for loop
+;	main.c:58: break; //break from for loop
 	sjmp	00112$
 00131$:
-;	main.c:62: for(uint8_t i=0;i<4;i++)
+;	main.c:53: for(uint8_t i=0;i<4;i++)
 	inc	r3
 	mov	ar4,r3
 	sjmp	00130$
 00111$:
-;	main.c:74: UartPrint("Slct Ptn. >\n");
+;	main.c:65: UartPrint("Slct Ptn. >\n");
 	mov	dptr,#___str_13
 	mov	b,#0x80
 	push	ar6
 	push	ar5
 	lcall	_UartPrint
-;	main.c:75: _temp=UartScanByte();
+;	main.c:66: _temp=UartScanByte();
 	lcall	_UartScanByte
 	mov	r4,dpl
 	pop	ar5
 	pop	ar6
 	mov	ar7,r4
 00112$:
-;	main.c:79: if( _temp<4 && (_resp & (1<<_temp)) )
+;	main.c:70: if( _temp<4 && (_resp & (1<<_temp)) )
 	cjne	r7,#0x04,00200$
 00200$:
 	jnc	00117$
@@ -5208,7 +5314,7 @@ _SelectFAT16PartitionPrompt:
 	mov	a,r5
 	orl	a,r6
 	jz	00117$
-;	main.c:81: UartPrint("\n\nPtn. Mounted:");UartWriteNumber(_temp,HEX);
+;	main.c:72: UartPrint("\n\nPtn. Mounted:");UartWriteNumber(_temp,HEX);
 	mov	dptr,#___str_14
 	mov	b,#0x80
 	push	ar7
@@ -5220,35 +5326,35 @@ _SelectFAT16PartitionPrompt:
 	mov	dpl,r7
 	lcall	_UartWriteNumber
 	dec	sp
-;	main.c:82: UartWrite('\n');
+;	main.c:73: UartWrite('\n');
 	mov	dpl,#0x0a
 	lcall	_UartWrite
 	pop	ar7
-;	main.c:83: VBR_MOUNT_VBR(_temp);
+;	main.c:74: VBR_MOUNT_VBR(_temp);
 	mov	dpl,r7
 	ljmp	_VBR_MOUNT_VBR
 00117$:
-;	main.c:87: UartPrint("\nBad Ptn.\n");
+;	main.c:78: UartPrint("\nBad Ptn.\n");
 	mov	dptr,#___str_15
 	mov	b,#0x80
 	lcall	_UartPrint
-;	main.c:88: UartPrint(HALTING_MSG); while(1);
-	mov	dptr,#_SelectFAT16PartitionPrompt_HALTING_MSG_65536_195
+;	main.c:79: UartPrint(HALTING_MSG); while(1);
+	mov	dptr,#_SelectFAT16PartitionPrompt_HALTING_MSG_65536_203
 	mov	b,#0x80
 	lcall	_UartPrint
 00114$:
 	sjmp	00114$
 00124$:
-;	main.c:94: UartPrint("No FAT16 Ptn.\n");
+;	main.c:85: UartPrint("No FAT16 Ptn.\n");
 	mov	dptr,#___str_16
 	mov	b,#0x80
 	lcall	_UartPrint
-;	main.c:95: UartPrint(HALTING_MSG); while(1);
-	mov	dptr,#_SelectFAT16PartitionPrompt_HALTING_MSG_65536_195
+;	main.c:86: UartPrint(HALTING_MSG); while(1);
+	mov	dptr,#_SelectFAT16PartitionPrompt_HALTING_MSG_65536_203
 	mov	b,#0x80
 	lcall	_UartPrint
 00121$:
-;	main.c:98: }
+;	main.c:89: }
 	sjmp	00121$
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'SelectFileAndFileOpen'
@@ -5257,36 +5363,36 @@ _SelectFAT16PartitionPrompt:
 ;i                         Allocated to registers r7 
 ;j                         Allocated to registers r6 
 ;------------------------------------------------------------
-;	main.c:100: uint8_t SelectFileAndFileOpen() __reentrant
+;	main.c:91: uint8_t SelectFileAndFileOpen() __reentrant
 ;	-----------------------------------------
 ;	 function SelectFileAndFileOpen
 ;	-----------------------------------------
 _SelectFileAndFileOpen:
-;	main.c:103: FAT16_ROOTENTRY_SCAN_RESET();
+;	main.c:94: FAT16_ROOTENTRY_SCAN_RESET();
 	lcall	_FAT16_ROOTENTRY_SCAN_RESET
-;	main.c:104: UartPrint("\nINDEX\t\tFILE\n");
+;	main.c:95: UartPrint("\nINDEX\t\tFILE\n");
 	mov	dptr,#___str_17
 	mov	b,#0x80
 	lcall	_UartPrint
-;	main.c:107: for(uint8_t i=0;i<255;i++) 
+;	main.c:98: for(uint8_t i=0;i<255;i++) 
 	mov	r7,#0x00
 00114$:
 	cjne	r7,#0xff,00155$
 00155$:
 	jnc	00107$
-;	main.c:109: _result = FAT16_ROOTENTRY_SCAN();
+;	main.c:100: _result = FAT16_ROOTENTRY_SCAN();
 	push	ar7
 	lcall	_FAT16_ROOTENTRY_SCAN
 	mov	r6,dpl
 	pop	ar7
-;	main.c:110: if(_result==0xff) break; //end of scan
+;	main.c:101: if(_result==0xff) break; //end of scan
 	cjne	r6,#0xff,00157$
 	sjmp	00107$
 00157$:
-;	main.c:111: else if (_result==0) //valid file
+;	main.c:102: else if (_result==0) //valid file
 	mov	a,r6
 	jnz	00115$
-;	main.c:113: UartWriteNumber(__global_rootEntry.entry_index,DEC); //print root entry index
+;	main.c:104: UartWriteNumber(__global_rootEntry.entry_index,DEC); //print root entry index
 	mov	r0,#(___global_rootEntry + 0x0012)
 	mov	ar6,@r0
 	push	ar7
@@ -5295,14 +5401,14 @@ _SelectFileAndFileOpen:
 	mov	dpl,r6
 	lcall	_UartWriteNumber
 	dec	sp
-;	main.c:114: UartWrite('\t');
+;	main.c:105: UartWrite('\t');
 	mov	dpl,#0x09
 	lcall	_UartWrite
-;	main.c:115: UartWrite('\t');
+;	main.c:106: UartWrite('\t');
 	mov	dpl,#0x09
 	lcall	_UartWrite
 	pop	ar7
-;	main.c:116: for(uint8_t j=0;j<11;j++)UartWrite(__global_rootEntry.name[j]); //print name
+;	main.c:107: for(uint8_t j=0;j<11;j++)UartWrite(__global_rootEntry.name[j]); //print name
 	mov	r6,#0x00
 00111$:
 	cjne	r6,#0x0b,00159$
@@ -5320,27 +5426,27 @@ _SelectFileAndFileOpen:
 	inc	r6
 	sjmp	00111$
 00101$:
-;	main.c:117: UartWrite('\n');
+;	main.c:108: UartWrite('\n');
 	mov	dpl,#0x0a
 	push	ar7
 	lcall	_UartWrite
 	pop	ar7
 00115$:
-;	main.c:107: for(uint8_t i=0;i<255;i++) 
+;	main.c:98: for(uint8_t i=0;i<255;i++) 
 	inc	r7
 	sjmp	00114$
 00107$:
-;	main.c:121: UartPrint("\nSlct index >\n");
+;	main.c:112: UartPrint("\nSlct index >\n");
 	mov	dptr,#___str_18
 	mov	b,#0x80
 	lcall	_UartPrint
-;	main.c:122: _result=UartScanByte();
+;	main.c:113: _result=UartScanByte();
 	lcall	_UartScanByte
-;	main.c:125: _result=FAT16_ROOTENTRY_READ(_result); //load the selected
+;	main.c:116: _result=FAT16_ROOTENTRY_READ(_result); //load the selected
 	mov	r6,#0x00
 	mov	dph,r6
 	lcall	_FAT16_ROOTENTRY_READ
-;	main.c:126: if(_result!=0) UartPrint("\nInvalid Entry !\n");
+;	main.c:117: if(_result!=0) UartPrint("\nInvalid Entry !\n");
 	mov	a,dpl
 	mov	r7,a
 	jz	00109$
@@ -5350,14 +5456,14 @@ _SelectFileAndFileOpen:
 	lcall	_UartPrint
 	pop	ar7
 00109$:
-;	main.c:127: return _result;
+;	main.c:118: return _result;
 	mov	dpl,r7
-;	main.c:129: }
+;	main.c:120: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'main'
 ;------------------------------------------------------------
-;buff                      Allocated with name '_main_buff_65536_214'
+;buff                      Allocated with name '_main_buff_65536_222'
 ;_resp                     Allocated to registers r7 
 ;xram_addr                 Allocated to registers r6 r7 
 ;_t                        Allocated to registers r5 r6 
@@ -5365,26 +5471,26 @@ _SelectFileAndFileOpen:
 ;i                         Allocated to registers r5 
 ;i                         Allocated to registers r5 
 ;------------------------------------------------------------
-;	main.c:140: void main(void)
+;	main.c:131: void main(void)
 ;	-----------------------------------------
 ;	 function main
 ;	-----------------------------------------
 _main:
-;	main.c:149: uint8_t _resp=0;
+;	main.c:140: uint8_t _resp=0;
 	mov	r7,#0x00
-;	main.c:156: UartBegin();
+;	main.c:147: UartBegin();
 	push	ar7
 	lcall	_UartBegin
-;	main.c:157: spi_init(); 
+;	main.c:148: spi_init(); 
 	lcall	_spi_init
-;	main.c:158: SDinit();
+;	main.c:149: SDinit();
 	lcall	_SDinit
-;	main.c:162: UartPrint("\nSYAMPUTER:V0\n");
+;	main.c:153: UartPrint("\nSYAMPUTER:V0\n");
 	mov	dptr,#___str_20
 	mov	b,#0x80
 	lcall	_UartPrint
 	pop	ar7
-;	main.c:164: while(UartReadReady())UartRead(); //flush
+;	main.c:155: while(UartReadReady())UartRead(); //flush
 00101$:
 	push	ar7
 	lcall	_UartReadReady
@@ -5394,7 +5500,7 @@ _main:
 	push	ar7
 	lcall	_UartRead
 	pop	ar7
-;	main.c:169: for(unsigned int _t=0;_t<65000;_t++)
+;	main.c:160: for(unsigned int _t=0;_t<65000;_t++)
 	sjmp	00101$
 00156$:
 	mov	r5,#0x00
@@ -5406,7 +5512,7 @@ _main:
 	mov	a,r6
 	subb	a,#0xfd
 	jnc	00107$
-;	main.c:171: if(UartReadReady())
+;	main.c:162: if(UartReadReady())
 	push	ar7
 	push	ar6
 	push	ar5
@@ -5416,11 +5522,11 @@ _main:
 	pop	ar6
 	pop	ar7
 	jz	00155$
-;	main.c:173: _resp=UartRead();
+;	main.c:164: _resp=UartRead();
 	lcall	_UartRead
 	mov	r7,dpl
-;	main.c:174: break;
-;	main.c:176: for(uint8_t wastetime=0;wastetime<3;wastetime++);
+;	main.c:165: break;
+;	main.c:167: for(uint8_t wastetime=0;wastetime<3;wastetime++);
 	sjmp	00107$
 00155$:
 	mov	r4,#0x00
@@ -5431,61 +5537,61 @@ _main:
 	inc	r4
 	sjmp	00137$
 00141$:
-;	main.c:169: for(unsigned int _t=0;_t<65000;_t++)
+;	main.c:160: for(unsigned int _t=0;_t<65000;_t++)
 	inc	r5
 	cjne	r5,#0x00,00140$
 	inc	r6
 	sjmp	00140$
 00107$:
-;	main.c:181: switch (_resp)
+;	main.c:172: switch (_resp)
 	cjne	r7,#0x56,00113$
-;	main.c:184: UartPrint("ISA:FS0:8052\n");
+;	main.c:175: UartPrint("ISA:FS0:8052\n");
 	mov	dptr,#___str_21
 	mov	b,#0x80
 	lcall	_UartPrint
-;	main.c:185: while(SL_getcmd()); //break when command is 0
+;	main.c:176: while(SL_getcmd()); //break when command is 0
 00109$:
 	lcall	_SL_getcmd
 	mov	a,dpl
 	jnz	00109$
-;	main.c:189: }
+;	main.c:180: }
 00113$:
-;	main.c:194: SelectFAT16PartitionPrompt();
+;	main.c:185: SelectFAT16PartitionPrompt();
 	lcall	_SelectFAT16PartitionPrompt
-;	main.c:201: if(FAT16_FILE_OPEN(DEFAULT_LOAD_FILENAME)==0)
+;	main.c:192: if(FAT16_FILE_OPEN(DEFAULT_LOAD_FILENAME)==0)
 	mov	dptr,#___str_22
 	mov	b,#0x80
 	lcall	_FAT16_FILE_OPEN
 	mov	a,dpl
 	jnz	00114$
-;	main.c:203: UartPrint(DEFAULT_LOAD_FILENAME);
+;	main.c:194: UartPrint(DEFAULT_LOAD_FILENAME);
 	mov	dptr,#___str_22
 	mov	b,#0x80
 	lcall	_UartPrint
-;	main.c:204: UartWrite('\n');
+;	main.c:195: UartWrite('\n');
 	mov	dpl,#0x0a
 	lcall	_UartWrite
-;	main.c:209: do{}
+;	main.c:200: do{}
 	sjmp	00168$
 00114$:
-;	main.c:210: while(SelectFileAndFileOpen());
+;	main.c:201: while(SelectFileAndFileOpen());
 	lcall	_SelectFileAndFileOpen
 	mov	a,dpl
 	jnz	00114$
-;	main.c:213: while(1)
+;	main.c:204: while(1)
 00168$:
 00131$:
-;	main.c:215: xram_addr=(__xdata unsigned char*)(uint16_t)__global_rootEntry.bytes_read;        
+;	main.c:206: xram_addr=(__xdata unsigned char*)(uint16_t)__global_rootEntry.bytes_read;        
 	mov	r0,#(___global_rootEntry + 0x0014)
 	mov	ar6,@r0
 	inc	r0
 	mov	ar7,@r0
-;	main.c:216: _resp=FAT16_FILE_READ(FILE_BUFF_SIZE,buff);
+;	main.c:207: _resp=FAT16_FILE_READ(FILE_BUFF_SIZE,buff);
 	push	ar7
 	push	ar6
-	mov	a,#_main_buff_65536_214
+	mov	a,#_main_buff_65536_222
 	push	acc
-	mov	a,#(_main_buff_65536_214 >> 8)
+	mov	a,#(_main_buff_65536_222 >> 8)
 	push	acc
 	mov	a,#0x40
 	push	acc
@@ -5497,23 +5603,23 @@ _main:
 	dec	sp
 	pop	ar6
 	pop	ar7
-;	main.c:217: if(_resp==0) 
+;	main.c:208: if(_resp==0) 
 	mov	a,r5
 	jnz	00163$
-;	main.c:219: UartPrint("\n<RUN>\n");
+;	main.c:210: UartPrint("\n<RUN>\n");
 	mov	dptr,#___str_23
 	mov	b,#0x80
 	lcall	_UartPrint
-;	main.c:220: break;
+;	main.c:211: break;
 	ljmp	00132$
-;	main.c:222: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
+;	main.c:213: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
 00163$:
 	mov	r5,#0x00
 00143$:
 	cjne	r5,#0x10,00248$
 00248$:
 	jnc	00121$
-;	main.c:228: *(xram_addr+i) = buff[i];
+;	main.c:219: *(xram_addr+i) = buff[i];
 	mov	a,r5
 	add	a,r6
 	mov	dpl,a
@@ -5521,24 +5627,24 @@ _main:
 	addc	a,r7
 	mov	dph,a
 	mov	a,r5
-	add	a,#_main_buff_65536_214
+	add	a,#_main_buff_65536_222
 	mov	r1,a
 	mov	a,@r1
 	mov	r4,a
 	movx	@dptr,a
-;	main.c:222: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
+;	main.c:213: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
 	inc	r5
 	sjmp	00143$
 00121$:
-;	main.c:232: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
+;	main.c:223: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
 	mov	r5,#0x00
 00146$:
 	cjne	r5,#0x10,00250$
 00250$:
 	jnc	00127$
-;	main.c:234: if(buff[i]!=*(xram_addr+i)) 
+;	main.c:225: if(buff[i]!=*(xram_addr+i)) 
 	mov	a,r5
-	add	a,#_main_buff_65536_214
+	add	a,#_main_buff_65536_222
 	mov	r1,a
 	mov	ar4,@r1
 	mov	a,r5
@@ -5553,19 +5659,19 @@ _main:
 	cjne	a,ar3,00252$
 	sjmp	00147$
 00252$:
-;	main.c:236: UartPrint("\nVerif. fail");
+;	main.c:227: UartPrint("\nVerif. fail");
 	mov	dptr,#___str_24
 	mov	b,#0x80
 	lcall	_UartPrint
-;	main.c:238: while(1);
+;	main.c:229: while(1);
 00123$:
 	sjmp	00123$
 00147$:
-;	main.c:232: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
+;	main.c:223: for(uint8_t i=0;i<FILE_BUFF_SIZE;i++)
 	inc	r5
 	sjmp	00146$
 00127$:
-;	main.c:244: if(__global_rootEntry.bytes_read % 64 == 0)
+;	main.c:235: if(__global_rootEntry.bytes_read % 64 == 0)
 	mov	r0,#(___global_rootEntry + 0x0014)
 	mov	ar4,@r0
 	inc	r0
@@ -5579,16 +5685,16 @@ _main:
 	jz	00254$
 	ljmp	00131$
 00254$:
-;	main.c:247: UartPrintNumber(__global_rootEntry.bytes_read);
+;	main.c:238: UartPrintNumber(__global_rootEntry.bytes_read);
 	mov	dpl,r4
 	mov	dph,r5
 	mov	b,r6
 	mov	a,r7
 	lcall	_UartPrintNumber
-;	main.c:248: UartWrite('/');
+;	main.c:239: UartWrite('/');
 	mov	dpl,#0x2f
 	lcall	_UartWrite
-;	main.c:249: UartPrintNumber(__global_rootEntry.size);
+;	main.c:240: UartPrintNumber(__global_rootEntry.size);
 	mov	r0,#(___global_rootEntry + 0x000e)
 	mov	ar4,@r0
 	inc	r0
@@ -5602,16 +5708,16 @@ _main:
 	mov	b,r6
 	mov	a,r7
 	lcall	_UartPrintNumber
-;	main.c:250: UartWrite('\r');
+;	main.c:241: UartWrite('\r');
 	mov	dpl,#0x0d
 	lcall	_UartWrite
 	ljmp	00131$
 00132$:
-;	main.c:255: SELF_RESET_PORT &= ~(1<<SELF_RESET_PIN);
-	anl	_P1,#0xef
-;	main.c:258: while(1);    
+;	main.c:247: enterApp();
+	lcall	_enterApp
+;	main.c:250: while(1);    
 00134$:
-;	main.c:260: }
+;	main.c:252: }
 	sjmp	00134$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
@@ -5650,7 +5756,7 @@ ___str_5:
 	.ascii "ATTR: 0x"
 	.db 0x00
 	.area CSEG    (CODE)
-_FAT16_FILE_READ_power2error_65536_176:
+_FAT16_FILE_READ_power2error_65536_184:
 	.ascii "nbytes must be power of 2"
 	.db 0x0a
 	.db 0x00
@@ -5665,7 +5771,7 @@ _SERIAL_LOADER_VERSION_INFO:
 	.ascii "ISA:S0:8052"
 	.db 0x0a
 	.db 0x00
-_SelectFAT16PartitionPrompt_HALTING_MSG_65536_195:
+_SelectFAT16PartitionPrompt_HALTING_MSG_65536_203:
 	.ascii "HALT!"
 	.db 0x00
 	.area CONST   (CODE)

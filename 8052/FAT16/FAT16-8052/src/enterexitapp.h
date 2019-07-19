@@ -1,5 +1,5 @@
-#ifndef APP_EXIT
-#define APP_EXIT
+#ifndef APP_ENTER
+#define APP_ENTER
 
 #ifndef RESET_PORT_8052
 #define RESET_PORT_8052 P1
@@ -10,7 +10,7 @@
 #define RESET_PIN_8052	4
 #endif
 
-void exitApp()
+void enterApp()
 {
 	unsigned int x,y;
 
@@ -36,6 +36,11 @@ void exitApp()
 
 
 
+void exitApp()
+{
+
+	RESET_PORT_8052 &= ~(1 << RESET_PIN_8052);
+}
 
 
 #endif

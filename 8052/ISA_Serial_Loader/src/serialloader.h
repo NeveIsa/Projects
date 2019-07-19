@@ -5,14 +5,7 @@
 #error "IMPORT UART.H"
 #endif
 
-#ifndef SELF_RESET_PORT
-#define SELF_RESET_PORT P1
-#endif
-
-#ifndef SELF_RESET_PIN
-#define SELF_RESET_PIN  4
-#endif
-
+#include "enterexitapp.h"
 
 //// GLOBALS ///
 
@@ -136,7 +129,7 @@ unsigned char SL_getcmd()
             SL_enable_write_protection();
             break;
         case 'X': //execute
-            SELF_RESET_PORT &= ~(1<<SELF_RESET_PIN);
+            enterApp();
             break;
         default:
             break;

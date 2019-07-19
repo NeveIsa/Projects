@@ -1,5 +1,5 @@
 #include <8052.h>
-#include "exitapp.h"
+#include "enterexitapp.h"
 #include "delay.h"
 
 
@@ -75,10 +75,11 @@ void UartPrint(unsigned char *p)
 int main()
 {
 	UartBegin(); //init uart
+	UartPrint("Hello World from Syamputer :)\t Press 'X' to exit.\n");
+	
 	while(1)
 	{
 		delayms(100);
-		UartPrint("Hello World from Syamputer :)\t Press 'X' to exit.\n");
 		P1 |= 1<<7;
 		delayms(100);
 		P1 &= ~(1<<7);

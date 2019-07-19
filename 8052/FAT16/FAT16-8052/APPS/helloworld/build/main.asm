@@ -18,6 +18,7 @@
 	.globl _UartBegin
 	.globl _delayms
 	.globl _exitApp
+	.globl _enterApp
 	.globl _TF2
 	.globl _EXF2
 	.globl _RCLK
@@ -368,16 +369,16 @@ __sdcc_program_startup:
 ;--------------------------------------------------------
 	.area CSEG    (CODE)
 ;------------------------------------------------------------
-;Allocation info for local variables in function 'exitApp'
+;Allocation info for local variables in function 'enterApp'
 ;------------------------------------------------------------
 ;x                         Allocated to registers r6 r7 
 ;y                         Allocated to registers r4 r5 
 ;------------------------------------------------------------
-;	exitapp.h:13: void exitApp()
+;	enterexitapp.h:13: void enterApp()
 ;	-----------------------------------------
-;	 function exitApp
+;	 function enterApp
 ;	-----------------------------------------
-_exitApp:
+_enterApp:
 	ar7 = 0x07
 	ar6 = 0x06
 	ar5 = 0x05
@@ -386,7 +387,7 @@ _exitApp:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-;	exitapp.h:21: for(x=0;x<250;x++)for(y=0;y<200;y++); // 250*200*3 = 150,000 ~ 150 ms
+;	enterexitapp.h:21: for(x=0;x<250;x++)for(y=0;y<200;y++); // 250*200*3 = 150,000 ~ 150 ms
 	mov	r6,#0x00
 	mov	r7,#0x00
 00124$:
@@ -410,7 +411,7 @@ _exitApp:
 	mov	a,r7
 	subb	a,#0x00
 	jc	00124$
-;	exitapp.h:22: for(x=0;x<250;x++)for(y=0;y<200;y++); // 250*200*3 = 150,000 ~ 150 ms
+;	enterexitapp.h:22: for(x=0;x<250;x++)for(y=0;y<200;y++); // 250*200*3 = 150,000 ~ 150 ms
 	mov	r6,#0x00
 	mov	r7,#0x00
 00128$:
@@ -434,9 +435,9 @@ _exitApp:
 	mov	a,r7
 	subb	a,#0x00
 	jc	00128$
-;	exitapp.h:25: RESET_PORT_8052 &= ~(1 << RESET_PIN_8052);
+;	enterexitapp.h:25: RESET_PORT_8052 &= ~(1 << RESET_PIN_8052);
 	anl	_P1,#0xef
-;	exitapp.h:28: for(x=0;x<250;x++) for(y=0;y<100;y++); 	// inner for loop takes about 3 cycles,
+;	enterexitapp.h:28: for(x=0;x<250;x++) for(y=0;y<100;y++); 	// inner for loop takes about 3 cycles,
 	mov	r6,#0x00
 	mov	r7,#0x00
 00132$:
@@ -460,9 +461,21 @@ _exitApp:
 	mov	a,r7
 	subb	a,#0x00
 	jc	00132$
-;	exitapp.h:32: RESET_PORT_8052 |= (1 << RESET_PIN_8052);	
+;	enterexitapp.h:32: RESET_PORT_8052 |= (1 << RESET_PIN_8052);	
 	orl	_P1,#0x10
-;	exitapp.h:35: }
+;	enterexitapp.h:35: }
+	ret
+;------------------------------------------------------------
+;Allocation info for local variables in function 'exitApp'
+;------------------------------------------------------------
+;	enterexitapp.h:39: void exitApp()
+;	-----------------------------------------
+;	 function exitApp
+;	-----------------------------------------
+_exitApp:
+;	enterexitapp.h:42: RESET_PORT_8052 &= ~(1 << RESET_PIN_8052);
+	anl	_P1,#0xef
+;	enterexitapp.h:43: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'delayms'
