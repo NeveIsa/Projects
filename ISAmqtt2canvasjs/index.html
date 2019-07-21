@@ -1,0 +1,128 @@
+<!doctype html>
+
+<html lang="en">
+
+	<head>
+	  <meta charset="utf-8">
+
+	  <title>ISA MQTT Plotter</title>
+	  <meta name="description" content="MQTT Plotter">
+	  <meta name="author" content="neveisa">
+
+	  <link rel="stylesheet" href="assets/wing.min.css"/>
+	  <style>
+		body{
+			background-color: #647d79;
+		}
+	  </style>
+
+	</head>
+
+	<body>
+		<p class=' row center'><i>Enter MQTT Connection details</i></p>
+		
+		<form id='mqttform' class='row'>
+			<div class='col'><input required name='mqtthost' type="text" value="localhost" placeholder="MQTT Broker Host"/></div>
+			<div class='col'><input required name='mqttport' type="number" value="9001" placeholder="MQTT Broker Port"/></div>
+			<div class='col'><input required name='mqtttopicbase' type="text" value="hello" placeholder="MQTT Base topic"/></div>
+			<div class='col'><input name='mqttuser' type="text" placeholder="MQTT Auth username"/></div>
+			<div class='col'><input name='mqttpass' type="password" placeholder="MQTT Auth password"/></div>
+		</form>
+	
+		<div class='row'>
+			<div class='col center'><button id='connect_button'>Connect</button></div>
+		</div>
+
+		<div id="afterConnection"></div>
+		
+	</body>
+
+	<script src="assets/cash.min.js"></script>
+	<script src="assets/mqttws31.js"></script>
+	
+	<script>
+		//on page load
+		$(()=>{
+			//$("#select_plot_topic").hide()
+		})
+
+		//can be used to reconnect on connection lost
+		function onConnectionLost(responseObject) {
+			console.log("connection lost: " + responseObject.errorMessage + " | Reloading in 10s.");
+			alert("connection lost: " + responseObject.errorMessage + " | Reloading in 10s.");
+			window.setTimeout(location.reload(),10000); //wait 10seconds before trying to connect again.
+		};
+
+		function connect2broker(host,port,topic,user,pass)
+		{
+			window.TOPICS=[]; //clear all topics
+			$("#afterConnection").html("<hr><div class='col center'><p><i><u>Detected Topics</u></i></p></div></div><div class='row' id='select_plot_topic'></div>"); //clear
+
+			// Create a client instance
+			client_id= "clientId_" + parseInt(Math.random()*1000,10);
+			console.log("ISA -> " + client_id)
+			client = new Paho.MQTT.Client(host, port, client_id);
+
+			// set callback handlers
+			client.onConnectionLost = onConnectionLost;
+			client.onMessageArrived = (message)=>{
+				if(window.TOPICS.includes(message.destinationName)); //pass
+				else 
+				{
+					console.log("topic: "+ message.destinationName);
+					window.TOPICS.push( message.destinationName );
+					$("#select_plot_topic").append("<button class='outline' value='" + message.destinationName +"' onclick='plotHandler(this)'>"+message.destinationName+"</button>")
+					$("#select_plot_topic").show();
+				}
+			}
+			// connect the client
+			client.connect({onSuccess:()=>{
+				console.log("ISA -> MQTT connected");
+				client.subscribe(topic);
+			}});
+		}
+
+		$('#connect_button').on('click',()=>{
+			let mqtthost=$("input[name=mqtthost]").val();
+			let mqttport=Number($("input[name=mqttport]").val());
+			let mqtttopicbase=$("input[name=mqtttopicbase]").val()+"/#";
+			let mqttuser=$("input[name=mqttuser]").val();
+			let mqttpass=$("input[name=mqttpass]").val();
+
+		        	
+
+			if(mqtthost=="" || mqttport=="" || mqtttopicbase=="")
+			{
+				alert("Host, Port and Topics can not be empty !");
+				return false;
+			}
+
+			window.formdata = {"mqtthost":mqtthost,"mqttport":mqttport,"mqtttopicbase":mqtttopicbase,"mqttuser":mqttuser,"mqttpass":mqttpass}
+			localStorage.setItem("mqttform", JSON.stringify(window.formdata));
+			console.log("Stored: " + JSON.stringify(window.formdata))
+			
+			connect2broker(mqtthost,mqttport,mqtttopicbase,mqttuser,mqttpass);
+
+			//window.location.href = "livemqttchart.html"
+
+
+		})
+
+
+	function plotHandler(el)
+	{
+		let topic=$(el).val()
+
+		storageKey = "mqttform_" + parseInt(Math.random()*1000,10);
+		localStorage.setItem(storageKey,JSON.stringify({"formdata":window.formdata,"topic":topic}))
+		console.log("stored: " + localStorage.getItem(storageKey))
+
+		url = "ISAplotCanvasjs.html?key=" + storageKey;
+		
+		var win=window.open(url, '_blank');
+		win.focus();
+	}
+	</script>
+</html>
+
+
