@@ -6,5 +6,6 @@ except:
 def callback(data):
 		print ("Got : ",data)
 
-TOKEN="cbda5b4ec5f249c68683316f8d84a4e3"
+TOKEN=open("token.txt").read().strip()
+print("TOKEN:%s " % TOKEN)
 ISAblynk.setup(TOKEN,callback)

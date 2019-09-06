@@ -6,12 +6,14 @@ class MSGTYPE:
 	PING   = 6
 	BRIDGE = 15
 	HW     = 20
+        CONNECT_REDIRECT = 41
 
 class MSGSTATUS:
 	OK = 200
 
 class blynkDevice:
 	server='blynk-cloud.com'
+	#server='188.166.206.43'
 	port=8442
 	sock=None
 	token=None
@@ -115,11 +117,20 @@ class blynkDevice:
 			self.tx(payload)
 			response = self.rx(5)
 			response=self.deframe(response)
+                        if response[0]==MSGTYPE.CONNECT_REDIRECT:
+                            print "CONNECT_REDIRECT command received..."
+                            length_of_msg = response[2]
+                            msg=self.rx(length_of_msg)
+                            new_ip,new_port = msg.split("\0")
+                            print new_ip,new_port
+                            input()
+
 			if response[-1]==MSGSTATUS.OK:
 				print "Authenticated..."
 				self.connected=True
 			else:
 				print "Authentication failed"
+                                print "response ->",response
 				self.connected=False
 
 		except Exception as e:
@@ -220,7 +231,7 @@ if __name__=="__main__":
 	def callback(data):
 		print "Got : ",data
 
-	TOKEN="cbda5b4ec5f249c68683316f8d84a4e3"
+	TOKEN="QYKQ0B9a3yPl4w_Q_fsz2G8lPSX65-9W"
 	setup(TOKEN,callback)
 	
 
