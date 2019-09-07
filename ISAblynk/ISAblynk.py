@@ -15,11 +15,15 @@ class blynkDevice:
 	server='blynk-cloud.com'
 	#server='188.166.206.43'
 	port=8442
+	#port=80
 	sock=None
 	token=None
 	msgID=0
 
 	connected=False
+        
+        def __init__(self,token):
+            self.token = token
 
 	def connect(self):
 		self.msgID=0
@@ -105,37 +109,41 @@ class blynkDevice:
 		return response,data
 
 
-	def auth(self,token=False):
-		if not token:
-			token = self.token
-		else:
-			self.token = token
+	def auth(self):
 
-		payload=self.frame(MSGTYPE.LOGIN,token)
+		payload=self.frame(MSGTYPE.LOGIN,self.token)
 
 		try:
 			self.tx(payload)
 			response = self.rx(5)
 			response=self.deframe(response)
+                        
                         if response[0]==MSGTYPE.CONNECT_REDIRECT:
                             print "CONNECT_REDIRECT command received..."
                             length_of_msg = response[2]
                             msg=self.rx(length_of_msg)
                             new_ip,new_port = msg.split("\0")
-                            print new_ip,new_port
-                            input()
+                            print "=== New IP : new Port -> %s : %s ===" % (new_ip,new_port)
+                            
+                            self.server,self.port = new_ip,new_port #update with new IP and Port
+                            print "New IP and Port set. Next attempt to connect will use new settings..."
+                            self.connected=False
+                            return False
 
 			if response[-1]==MSGSTATUS.OK:
 				print "Authenticated..."
 				self.connected=True
+                                return True
 			else:
 				print "Authentication failed"
                                 print "response ->",response
 				self.connected=False
+                                return False
 
 		except Exception as e:
 			print "Auth exception",e
 			self.connected=False
+                        return False
 
 	def ping(self):
 		payload = self.frame(MSGTYPE.PING,"")
@@ -204,10 +212,13 @@ class blynkDevice:
 
 
 def setup(token,callback=None):
-	dev = blynkDevice()
+	dev = blynkDevice(token)
 	dev.connect()
-	dev.auth(token)
+        while not dev.auth():
+            dev.connect()
 	dev.ping()
+
+        print "Delegating to 'manage' method..."
 	
 	def myprint(x):
 		if callback:

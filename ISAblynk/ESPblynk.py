@@ -3,14 +3,16 @@ import time
 try:
 	import usocket as socket
 except:
+	print("usocket not found. Importing socket")
 	import socket
 
 class MSGTYPE:
-	RSP    = 0
-	LOGIN  = 2
-	PING   = 6
-	BRIDGE = 15
-	HW     = 20
+	RSP                 = 0
+	LOGIN               = 2
+	PING                = 6
+	BRIDGE              = 15
+	HW                  = 20
+	CONNECT_REDIRECT    = 41
 
 class MSGSTATUS:
 	OK = 200
@@ -23,6 +25,8 @@ class blynkDevice:
 	msgID=0
 
 	connected=False
+	def __init__(self,token):
+		self.token = token
 
 	def connect(self):
 		self.msgID=0
@@ -77,7 +81,7 @@ class blynkDevice:
 		try:
 			self.sock.sendall(payload)
 		except Exception as e:
-			print (e)
+			print ("-> tx:",e)
 			self.connected=False
 
 	def rx(self,length):
@@ -115,29 +119,39 @@ class blynkDevice:
 		return response,data
 
 
-	def auth(self,token=False):
-		if not token:
-			token = self.token
-		else:
-			self.token = token
+	def auth(self):
 
-		payload=self.frame(MSGTYPE.LOGIN,token)
+		payload=self.frame(MSGTYPE.LOGIN,self.token)
 
 		try:
 			self.tx(payload)
 			response = self.rx(5)
 			#return response
 			response=self.deframe(response)
+			if response[0]==MSGTYPE.CONNECT_REDIRECT:
+				print ("CONNECT_REDIRECT command received...")
+				length_of_msg = response[2]
+				msg=self.rx(length_of_msg)
+				new_ip,new_port = msg.split("\0")
+				print ("=== New IP : new Port -> %s : %s ===" % (new_ip,new_port))
+				self.server,self.port = new_ip,new_port #update with new IP and Port
+				print ("New IP and Port set. Next attempt to connect will use new settings...")
+				self.connected=False
+				return False
+
 			if response[-1]==MSGSTATUS.OK:
 				print ("Authenticated...")
 				self.connected=True
+				return True
 			else:
 				print ("Authentication failed")
 				self.connected=False
+				return False
 
 		except Exception as e:
 			print ("Auth exception",e)
 			self.connected=False
+			return False
 
 	def ping(self):
 		payload = self.frame(MSGTYPE.PING,"")
@@ -180,7 +194,7 @@ class blynkDevice:
 				else:
 					self.ping()
 					return False
-					
+
 				if response[0]==MSGTYPE.HW or response[0]==MSGTYPE.BRIDGE:
 					pass
 				else:
@@ -203,14 +217,14 @@ class blynkDevice:
 		except Exception as e:
 			print ("Exception in manage",e)
 
-
-
 def setup(token,callback=None):
-	dev = blynkDevice()
+	dev = blynkDevice(token)
 	dev.connect()
-	dev.auth(token)
+	while not dev.auth():
+		dev.connect()
 	dev.ping()
-	
+	print ("Delegating to 'manage' method...")
+
 	def myprint(x):
 		if callback:
 			callback(x)
@@ -235,10 +249,4 @@ if __name__=="__main__":
 
 	TOKEN="cbda5b4ec5f249c68683316f8d84a4e3"
 	setup(TOKEN,callback)
-	
-
-
-
-	
-
 
