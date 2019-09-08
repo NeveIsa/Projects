@@ -58,7 +58,7 @@ glow(250,100,150)
 
 import network
 wlan=network.WLAN()
-wlan.connect("Kalyani4","tp001998")
+wlan.connect("USC Guest Wireless")
 
 wait_count=30 #seconds
 
@@ -91,5 +91,5 @@ else:
 
 
 
-TOKEN="cbda5b4ec5f249c68683316f8d84a4e3"
+TOKEN=open("token.txt").read()"
 ISAblynk.setup(TOKEN,callback)

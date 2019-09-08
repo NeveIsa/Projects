@@ -10,6 +10,7 @@ class MSGTYPE:
 
 class MSGSTATUS:
 	OK = 200
+        INVALID_TOKEN=9
 
 class blynkDevice:
 	server='blynk-cloud.com'
@@ -129,6 +130,9 @@ class blynkDevice:
                             print "New IP and Port set. Next attempt to connect will use new settings..."
                             self.connected=False
                             return False
+                        if response[-1]==MSGSTATUS.INVALID_TOKEN:
+                            print("Invalid TOKEN: %s" % self.token)
+                            exit()
 
 			if response[-1]==MSGSTATUS.OK:
 				print "Authenticated..."

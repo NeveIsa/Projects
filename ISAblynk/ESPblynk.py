@@ -16,10 +16,13 @@ class MSGTYPE:
 
 class MSGSTATUS:
 	OK = 200
+	INVALID_TOKEN = 9
 
 class blynkDevice:
 	server='blynk-cloud.com'
 	port=8442
+	port=80
+	server='188.166.206.43'
 	sock=None
 	token=None
 	msgID=0
@@ -61,7 +64,7 @@ class blynkDevice:
 		payload = chr(msgtype) + chr(int(msgID/256)) + chr(msgID%256) + chr(int(msglen/256)) + chr(msglen%256)
 		payload = payload + msg
 		#print payload
-		return payload
+		return payload.encode()
 
 	def deframe(self,payload):
 		if len(payload)<5:
@@ -139,6 +142,9 @@ class blynkDevice:
 				self.connected=False
 				return False
 
+			if response[-1]==MSGSTATUS.INVALID_TOKEN:
+				print("Invalid TOKEN: %s" % self.token)
+				exit()
 			if response[-1]==MSGSTATUS.OK:
 				print ("Authenticated...")
 				self.connected=True
@@ -247,6 +253,6 @@ if __name__=="__main__":
 	def callback(data):
 		print ("Got : ",data)
 
-	TOKEN="cbda5b4ec5f249c68683316f8d84a4e3"
+	TOKEN="QYKQ0B9a3yPl4w_Q_fsz2G8lPSX65-9W"
 	setup(TOKEN,callback)
 
