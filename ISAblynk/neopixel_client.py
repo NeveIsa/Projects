@@ -91,5 +91,5 @@ else:
 
 
 
-TOKEN=open("token.txt").read()"
+TOKEN=open("token.txt").read()
 ISAblynk.setup(TOKEN,callback)
