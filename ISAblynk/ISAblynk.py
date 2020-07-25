@@ -1,4 +1,4 @@
-import socket,time
+import socket,time,sys
 
 class MSGTYPE:
 	RSP    = 0
@@ -53,7 +53,8 @@ class blynkDevice:
 			self.msgID = self.msgID+1
 			msgID=self.msgID
 		msglen = len(msg)
-		payload = chr(msgtype) + chr(msgID/256) + chr(msgID%256) + chr(msglen/256) + chr(msglen%256)
+		#print(f"msgtype:{msgtype} | msgID:{msgID} | msg:{msg}")
+		payload = chr(msgtype) + chr(msgID//256) + chr(msgID%256) + chr(msglen//256) + chr(msglen%256)
 		payload = payload + msg
 		#print payload
 		return payload
@@ -63,28 +64,30 @@ class blynkDevice:
 			print ("deframe payload header is less than 5 bytes..error")
 			return (0,0,0)
 		try:
-			msgtype=ord(payload[0])
-			msgID=ord(payload[1])*256 + ord(payload[2])
-			msglen=ord(payload[3])*256 + ord(payload[4])
+			msgtype=payload[0]
+			msgID=payload[1]*256 + payload[2]
+			msglen=payload[3]*256 + payload[4]
 			return (msgtype,msgID,msglen)
 		except Exception as e:
-			print ("deframe exception",e)
+			print ("deframe exception ->",e)
 			return (0,0,0)
 
 
 	def tx(self,payload):
 		try:
-			self.sock.sendall(payload)
+			self.sock.sendall(payload.encode())
 		except Exception as e:
-			print (e)
+			print ("exception in tx ->",e)
 			self.connected=False
 
 	def rx(self,length):
-		rcv = ""
+		rcv = b""
 		l=0
 		try:
 			while True:
 				r = self.sock.recv(length-l)
+				#print(type(r))
+				#print(r+r)
 				rcv = rcv + r
 				l = len(rcv)
 				if l<length:
@@ -92,11 +95,12 @@ class blynkDevice:
 				else:
 					break
 		except socket.timeout:
-			rcv=""
+			rcv=b""
 		except Exception as e:
-			print ("rx exception",e)
-			rcv=""
+			print ("rx exception ->",e)
+			rcv=b""
 			self.connected=False
+		#print(rcv)
 		return rcv
 
 	def rxFrame(self):
@@ -161,8 +165,11 @@ class blynkDevice:
 
 
 	def unpack_command(self,cmd):
-		#print cmd
-		cmd = cmd.split('\0') #split into
+		#print (cmd)
+		#print(len(cmd))
+		#print(cmd[0],cmd[1],cmd[2],cmd[3])
+		cmd=cmd.decode("ascii")
+		cmd = cmd.split("\0") #split into
 		pinCmdType=cmd.pop(0)
 		if pinCmdType=="pm":
 			pass # no values to pop if 'pm' command
@@ -209,7 +216,8 @@ class blynkDevice:
 					return False
 
 		except Exception as e:
-			print ("Exception in manage",e)
+			print ("Exception in manage ->",e)
+			print("Error on line {}".format(sys.exc_info()[-1].tb_lineno))
 
 
 

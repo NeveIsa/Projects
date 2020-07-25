@@ -106,7 +106,7 @@ class blynkDevice:
 			rcv=""
 			print ('---> OSError => socket.timeout for micropython (no worries)')
 		except Exception as e:
-			print ("rx exception",e)
+			print ("rx exception -> ",e)
 			rcv=""
 			self.connected=False
 		return rcv
