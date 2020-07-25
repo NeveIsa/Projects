@@ -252,7 +252,7 @@ if __name__=="__main__":
 
 	def callback(data):
 		print ("Got : ",data)
-
-	TOKEN=open("token.txt").read()
+        import ujson
+	TOKEN=ujson.load(open("token.txt").read())
 	setup(TOKEN,callback)
 
