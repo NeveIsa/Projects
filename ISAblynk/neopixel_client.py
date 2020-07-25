@@ -56,9 +56,14 @@ glow(0,0,0)
 # Wait for wifi
 glow(250,100,150)
 
-import network
-wlan=network.WLAN()
-wlan.connect("USC Guest Wireless")
+import network,ujson
+with open("config.json") as f:
+  config=ujson.loads(f.read())
+
+
+wlan=network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(config["AP_NAME"],config["AP_PASS"])
 
 wait_count=30 #seconds
 
@@ -91,5 +96,5 @@ else:
 
 
 
-TOKEN=open("token.txt").read()
+TOKEN=config["TOKEN"]
 ISAblynk.setup(TOKEN,callback)

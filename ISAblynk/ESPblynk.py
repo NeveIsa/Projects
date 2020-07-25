@@ -253,6 +253,6 @@ if __name__=="__main__":
 	def callback(data):
 		print ("Got : ",data)
 
-	TOKEN="QYKQ0B9a3yPl4w_Q_fsz2G8lPSX65-9W"
+	TOKEN=open("token.txt").read()
 	setup(TOKEN,callback)
 
