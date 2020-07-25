@@ -56,45 +56,12 @@ glow(0,0,0)
 # Wait for wifi
 glow(250,100,150)
 
-import network,ujson
-with open("config.json") as f:
-  config=ujson.loads(f.read())
 
-
-wlan=network.WLAN(network.STA_IF)
-wlan.active(True)
-wlan.connect(config["AP_NAME"],config["AP_PASS"])
-
-wait_count=30 #seconds
-
-while not wlan.isconnected():
-  time.sleep_ms(1000)
-  wait_count-=1
-  if not wait_count:break
+glow(0,0,100)
+time.sleep_ms(700)
+glow(250,100,150)
 
 
 
-#Attempt to connect to ISA
-
-
-if not wlan.isconnected():
-  glow(100,0,0)
-  time.sleep_ms(700)
-  glow(250,100,150)
-
-  wlan.connect("isa","infinity")
-
-  #wait forever
-  while not wlan.isconnected():
-    pass
-
-
-else:
-  glow(0,0,100)
-  time.sleep_ms(700)
-  glow(250,100,150)
-
-
-
-TOKEN=config["TOKEN"]
+TOKEN=join_network.config["TOKEN"]
 ISAblynk.setup(TOKEN,callback)

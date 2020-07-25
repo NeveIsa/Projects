@@ -1,9 +1,11 @@
 require 'rest-client'
-
+require 'json'
 
 # get cmdline args
 cmd,pin,value=ARGV
-auth_token=File.read("../token.txt").chop
+jsonconfig=File.read("../config.json").chop
+config = JSON.parse(jsonconfig)
+auth_token = config["TOKEN"]
 puts "TOKEN: #{auth_token}"
 
 urlBase="http://blynk-cloud.com/#{auth_token}"

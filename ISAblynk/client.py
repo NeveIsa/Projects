@@ -6,6 +6,14 @@ except:
 def callback(data):
 		print ("Got : ",data)
 
-TOKEN=open("token.txt").read().strip()
+
+
+import json
+
+with open("config.json") as f:
+	conf = json.loads(f.read().strip())
+
+TOKEN = conf["TOKEN"]
+
 print("TOKEN:%s " % TOKEN)
 ISAblynk.setup(TOKEN,callback)

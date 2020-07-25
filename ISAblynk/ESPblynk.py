@@ -44,7 +44,7 @@ class blynkDevice:
 				self.sock.settimeout(5)
 				self.sock.connect(socket.getaddrinfo(self.server,self.port)[0][-1])
 			except:
-				print("Failed to create new socket...")
+				print("exception in connect -> Failed to create new socket...")
 			if self.sock:
 				print ("Connected...")
 				return True
