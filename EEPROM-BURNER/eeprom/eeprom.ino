@@ -37,14 +37,14 @@ void setup_data_pins_out()
 
 void setup_data_pins_in()
 {
-  pinMode(2,INPUT);
-  pinMode(3,INPUT);
-  pinMode(4,INPUT);
-  pinMode(5,INPUT);
-  pinMode(6,INPUT);
-  pinMode(7,INPUT);
-  pinMode(8,INPUT);
-  pinMode(9,INPUT);
+  pinMode(2,INPUT_PULLUP);
+  pinMode(3,INPUT_PULLUP);
+  pinMode(4,INPUT_PULLUP);
+  pinMode(5,INPUT_PULLUP);
+  pinMode(6,INPUT_PULLUP);
+  pinMode(7,INPUT_PULLUP);
+  pinMode(8,INPUT_PULLUP);
+  pinMode(9,INPUT_PULLUP);
 
 }
 
