@@ -1,0 +1,69 @@
+ÿxt2html/HTML::TextToHTML Sample Conversion
+
+This sample is based hugely on the original sample.txt produced
+by Seth Golub for txt2html.
+
+I used the following options to convert this document:
+
+     -titlefirst -mailmode -make_tables
+     --custom_heading_regexp '^ *--[\w\s]+-- *$'
+     --system_link_dict txt2html.dict
+     --append_body sample.foot --infile sample.txt --outfile sample.html
+
+This has either been done at the command line with:
+
+	perl -MHTML::TextToHTML -e run_txt2html -- *options*
+
+or using the script
+
+	txt2html *options*
+
+or from a (test) perl script with:
+	
+	use HTML::TextToHTML;
+	my $conv = new HTML::TextToHTML();
+	$conv->txt2html([*options*]);
+
+======================================================================
+
+From bozo@clown.wustl.edu
+Return-Path: <bozo@clown.wustl.edu>
+Message-Id: <9405102200.AA04736@clown.wustl.edu>
+Content-Length: 1070
+From: bozo@clown.wustl.edu (Bozo the Clown)
+To: kitty@example.com (Kathryn Andersen)
+Subject: Re: HTML::TextToHTML
+Date: Sun, 12 May 2002 10:01:10 -0500
+
+Bozo wrote:
+BtC> Can you post an example text file with its html'ed output?
+BtC> That would provide a much better first glance at what it does
+BtC> without having to look through and see what the perl code does.
+
+Good idea.  I'll write something up.
+
+       -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+The header lines were kept separate because they looked like mail
+headers and I have mailmode on.  The same thing applies to Bozo's
+quoted text.  Mailmode doesn't screw things up very often, but since
+most people are usually converting non-mail, it's off by default.
+
+Paragraphs are handled ok.  In fact, this one is here just to
+demonstrate that.
+
+THIS LINE IS VERY IMPORTANT!
+(Ok, it wasn't *that* important)
+
+
+EXAMPLE HEADER
+==============
+
+Since this is the first header noticed (all caps, underlined with an
+"="), it will be a level 1 header.  It gets an anchor named
+"section_1".
+
+Another example
+===============
+This is the second type of header (not all caps, underlined with "=").
+It gets an ancho

@@ -32,7 +32,7 @@ time.sleep(1)
 ser.read(ser.inWaiting())
 time.sleep(1)
 
-_delay = 0.0001
+_delay = 0.001
 
 
 def BLgetVersion():
@@ -71,7 +71,7 @@ def BLwrite(addr, data):
 
     cmd = b"W" + bytes([addrMSB, addrLSB, data])
     ser.write(cmd)
-    # time.sleep(_delay)
+    time.sleep(_delay)
 
     # listen for W reply
     if ser.read().decode() == "W":
@@ -86,7 +86,7 @@ def BLread(addr):
 
     cmd = b"R" + bytes([addrMSB, addrLSB])
     ser.write(cmd)
-    # time.sleep(_delay)
+    #time.sleep(_delay)
 
     data = ord(ser.read())
     # print(addrMSB,addrLSB,data,"\t",chr(data))
@@ -231,8 +231,12 @@ if __name__ == "__main__":
         if EEPROM_WRITE_PROTECTION:
             BLenableEEPROMWriteProtection()
         else:
-            if not BLdisableEEPROMWriteProtection():
+            good = BLdisableEEPROMWriteProtection()
+            if not good:
                 exit(0)
+
+        # this sleep maybe critical after disabling write protection
+        time.sleep(0.1)
 
         burnImage(filename)
         verifyImage(filename)
