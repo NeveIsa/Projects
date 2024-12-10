@@ -1,4 +1,3 @@
-volatile unsigned char EEP_WRITE_PROTECTION=1;
 
 
 void setup_addr_pins()
@@ -178,32 +177,16 @@ unsigned char get_data()
 
 unsigned char EEPread(unsigned int addr)
 {
+  //The AT28C64B is accessed like a Static RAM. When CE and OE are low and WE is high, the data stored at the memory location determined by the address pins are asserted on the outputs. The outputs are put in the high-impedance state when either CE or OE is high. This dual-line control gives designers flexibility in preventing bus contention in their system.
+
+    WEhigh(); //just to be sure WE is high
+    
     unsigned char data;
-
     setup_data_pins_in();
-    
-    WEhigh();
-    //delayMicroseconds(10);
-    
     put_addr(addr);
-    //delayMicroseconds(10);
-    
-    CElow();
-    //delayMicroseconds(10);
-    
     OElow();
-    //delayMicroseconds(1);
-
-    
     data = get_data();
-    //delayMicroseconds(10);
-    
-
     OEhigh();
-    CEhigh();
-
-    //delayMicroseconds(10);
-
     return data;
     
 }
@@ -211,69 +194,17 @@ unsigned char EEPread(unsigned int addr)
 
 void EEPwrite(unsigned int addr, unsigned char data)
 {
+  //A low pulse on the WE or CE input with CE or WE low (respectively) and OE high initiates a write cycle. The address is latched on the falling edge of CE or WE, whichever occurs last. The data is latched by the first rising edge of CE or WE. Once a byte write is started, it will automatically time itself to completion. Once a programming operation is initiated and for the duration of tWC, a read operation will effectively be a polling operation.
 
-  put_addr(addr);
-  //delayMicroseconds(10);
-
+  OEhigh(); //just making sure OE is high
   
-  OEhigh();
-  CElow();
+  put_addr(addr); 
   setup_data_pins_out();
-  //delayMicroseconds(10);
-
-  WElow();
-  //delayMicroseconds(10);
-
   put_data(data);
-
+  WElow();
   WEhigh();
-  //delayMicroseconds(10);
-
-  CEhigh();
-
-  
-  //OElow();
-
-
-  //delayMicroseconds(250);
-  
+  delay(1); // datasheet says takes 1ms for write cycle to complete
 }
-
-void EEPwriteWithProtection(unsigned int addr,unsigned char data)
-{
-  EEPwrite(0x1555,0xAA);
-  EEPwrite(0x0AAA,0x55);
-  EEPwrite(0x1555,0xA0);
-
-  EEPwrite(addr,data);
-
-
-  delay(3); //maximum page write cycle time is 10ms according to DataSheet, we are optimistic that it will be done in 3ms
-}
-
-void EEPdisableWriteProtection()
-{
-  EEPwrite(0x1555,0xAA);
-  EEPwrite(0x0AAA,0x55);
-  EEPwrite(0x1555,0x80);
-  
-  EEPwrite(0x1555,0xAA);
-  EEPwrite(0x0AAA,0x55);
-  EEPwrite(0x1555,0x20);
-  delay(3);
-
-  EEP_WRITE_PROTECTION=0;
-  Serial.write('D');
-}
-
-void EEPenableWriteProtection()
-{
-  EEP_WRITE_PROTECTION=1;
-  Serial.write('E');
-}
-
-///////////////////////////////////// EEPROM METHODS //////////////////////////////////////////
-
 
 //////////////////////////////////// SERIAL BOOTLOADER HELPERS ///////////////////////////////
 
@@ -299,15 +230,7 @@ void BLwriteByte()
 
   data=Serial.read();
 
-  if(EEP_WRITE_PROTECTION)
-  {
-    EEPwriteWithProtection(addr,data);
-  }
-  else
-  {
-    EEPwrite(addr,data);
-    delay(3);
-  }
+  EEPwrite(addr,data);
   
   Serial.write("W");
 
@@ -339,14 +262,13 @@ void BLreadByte()
 
 void BLversion()
 {
-  Serial.println("28C64:V0.0");
+  Serial.println("KONARK_BURNER:V0.1");
 }
 
 unsigned char BLgetcmd()
 {
-  while(Serial.available())Serial.read();//flush
   while(!Serial.available());
-  delayMicroseconds(500); // at 460800 baud, each byte is incoming at about 25us, hence for 3-4 bytes, we just need 100us
+  //delayMicroseconds(500); // at 460800 baud, each byte is incoming at about 25us, hence for 3-4 bytes, we just need 100us
 
   unsigned char cmd = Serial.read();
 
@@ -359,10 +281,10 @@ unsigned char BLgetcmd()
       BLreadByte();
       break;
     case 'D':
-      EEPdisableWriteProtection();
+      CEhigh();
       break;
     case 'E':
-      EEPenableWriteProtection();
+      CElow();
       break;
     case 'V':
       BLversion();
@@ -387,20 +309,11 @@ void setup() {
   delay(100);
 
   Serial.begin(460800);
+  while(Serial.available())Serial.read();//flush
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-
-/*for(unsigned int addr=0;addr<60;addr++)
-  {
-    EEPwriteWithProtection(addr,addr + 90);
-  }
-*/
-
-
-  
- 
  while(1)
  {
   BLgetcmd();

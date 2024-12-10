@@ -221,7 +221,7 @@ Examples of Tables
 ------------------
 
 ALIGN
-~~~~~
+
 
 Here is a simple ALIGN table:
 
@@ -240,64 +240,4 @@ Here are some of the conditions of ALIGN tables:
 #Cell Size:#  If you have more than one line (as just above) then
               you will simply get empty cells where the other column is empty.
 #Alignment:#  Alignment of cells is attempted to be preserved.
-
-BORDER
-~~~~~~
-
-This is a table with a border.
-
-	+---------+-----+
-	| Food    | Qty |
-	+---------+-----+
-	| Bread   |   1 |
-	| Milk    |   1 |
-	| Oranges |   3 |
-	| Apples  |   6 |
-	+---------+-----+
-
-PGSQL
-~~~~~~
-
-This is the same table like Postgresql would make it.
-
-	 Food    | Qty 
-	---------+-----
-	 Bread   |   1 
-	 Milk    |   1 
-	 Oranges |   3 
-	 Apples  |   6 
-	(4 rows)
-
-DELIM
-~~~~~
-
-A delimited table needs to have its delimiters at the start and end,
-just to be sure that this is a table.
-
-:Fred:Nurk:58:
-:George:Washington:62:
-:Mary:Quant:35:
-
-And one can have almost any delimiter one wishes.
-
-| Darcy, Fitzwilliam | hero    |
-| Bennet, Elizabeth  | heroine |
-| Wickham, George    | villain |
-
-THINGS TO DO
-============
-
-There are some things which this module doesn't handle yet which
-I would like to implement.
-
-A. I would like to be able to preserve lettered lists, that is:
-   a) recognise that they are letters and not numbers (which it already
-      does)
-   b) display the correct OL properties with CSS so as to preserve
-      that information.
-
-----------------------------------------
-
-The footer is everything from the end of this sentence to the
-</BODY> tag.
 

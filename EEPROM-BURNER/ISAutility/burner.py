@@ -3,10 +3,22 @@ import time
 import sys
 import platform
 import serial.tools.list_ports
+from dataclasses import dataclass
+
+
+@dataclass
+class AT28C64:
+    disableseq = zip(
+        [0x1555, 0x0AAA, 0x1555, 0x1555, 0x0AAA, 0x1555],
+        [0xAA, 0x55, 0x80, 0xAA, 0x55, 0x20],
+    )
+
+    enableseq = zip([0x1555, 0x0AAA, 0x1555], [0xAA, 0x55, 0xA0])
+
 
 print("ISA EEPROM UTILITY - V0.1")
 
-if platform.system() == "Windows":
+if platform.system() in ["Linux", "Windows"]:
     _ports = serial.tools.list_ports.comports()
 else:
     pass
@@ -20,17 +32,15 @@ else:
     print("Available Serial Ports:")
     for i in range(len(_ports)):
         print("{} : {}".format(i, _ports[i].device))
-    print("Select Serial Port No. (", ",".join(map(str, range(len(_ports)))), "):")
+    print("Select Serial Port No. : ", end="")
     port = _ports[int(input())].device
 
-# baud=4800#460800
 baud = 460800
 tout = 3  # secs
 print("Opening > port:", port, "baudrate:", baud, "timeout:", tout)
 ser = serial.Serial(port, baudrate=baud, timeout=3)
-time.sleep(1)
 ser.read(ser.inWaiting())
-time.sleep(1)
+time.sleep(0.5)
 
 _delay = 0.001
 
@@ -42,32 +52,41 @@ def BLgetVersion():
     return ser.readline().decode().strip()
 
 
-def BLdisableEEPROMWriteProtection():
-    ser.read(ser.inWaiting())
-    ser.write(b"D")
-    time.sleep(_delay * 5)
-    print("Disabling EEPROM write protection: ", end="")
-    success = ser.read().decode() == "D"
-    print("Done" if success else "Failed")
-    return success
-
-
-def BLenableEEPROMWriteProtection():
+def BLdisableEEPROMWriteProtection(EEPROM):
     ser.read(ser.inWaiting())
     ser.write(b"E")
     time.sleep(_delay * 5)
-    print("Enabling EEPROM write protection: ", end="")
-    success = ser.read().decode() == "E"
-    print("Done" if success else "Failed")
-    return success
+    for a, d in EEPROM.disableseq:
+        BLwrite(a, d, swp=False, EEPROM=EEPROM)
+    time.sleep(_delay * 5)
+    ser.write(b"D")
+    print("Disabled EEPROM software write protection")
+    return True
 
 
-def BLwrite(addr, data):
+def BLenableEEPROMWriteProtection(EEPROM):
+    ser.read(ser.inWaiting())
+    ser.write(b"E")
+    time.sleep(_delay * 5)
+    for a, d in EEPROM.enableseq:
+        BLwrite(a, d, swp=False, EEPROM=EEPROM)
+    time.sleep(_delay * 5)
+    ser.write(b"D")
+    print("Enabled EEPROM write protection")
+    return True
+
+
+def BLwrite(addr, data, swp, EEPROM):
     ser.read(ser.inWaiting())  # flush
 
     addrMSB = addr >> 8 & 0xFF
     addrLSB = addr & 0xFF
     # print(addrMSB,addrLSB,data,"\t",chr(data))
+
+    # SDP sequence
+    if swp == True:
+        for d, a in EEPROM.enableseq:
+            BLwrite(a, d, swp=False, EEPROM=EEPROM)
 
     cmd = b"W" + bytes([addrMSB, addrLSB, data])
     ser.write(cmd)
@@ -86,7 +105,7 @@ def BLread(addr):
 
     cmd = b"R" + bytes([addrMSB, addrLSB])
     ser.write(cmd)
-    #time.sleep(_delay)
+    # time.sleep(_delay)
 
     data = ord(ser.read())
     # print(addrMSB,addrLSB,data,"\t",chr(data))
@@ -97,19 +116,22 @@ def BLread(addr):
 ########################### HIGH LEVEL METHODS #############################
 
 
-def burnImage(filename):
+def burnImage(filename, swp, EEPROM):
     print("\n\nBurning...")
+    ser.write(b"E")
     with open(filename, "rb") as f:
         fileInBinary = f.read()
     fsize = len(fileInBinary)
+    # print(f"Will write {fsize} bytes")
+    # time.sleep(1)
     for indx in range(fsize):
-        BLwrite(indx, fileInBinary[indx])
-        pbar = int((indx + 1) * 100 / fsize)
+        BLwrite(indx, fileInBinary[indx], swp=swp, EEPROM=EEPROM)
+        pbar = int((indx + 1) * 50 / fsize)
         print(
             "\r",
             "[",
             "#" * pbar,
-            " " * (100 - pbar),
+            " " * (50 - pbar),
             "] [",
             indx + 1,
             "/",
@@ -118,22 +140,25 @@ def burnImage(filename):
             end="",
         )
 
+    ser.write(b"D")
+
 
 def verifyImage(filename):
     print("\n\nVerifying...")
     time.sleep(0.5)
+    ser.write(b"E")
     with open(filename, "rb") as f:
         fileInBinary = f.read()
     fsize = len(fileInBinary)
     for indx in range(fsize):
         r = BLread(indx)
         if r == fileInBinary[indx]:
-            pbar = int((indx + 1) * 100 / fsize)
+            pbar = int((indx + 1) * 50 / fsize)
             print(
                 "\r",
                 "[",
                 "#" * pbar,
-                " " * (100 - pbar),
+                " " * (50 - pbar),
                 "] [",
                 indx + 1,
                 "/",
@@ -168,26 +193,28 @@ def verifyImage(filename):
                 print("-----" * 15)
             break
     print("")
+    ser.write(b"D")
 
 
 def dumpImage(filename):
     print("\n\nDumping...")
-    eepsizes = [2**x for x in range(1, 6)]
+    eepsizes = [2**x for x in range(0, 7)]
     for enum, esize in enumerate(eepsizes):
         print(f"id:{enum} {esize}k")
     eepsize = eepsizes[int(input("select eeprom size (by id number): "))] * 1024
 
+    ser.write(b"E")
     with open(filename, "wb") as g:
         for addr in range(eepsize):
             b = BLread(addr)
             g.write(bytes([b]))
 
-            pbar = int((addr + 1) * 100 / eepsize)
+            pbar = int((addr + 1) * 50 / eepsize)
             print(
                 "\r",
                 "[",
                 "#" * pbar,
-                " " * (100 - pbar),
+                " " * (50 - pbar),
                 "] [",
                 addr + 1,
                 "/",
@@ -196,28 +223,32 @@ def dumpImage(filename):
                 end="",
             )
 
+    ser.write(b"D")
+
 
 ########################### HIGH LEVEL METHODS #############################
 
 if __name__ == "__main__":
     time.sleep(1)
-    print("\nFW-VERSION:", BLgetVersion())
+    print("\nFW-VERSION:", BLgetVersion(),'\n'*2)
+    CHIPS = [AT28C64]
+
     usage = (
         "\nUSAGE:\n\tpython3 "
         + sys.argv[0]
-        + " burn/dump filename [ --dwp (optional,Disable EEPROM Write Protection) ]"
+        + " burn/dump filename [ --swp (optional, enable EEPROM Software Write Protection) ]"
     )
 
     if len(sys.argv) < 3:
         print(usage)
         exit()
     else:
-        EEPROM_WRITE_PROTECTION = True
-        if len(sys.argv) == 4 and sys.argv[3] == "--dwp":
-            EEPROM_WRITE_PROTECTION = False
+        EEPROM_WRITE_PROTECTION = False
+        if len(sys.argv) == 4 and sys.argv[3] == "--swp":
+            EEPROM_WRITE_PROTECTION = True
         else:
             print(
-                "\nNOTE: EEPROM write protection is enabled by default. Pass --dwp as last argument to disable."
+                "\nNOTE: EEPROM software write protection is disabled by default. Pass --swp as last argument to enable."
             )
 
         action = sys.argv[1]
@@ -228,17 +259,23 @@ if __name__ == "__main__":
             exit()
 
     if action == "burn":
+        chip = CHIPS[
+            int(
+                input(
+                    "\n".join([f"{i}: {e.__name__}" for i, e in enumerate(CHIPS)])
+                    + "\nSelect eeprom chip no.: "
+                )
+            )
+        ]
         if EEPROM_WRITE_PROTECTION:
-            BLenableEEPROMWriteProtection()
+            BLenableEEPROMWriteProtection(EEPROM=chip)
         else:
-            good = BLdisableEEPROMWriteProtection()
-            if not good:
-                exit(0)
+            BLdisableEEPROMWriteProtection(EEPROM=chip)
 
         # this sleep maybe critical after disabling write protection
-        time.sleep(0.1)
+        time.sleep(1)
 
-        burnImage(filename)
+        burnImage(filename, swp=EEPROM_WRITE_PROTECTION, EEPROM=chip)
         verifyImage(filename)
     elif action == "dump":
         dumpImage(filename)
